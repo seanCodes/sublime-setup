@@ -1,0 +1,4 @@
+# All root-level directories are ignored by default (since every environment will have different
+# requirements). To track/sync a directory or file, it must be explicitly whitelisted below.
+
+/*/
