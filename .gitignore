@@ -2,3 +2,10 @@
 # requirements). To track/sync a directory or file, it must be explicitly whitelisted below.
 
 /*/
+
+!/User/
+/User/*
+
+!User/One Dark Remix Color Scheme/
+User/One Dark Remix Color Scheme/*
+!User/One Dark Remix Color Scheme/One Dark Remix Sublime.sublime-color-scheme
