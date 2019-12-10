@@ -1,0 +1,37 @@
+[
+	{
+		"caption": "Preferences: ES6 Tools",
+		"command": "edit_settings",
+		"args": {
+			"base_file": "${packages}/ES6 Tools/ES6 Tools.sublime-settings",
+			"default": "{\n\t$0\n}\n",
+		},
+	},
+	{
+		"caption": "Preferences: ES6 Tools Key Bindings",
+		"command": "edit_settings",
+		"args": {
+			"base_file": "${packages}/ES6 Tools/Default (${platform}).sublime-keymap",
+			"default": "[\n\t$0\n]\n",
+		},
+	},
+	{
+		"caption": "ES6 Tools: Open Readme",
+		"command": "open_file",
+		"args": {
+			"file": "${packages}/ES6 Tools/README.md",
+		},
+	},
+	{
+		"caption": "ES6 Tools: Convert to/from template string",
+		"command": "es6_template_string",
+	},
+	{
+		"caption": "ES6 Tools: Convert to/from arrow function",
+		"command": "es6_arrow_function",
+	},
+	{
+		"caption": "ES6 Tools: Convert object to multiline",
+		"command": "es6_object_multiline",
+	},
+]

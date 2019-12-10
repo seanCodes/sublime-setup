@@ -1,0 +1,6 @@
+[
+	{ "keys": ["super+alt+`"], "command": "es6_template_string", },
+	{ "keys": ["super+alt+a"], "command": "es6_arrow_function",  },
+	{ "keys": ["super+alt+shift+]"], "command": "es6_object_multiline",                                 },
+	{ "keys": ["super+alt+shift+["], "command": "es6_object_multiline", "args": { "collapse": true }, },
+]
