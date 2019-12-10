@@ -1,0 +1,11 @@
+[
+	{ "command": "clear_bookmarks", "args": { "name": "mark" },                       },
+	{ "command": "set_mark"       },
+	{ "command": "move",            "args": { "by": "characters", "forward": false }, },
+	{ "command": "insert",          "args": { "characters": " " },                    },
+	{ "command": "select_to_mark" },
+	{ "command": "move",            "args": { "by": "characters", "forward": true },  },
+	{ "command": "insert",          "args": { "characters": " " },                    },
+	{ "command": "move",            "args": { "by": "characters", "forward": false }, },
+	{ "command": "clear_bookmarks", "args": { "name": "mark" },                       },
+]

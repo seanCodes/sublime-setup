@@ -6,10 +6,12 @@
 !/User/
 /User/*
 
+!User/Completions/
+
+!User/Macros/
+
 !User/One Dark Remix Color Scheme/
 User/One Dark Remix Color Scheme/*
 !User/One Dark Remix Color Scheme/One Dark Remix Sublime.sublime-color-scheme
 
 !User/Snippets/
-
-!User/Completions/

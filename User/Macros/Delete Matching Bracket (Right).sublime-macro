@@ -1,0 +1,14 @@
+[
+	// Establish a consistent start position.
+	{ "command": "expand_selection", "args": { "to": "brackets" }, },
+	{ "command": "move",             "args": { "by": "characters", "forward": true }, },
+	// Mark the close bracket.
+	{ "command": "set_mark"          },
+	// Delete the open bracket.
+	{ "command": "move_to",          "args": { "to": "brackets" }, },
+	{ "command": "left_delete"       },
+	// Delete the close bracket.
+	{ "command": "swap_with_mark"    },
+	{ "command": "right_delete"      },
+	{ "command": "clear_bookmarks",  "args": { "name": "mark" }, },
+]
