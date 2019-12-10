@@ -1,0 +1,60 @@
+[
+	// Save
+
+	{ "keys": ["ctrl+alt+shift+s"], "command": "save_all" },
+
+	// Find/Replace
+
+	{ "keys": ["ctrl+shift+f"],     "command": "show_panel",  "args": { "panel": "replace", "reverse": false } },
+	{ "keys": ["ctrl+alt+shift+f"], "command": "show_panel",  "args": { "panel": "find_in_files" } },
+	{ "keys": ["ctrl+g"],           "command": "find_next"            },
+	{ "keys": ["ctrl+shift+g"],     "command": "find_prev"            },
+	{ "keys": ["ctrl+alt+g"],       "command": "replace_next"         },
+	{ "keys": ["ctrl+alt+shift+g"], "command": "replace_all", "args": { "close_panel": true },
+		"context": [
+			{ "key": "panel",          "operand": "replace" },
+			{ "key": "panel_has_focus"                      },
+		],
+	},
+	{ "keys": ["ctrl+e"],           "command": "slurp_find_string"    },
+	{ "keys": ["ctrl+alt+e"],       "command": "slurp_replace_string" },
+
+	// Goto
+
+	{ "keys": ["alt+r"],        "command": "show_overlay", "args": { "overlay": "goto", "text": "@", }, },
+	{ "keys": ["ctrl+shift+l"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":", }, },
+	{ "keys": ["alt+;"],        "command": "show_overlay", "args": { "overlay": "goto", "text": "#", }, },
+
+	// Selection
+
+	{ "keys": ["ctrl+alt+l"], "command": "split_selection_into_lines", },
+
+	// Swap
+
+	{ "keys": ["alt+up"],   "command": "swap_line_up",   },
+	{ "keys": ["alt+down"], "command": "swap_line_down", },
+
+
+	//
+	// Plugins
+	//
+
+	// Git Gutter
+
+	{ "keys": ["alt+g"],       "command": "git_gutter_next_change" },
+	{ "keys": ["alt+shift+g"], "command": "git_gutter_prev_change" },
+
+	// Alignment
+
+	{ "keys": ["ctrl+alt+shift+a"], "command": "alignment", },
+
+	// Sublime Linter
+
+	// Show all errors.
+	{ "keys": ["alt+a"], "command": "sublime_linter_panel_toggle" },
+	// Lint this view.
+	{ "keys": ["alt+l"], "command": "sublime_linter_lint" },
+	// Goto next/previous error.
+	{ "keys": ["alt+e"],       "command": "sublime_linter_goto_error", "args": { "direction": "next"     } },
+	{ "keys": ["alt+shift+e"], "command": "sublime_linter_goto_error", "args": { "direction": "previous" } },
+]
