@@ -1,0 +1,188 @@
+/*
+	Jinja2 css template. Provided values are:
+		- wrapper_class: the surrounding class;
+	Copy the values you want to change into your user directory
+	and change them there to overwrite the stylesheet.
+/
+
+{{wrapper_class}} .gitgutter-button {
+	font-size: 1.15rem;
+}
+
+/* Don't underline button links. /
+{{wrapper_class}} .gitgutter-button a {
+	text-decoration: none;
+}
+
+/* Size of button, if they are an image. /
+{{wrapper_class}} .gitgutter-button img {
+	height: 1.15rem;
+	width: 1.15rem;
+}
+
+/*
+	The following entries apply to the "difference highlight"
+	mode of the popup.
+/
+/* Highlight text, that has not changed. /
+{{wrapper_class}} .gitgutter-hi-equal {
+	color: rgb(136, 136, 136);
+}
+
+/* Highlight text, that has been inserted. /
+{{wrapper_class}} .gitgutter-hi-inserted {
+	line-height: 1.35;
+	border-radius: 3px;
+	background-color: rgba(34, 255, 169, 0.17);
+	/*background-color: rgba(34, 255, 169, 0.1);/
+	opacity: 0.6;
+	color: rgba(18, 255, 169, 0.73);
+}
+
+/* Highlight text, that has been deleted. /
+{{wrapper_class}} .gitgutter-hi-deleted {
+	line-height: 1.35;
+	border-radius: 3px;
+	background-color: rgba(232, 48, 79, 0.22);
+	/*background-color: rgba(232, 48, 79, 0.15);/
+	opacity: 0.6;
+	color: rgba(255, 102, 132, 1);
+	/*color: rgba(255, 92, 122, 1);/
+	/*color: rgba(255, 102, 108, 1);/
+	text-decoration: none;
+}
+
+/* Highlight text, that has been inserted and substitutes other text. /
+{{wrapper_class}} .gitgutter-hi-changed .gitgutter-hi-inserted {
+	line-height: 1.35;
+	border-radius: 3px;
+	background-color: rgba(244, 229, 72, 0.2);
+	color: rgba(224, 229, 72, 1);
+}
+
+/* Highlight text, that has been deleted and is substituted by other text. /
+{{wrapper_class}} .gitgutter-hi-changed .gitgutter-hi-deleted {
+	line-height: 1.35;
+	border-radius: 3px;
+	background-color: rgba(244, 229, 72, 0.2);
+	/*color: yellow;/
+	color: rgba(224, 229, 72, 1);
+}
+*/
+
+
+
+
+
+
+/**********************************************************************
+
+	This is the default stylesheet for GitGutter diff popup.
+
+	It defines additional rules to merge with mdpopups' styleshets.
+
+	NOTE: You can use all jinja2 template variables of mdpopups.
+
+		Examples:
+		  var.is_dark
+		  var.is_light
+		  var.sublime_version       (mdpopups 2.0.0+)
+		  var.mdpopups_version      (mdpopups 2.0.0+)
+
+	The popup's HTML structure:
+
+		<div class="mdpopups">
+			<div class="git-gutter">
+				<div class="toolbar">
+					<a href="revert"><symbol>⟲</symbol></a>
+					...
+					<a href="revert"><text>(revert)</text></a>
+					...
+				</div>
+				<div class="highlight">
+					... the content goes in here
+				</div>
+			</div>
+		</div>
+
+	Copy the values you want to change into your user directory
+	and change them there to overwrite the stylesheet.
+
+**********************************************************************/
+
+/**
+ * POPUP BACKGROUND
+ *
+ * Compatibility rules to fix default popup background color
+ * for light and dark color schemes of Sublime Text < 3132.
+ **/
+html.dark {
+	background-color: color(var(--background) blend(white 85%));
+	--mdpopups-hl-bg: color(var(--background) blend(white 95%));
+	--diffpopup-ins-bg:     rgba(34, 255, 169, 0.17);
+	--diffpopup-ins-fg:     rgba(18, 255, 169, 0.73);
+	--diffpopup-chg-ins-bg: rgba(244, 229, 72, 0.2);
+	/*--diffpopup-chg-ins-fg: rgba(224, 229, 72, 1);*/
+	/*--diffpopup-chg-ins-bg: rgba(34, 255, 169, 0.17);*/
+	--diffpopup-chg-ins-fg: rgba(18, 255, 169, 0.73);
+	--diffpopup-del-bg:     rgba(232, 48, 79, 0.22);
+	--diffpopup-del-fg:     rgba(255, 102, 132, 1);
+	--diffpopup-chg-del-bg: rgba(244, 229, 72, 0.2);
+	/*--diffpopup-chg-del-fg: rgba(224, 229, 72, 1);*/
+	/*--diffpopup-chg-del-bg: rgba(232, 48, 79, 0.22);*/
+	--diffpopup-chg-del-fg: rgba(255, 102, 132, 1);
+}
+
+/**
+ * TEXT VIEW
+ *
+ * Shows the old content or diff.
+ **/
+.git-gutter div.highlight {
+	border-style: none;
+	border-radius: 0;
+	line-height: 1.3rem;
+	margin: 0;
+	padding: 0.7rem 0.7rem 0.6rem 0.7rem;
+	color: rgb(136, 136, 136);
+}
+
+/**
+ * TEXT LINE
+ *
+ * Each line is wrapped into <p> tag.
+ **/
+.git-gutter .highlight p {
+	margin: 0;
+}
+
+/**
+ * DIFF HIGHLIGHTING
+ *
+ * The following entries apply to the "highlight difference"
+ * mode of the popup.
+ **/
+
+/* Highlight text, that has been inserted. */
+.git-gutter .hi-ins {
+	color: var(--diffpopup-ins-fg);
+	background-color: var(--diffpopup-ins-bg);
+}
+
+/* Highlight text, that has been deleted. */
+.git-gutter .hi-del {
+	color: var(--diffpopup-del-fg);
+	background-color: var(--diffpopup-del-bg);
+}
+
+/* Highlight text, that has been inserted and substitutes other text. */
+.git-gutter .hi-chg-ins {
+	color: var(--diffpopup-chg-ins-fg);
+	background-color: var(--diffpopup-chg-ins-bg);
+}
+
+/* Highlight text, that has been deleted and is substituted by other text. */
+.git-gutter .hi-chg-del {
+	color: var(--diffpopup-chg-del-fg);
+	background-color: var(--diffpopup-chg-del-bg);
+}
