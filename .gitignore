@@ -20,3 +20,4 @@ User/One Dark Remix Color Scheme/*
 
 !User/*.css
 !User/*.sublime-color-scheme
+!User/*.sublime-keymap
