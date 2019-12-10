@@ -1,2 +1,2 @@
 # sublime-setup
-Rate my setup. 😎
+Rate my setup.
