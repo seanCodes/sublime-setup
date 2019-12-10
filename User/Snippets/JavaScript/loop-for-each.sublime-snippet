@@ -1,0 +1,8 @@
+<snippet>
+	<content><![CDATA[for (let i = 0; i < ${1:${2:arr}.length}; i++) {
+	${3}
+}]]></content>
+	<tabTrigger>fori</tabTrigger>
+	<scope>source.js - string - comment</scope>
+	<description>ES6 For-Each Loop</description>
+</snippet>
