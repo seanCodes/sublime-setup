@@ -1,0 +1,8 @@
+{
+	"scope": "meta.switch.js",
+
+	"completions": [
+		{ "trigger": "case\tswitch",    "contents": "case '${1:value}':\n\t${2:// code}\nbreak" },
+		{ "trigger": "default\tswitch", "contents": "default:\n\t${1:// code}" },
+	]
+}

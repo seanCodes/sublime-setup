@@ -1,0 +1,31 @@
+{
+	"scope": "source.js - comment - string.quoted",
+
+	"completions": [
+		{ "trigger": "f\tFunction",            "contents": "function $1($2) {$3}" },
+		{ "trigger": "af\tArrow Function",     "contents": "($1) => ${2:{ ${3} \\}}" },
+		{ "trigger": "mf\tMethod",             "contents": "${1:name}: function ($2) {$3}" },
+		{ "trigger": "ms\tMethod Shorthand",   "contents": "${1:name}($2) {$3}" },
+
+		{ "trigger": "import\tES6 Module",     "contents": "import ${1:{ ${2:var} \\}} from '${3:path}'" },
+		{ "trigger": "export\tES6 Module",     "contents": "export ${1:default} ${2:type}" },
+
+		{ "trigger": "switch\tswitch",         "contents": "switch (${1:variable}) {\n\tcase '${2:value}':\n\t\t${3:// code}\n\tbreak\n}" },
+
+		{ "trigger": "try\ttry/catch",         "contents": "try {\n\t${1:// ...}\n} catch (${2:err}) {\n\t${3:// ...}\n}" },
+		{ "trigger": "catch\ttry/catch",       "contents": "catch (${1:err}) {\n\t${2:// ...}\n}" },
+
+		{ "trigger": "const\tconst",           "contents": "const ${1:name} = ${2:'value'}" },
+		{ "trigger": "let\tlet",               "contents": "let ${1:name} = ${2:'value'}" },
+		{ "trigger": "return\treturn",         "contents": "return" },
+
+		// Backbone
+		{ "trigger": "listenTo\tBackbone",     "contents": "listenTo(${1:subject}, '${2:event}', ${3:handler})" },
+		{ "trigger": "listenToOnce\tBackbone", "contents": "listenToOnce(${1:subject}, '${2:event}', ${3:handler})" },
+		{ "trigger": "trigger\tBackbone",      "contents": "trigger('${1:event}', ${2:data})" },
+		{ "trigger": "get\tBackbone",          "contents": "get('${1:key}'${2:, ${3:options}})" },
+		{ "trigger": "cget\tBackbone",         "contents": "const ${1:attribute} = ${2:this}.get('$1')" },
+		{ "trigger": "lget\tBackbone",         "contents": "let ${1:attribute} = ${2:this}.get('$1')" },
+		{ "trigger": "set\tBackbone",          "contents": "set('${1:key}', ${2:value}${3:, ${4:options}})" },
+	]
+}

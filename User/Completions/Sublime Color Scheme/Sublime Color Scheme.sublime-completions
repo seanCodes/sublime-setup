@@ -1,0 +1,10 @@
+{
+	//"scope": "source.json.sublime.color-scheme  meta.color-scheme.collection.sublime-color-scheme  meta.mapping.value.json  meta.mapping.value.json  string.quoted  meta.color.sublime-color-scheme",
+	"scope": "source.json.sublime.color-scheme  meta.mapping.value.json  string.quoted.double  meta.color.sublime-color-scheme",
+	"completions": [
+		{ "trigger": "a\tCSS Color Mod", "contents": "alpha(${1:0..1})" },
+		{ "trigger": "v\tColor Variable", "contents": "var($1)" },
+		{ "trigger": "hsl\tCSS Color", "contents": "hsl(${1:hue}, ${2:saturation}%, ${3:value}%)" },
+		{ "trigger": "hsla\tCSS Color", "contents": "hsla(${1:hue}, ${2:saturation}%, ${3:value}%, ${4:alpha})" },
+	],
+}
