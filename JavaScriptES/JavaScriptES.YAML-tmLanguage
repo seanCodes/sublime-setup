@@ -31,7 +31,6 @@ repository:
 
     - include: '#literal-regexp'              # before operators to avoid ambiguities
     - include: '#literal-number'
-    - include: '#literal-tagged-html'
     - include: '#literal-template-string'
     - include: '#literal-string'
     - include: '#literal-language-constant'
@@ -99,15 +98,43 @@ repository:
 
     - name: comment.block.documentation.js
       begin: /\*\*(?!/)
-      end: \*/
-      captures:
-        '0': {name: punctuation.definition.comment.js}
+      end: (\*/)(\n)?
+      beginCaptures:
+        '0': {name: punctuation.definition.comment.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.comment.end.js}
+        '2': {name: meta.punctuation.definition.comment.end.after.js}
+      patterns:
+        - include: '#special-comments-jsdoc'
+        - name: punctuation.definition.comment
+          match: ^(\s+)(\*)(?=\s)
+          captures:
+            '1': {name: meta.punctuation.definition.comment.edge.before.js}
+            '2': {name: punctuation.definition.comment.edge.js}
+        - match: ^(\s+)(?=\*/)
+          captures:
+            '0': {name: meta.punctuation.definition.comment.end.before.js}
+        - include: '#comments-markdown-code-block'
+        - include: '#comments-markdown-strong-emphasis'
+        - include: '#comments-markdown-strong'
+        - include: '#comments-markdown-emphasis'
+        - include: '#comments-markdown-code-span'
 
     - name: comment.block.js
       begin: /\*
-      end: \*/
-      captures:
-        '0': {name: punctuation.definition.comment.js}
+      end: (\*/)(\n)?
+      beginCaptures:
+        '0': {name: punctuation.definition.comment.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.comment.end.js}
+        '2': {name: meta.after.comment.block.js}
+      # Only highlight markdown in doc blocks for now.
+      #patterns:
+      #  - include: '#comments-markdown-code-block'
+      #  - include: '#comments-markdown-strong-emphasis'
+      #  - include: '#comments-markdown-strong'
+      #  - include: '#comments-markdown-emphasis'
+      #  - include: '#comments-markdown-code-span'
 
     - name: comment.block.html.js
       match: (<!--|-->)
@@ -115,14 +142,271 @@ repository:
         '0': {name: punctuation.definition.comment.js}
 
     - name: comment.line.double-slash.js
-      match: (//).*$\n?
-      captures:
+      begin: (//)
+      end: \n|^
+      beginCaptures:
         '1': {name: punctuation.definition.comment.js}
+      endCaptures:
+        '0': {name: meta.after.comment.line.double-slash.js}
+      patterns:
+        - include: '#comments-markdown-code-block'
+        - include: '#comments-markdown-strong-emphasis'
+        - include: '#comments-markdown-strong'
+        - include: '#comments-markdown-emphasis'
+        - include: '#comments-markdown-code-span'
 
     - name: comment.line.shebang.js
-      match: ^(#!).*$\n?
+      match: ^(#!).*$(\n)?
       captures:
         '1': {name: punctuation.definition.comment.js}
+        '2': {name: meta.after.comment.line.shebang.js}
+
+  special-comments-jsdoc:
+    patterns:
+    # Callbacks
+    - name: meta.jsdoc.tag.definition.callback # namepath
+      match: ^(\s+)(\*)\s+((@)(callback))\s+((external:)?(\S+))\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.callback.definition.jsdoc.js}
+        '7': {name: keyword.declaration.type.kind.external.jsdoc.js} # maybe `type.namespace`?
+        '8': {name: entity.name.type.callback.definition.jsdoc.js}
+    # Mixins
+    - name: meta.jsdoc.tag.definition.mixin # ?namepath
+      match: ^(\s+)(\*)\s+((@)(mixin))(?:\s+((external:)?(\S+)))?$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.mixin.definition.jsdoc.js}
+        '7': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '8': {name: entity.name.type.mixin.definition.jsdoc.js}
+    # External Modules
+    - name: meta.jsdoc.tag.definition.namepath-only # namepath
+      match: ^(\s+)(\*)\s+((@)(external|host))\s+(\S+)\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.namepath.definition.jsdoc.js entity.name.type.namepath.definition.jsdoc.js}
+    # Classes
+    - name: meta.jsdoc.tag.definition.type-optional-and-namepath-optional # ?type ?namepath
+      match: ^(\s+)(\*)\s+((@)(class|constructor))(?:\s+(({\(?)(\?|\!|\.{3})?(.*?)(\[\])?(\)?})(?=\s+(?:$|[\w\d]))))?(?:\s+((external:)?(\S+)))?
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.jsdoc.js}
+        '7': {name: punctuation.definition.type.jsdoc.js}
+        '8': {name: keyword.operator.type.jsdoc.js}
+        '9': {name: storage.type.namepath.jsdoc.js}
+        '10': {name: keyword.operator.type.jsdoc.js}
+        '11': {name: punctuation.definition.type.jsdoc.js}
+        '12': {name: meta.type.namepath.definition.jsdoc.js}
+        '13': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '14': {name: entity.name.type.namepath.definition.jsdoc.js}
+    # Typedefs
+    - name: meta.jsdoc.tag.definition.type-optional-and-namepath # ?type namepath
+      match: ^(\s+)(\*)\s+((@)(typedef))(?:\s+(({\(?)(\?|\!|\.{3})?(.*?)(\[\])?(\)?})(?=\s+(?:$|[\w\d]))))?\s+((external:)?(\S+))
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.jsdoc.js}
+        '7': {name: punctuation.definition.type.jsdoc.js}
+        '8': {name: keyword.operator.type.jsdoc.js}
+        '9': {name: storage.type.namepath.jsdoc.js}
+        '10': {name: keyword.operator.type.jsdoc.js}
+        '11': {name: punctuation.definition.type.jsdoc.js}
+        '12': {name: meta.type.namepath.definition.jsdoc.js}
+        '13': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '14': {name: entity.name.type.namepath.definition.jsdoc.js}
+    # Event Definitions
+    - name: meta.jsdoc.tag.definition.event # ?classname eventname
+      match: ^(\s+)(\*)\s+((@)(event))\s+(((external:)?([^\s#:]+?#))?((event:)?(\S+)))\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.event.definition.jsdoc.js}
+        '7': {name: meta.type.namepath.jsdoc.js}
+        '8': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '9': {name: storage.type.namepath.jsdoc.js}
+        '10': {name: meta.type.event.name.definition.jsdoc.js}
+        '11': {name: keyword.declaration.type.kind.event.jsdoc.js}
+        '12': {name: entity.name.type.event.definition.jsdoc.js}
+    # Event Usages
+    - name: meta.jsdoc.tag.definition.event # ?classname eventname
+      match: ^(\s+)(\*)\s+((@)(fires|emits|listens))\s+(((external:)?(module:)?([^\s#:]+?#))?((event:)?(\S+)))\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.event.definition.jsdoc.js}
+        '7': {name: meta.type.namepath.jsdoc.js}
+        '8': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '9': {name: keyword.declaration.type.kind.module.jsdoc.js}
+        '10': {name: storage.type.namepath.jsdoc.js}
+        '11': {name: meta.type.event.name.jsdoc.js}
+        '12': {name: keyword.declaration.type.kind.event.jsdoc.js}
+        '13': {name: storage.type.event.jsdoc.js}
+
+    # Tags:  @tag
+    - name: meta.jsdoc.tag.tag-only
+      match: ^(\s+)(\*)\s+((@)(abstract|async|generator|global|hideconstructor|ignore|inheritdoc|inner|instance|override|package|private|protected|public|readonly|virtual))\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+    # Tags:  @tag  <namepath>
+    - name: meta.jsdoc.tag.namepath-only
+      match: ^(\s+)(\*)\s+((@)(augments|extends|memberof\!?|mixes))\s+((external:)?(\S+))\s*$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.namepath.jsdoc.js}
+        '7': {name: keyword.declaration.type.kind.external.jsdoc.js}
+        '8': {name: storage.type.namepath.jsdoc.js}
+    # Tags:  @tag  <type>
+    - name: meta.jsdoc.tag.type-no-namepath
+      match: ^(\s+)(\*)\s+((@)(type))\s+(({\(?)(\?|\!|\.{3})?(.*?)(\[\])?(\)?})(?=\s*$))$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.jsdoc.js}
+        '7': {name: punctuation.definition.type.jsdoc.js}
+        '8': {name: keyword.operator.type.jsdoc.js}
+        '9': {name: storage.type.namepath.jsdoc.js}
+        '10': {name: keyword.operator.type.jsdoc.js}
+        '11': {name: punctuation.definition.type.jsdoc.js}
+    # Tags:  @tag  [<type>]
+    - name: meta.jsdoc.tag.type-optional-no-namepath
+      match: ^(\s+)(\*)\s+((@)(enum))(?:\s+(({\(?)(\?|\!|\.{3})?(.*?)(\[\])?(\)?})(?=\s*$)))?$
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.jsdoc.js}
+        '7': {name: punctuation.definition.type.jsdoc.js}
+        '8': {name: keyword.operator.type.jsdoc.js}
+        '9': {name: storage.type.namepath.jsdoc.js}
+        '10': {name: keyword.operator.type.jsdoc.js}
+        '11': {name: punctuation.definition.type.jsdoc.js}
+    - name: meta.jsdoc.tag.generic
+      match: >-
+        (?x)
+          ^(\s+)
+          (\*)
+          \s+
+          (
+            (@)
+            (
+              a(?:
+                ccess|
+                lias|
+                rg(?:ument)?|
+                uthor)|
+              borrows|
+              c(?:
+                lassdesc|
+                o(?:
+                  nst(?:
+                    ant|
+                    ructs)?|
+                pyright))|
+              d(?:
+                e(?:
+                  fault(?:value)?|
+                  precated|
+                  sc(?:ription)?))|
+              ex(?:
+                ample|
+                ception|
+                ports)
+              f(?:
+                ile(?:overview)?|
+                unc(?:tion)?)|
+              i(?:
+                mplements|
+                nterface)|
+              kind|
+              l(?:
+                ends|
+                i(?:
+                  cense|
+                  stens
+                  nk(?:code|plain)?))|
+              m(?:
+                ethod|
+                odule)|
+              name(?:space)?|
+              overview|
+              p(?:
+                aram|
+                rop(?:erty)?)|
+              re(?:
+                quires|
+                turns?)|
+              s(?:
+                ee|
+                ince|
+                tatic|
+                ummary)|
+              t(?:
+                h(?:
+                  is|
+                  rows)
+                odo|
+                utorial)|
+              v(?:
+                ar(?:iation)?
+                ersion)|
+              yields?
+            )
+          )
+          (?:
+            \s+(
+              ({\(?)(\?|\!|\.{3})?(.*?)(\[\])?(\)?})(?=\s+(?:$|[\w\d\[({*>-]))
+            )
+          )?
+      captures:
+        '1': {name: meta.punctuation.definition.comment.edge.before.js}
+        '2': {name: punctuation.definition.comment.edge.js}
+        '3': {name: meta.tag.jsdoc.js}
+        '4': {name: punctuation.definition.tag.jsdoc.js}
+        '5': {name: entity.name.tag.jsdoc.js}
+        '6': {name: meta.type.jsdoc.js}
+        '7': {name: punctuation.definition.type.jsdoc.js}
+        '8': {name: keyword.operator.type.jsdoc.js}
+        '9': {name: meta.type.namepath.jsdoc.js storage.type.namepath.jsdoc.js}
+        '10': {name: keyword.operator.type.jsdoc.js}
+        '11': {name: punctuation.definition.type.jsdoc.js}
 
   special-comments-conditional-compilation:
     patterns:
@@ -149,6 +433,140 @@ repository:
       captures:
         '1': {name: punctuation.definition.variable.js}
 
+  comments-markdown-strong-emphasis:
+    patterns:
+    - name: comment.markdown.strong-emphasis.js
+      begin: (\*\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\b(?!_)|\S\*(?![a-zA-Z0-9]))) #(\*\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*\*)
+      end: (\b(?<!_)\*\*\*\b(?!_)|(?<!\s)\*\*\*(?![a-zA-Z0-9])) #(?<![\s\\*])(\*\*\*)
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.strong-emphasis.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.strong-emphasis.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+    - name: comment.markdown.strong-emphasis.js
+      begin: ((?<![a-zA-Z0-9])___(?=[a-zA-Z0-9])|(?<![a-zA-Z0-9])___(?!\s))(?=.*?\S___(?![a-zA-Z0-9])) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(___)(?=[^\s_](\\_|\s[\s_]+\s|[^_])*(?<!\s)___)
+      end: ((?<=[a-zA-Z0-9])___(?=[a-zA-Z0-9])|(?<=\S)___(?=[^a-zA-Z0-9])) #\n|(?<![\s\\_])(___)
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.strong-emphasis.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.strong-emphasis.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+
+  comments-markdown-strong:
+    patterns:
+    - name: comment.markdown.strong.js
+      begin: (\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\b(?!_)|\S\*(?![a-zA-Z0-9]))) #(\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*)
+      end: (\b(?<!_)\*\*\b(?!_)|(?<!\s)\*\*(?![a-zA-Z0-9])) #(?<![\s\\*])(\*\*)
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.strong.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.strong.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+      # - include: '#comments-markdown-emphasis'
+    - name: comment.markdown.strong.js
+      begin: ((?<!\w)__(?=[a-zA-Z0-9])|(?<!\w)__(?![\s_]))(?=.*?\S__(?!\w)) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(__)(?=[^\s_](\\_|\s[\s_]+\s|[^_])*(?<!\s)__)
+      end: ((?<=[a-zA-Z0-9])__(?=[a-zA-Z0-9])|(?<=\S)__(?=[^a-zA-Z0-9])) #\n|(?<![\s\\_])(__)
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.strong.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.strong.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+      # - include: '#comments-markdown-emphasis'
+
+  comments-markdown-emphasis:
+    # Reviewed these May 9 2018 and they can probably all be deleted.
+    #(?:\*(?=[a-zA-Z0-9])|(?<=[^a-zA-Z0-9])\*(?=\S)|^\*(?=\S))(?:.\r?\n?)*?(?:(?:[a-zA-Z0-9]\*(?=[a-zA-Z0-9])|\S\*(?=[^a-zA-Z0-9])))
+    #(\*(?=[a-zA-Z0-9])|(?<=[^a-zA-Z0-9])\*(?=\S)|^\*(?=\S))(?:.\r?\n?)*?(?:[a-zA-Z0-9](\1)(?=[a-zA-Z0-9])|\S(\1)(?=$|[^a-zA-Z0-9]))
+    #(\*(?=[a-zA-Z0-9])|(?<=[^a-zA-Z0-9])\*(?=[^\s*])|^\*(?=[^\s*]))(?:.\r?\n?)*?(?:[a-zA-Z0-9](\1)(?=[a-zA-Z0-9])|[^\s*](\1)(?=$|[^a-zA-Z0-9*]))
+    #((?<!\*)\*(?=[a-zA-Z0-9])|(?<![a-zA-Z0-9*])\*(?![\s*]))(?:.\r?\n?)*?(?:[a-zA-Z0-9](\1)(?=[a-zA-Z0-9])|[^\s*](\1)(?![a-zA-Z0-9*]))
+    #((?<!\*)\*\b(?!_)|(?<![a-zA-Z0-9*])\*(?![\s*]))(?:.\r?\n?)*?(?:\b(?<!_)(\1)\b(?!_)|[^\s*](\1)(?![a-zA-Z0-9*]))
+    #((?<!\*)\*\b(?!_)|(?<![a-zA-Z0-9*])\*(?![\s*]))(?=.*?(?:\b(?<!_)\*\b(?!_)|[^\s*]\*(?![a-zA-Z0-9*])))
+    patterns:
+    - name: comment.markdown.emphasis.js
+      #begin: (\*(?=[a-zA-Z0-9])|(?<=[^a-zA-Z0-9])\*(?=\S)|^\*(?=\S))(?=.*(?:[a-zA-Z0-9]\*(?=[a-zA-Z0-9])|\S\*(?=[^a-zA-Z0-9])))
+      begin: ((?<!\*)\*\b(?!_)|(?<![a-zA-Z0-9*])\*(?![\s*]))(?=.*?(?:\b(?<!_)\*\b(?!_)|[^\s*]\*(?![a-zA-Z0-9*]))) #(\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*)
+      end: (\b(?<!_)\*\b(?!_)|(?<![\s*])\*(?![a-zA-Z0-9*])) #\n|(?<![\s\\*])(\*)
+      #match: (\*(?=[a-zA-Z0-9])|(?<=[^a-zA-Z0-9])\*(?=\S)|^\*(?=\S)).*(?:[a-zA-Z0-9](\*)(?=[a-zA-Z0-9])|\S(\*)(?=[^a-zA-Z0-9]))
+      #match: (\*(?![\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])|(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])\*(?!\s)).*(?:[^\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”](\*)(?![!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])|\S(\*)(?=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”]))
+      #captures:
+      #  '1': {name: punctuation.definition.markdown.emphasis.begin.js}
+      #  '2': {name: punctuation.definition.markdown.emphasis.end.js}
+      #  '3': {name: punctuation.definition.markdown.emphasis.end.js}
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.emphasis.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.emphasis.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+    - name: comment.markdown.emphasis.js
+      begin: ((?<!\w)_(?=[a-zA-Z0-9])|(?<!\w)_(?![\s_]))(?=.*?[^\s_]_(?!\w)) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(_(?!\s))(?=(\\_|\s[\s_]+\s|[^_])*[^\s_]_)
+      end: (?<![\s_])(_)(?!\w) #\n|(?<![\s\\_])(_)
+      beginCaptures:
+        '1': {name: punctuation.definition.markdown.emphasis.begin.js}
+      endCaptures:
+        '1': {name: punctuation.definition.markdown.emphasis.end.js}
+      patterns:
+      - include: '#comments-markdown-code-span'
+
+  comments-markdown-code-span:
+    patterns:
+    - name: comment.markdown.code.js
+      match: (`)(?!\s)(\\`|[^`])*?\S(`)(?![a-zA-Z0-9])
+      captures:
+        '1': {name: punctuation.definition.markdown.code.begin.js}
+        '3': {name: punctuation.definition.markdown.code.end.js}
+
+  comments-markdown-code-block:
+    patterns:
+    - name: comment.markdown.code.block.js
+      begin: (\s*)(````*)([^`\s]*)(\s*)
+      end: (\s*)(\2`*)(\s*)
+      beginCaptures:
+        '1': {name: meta.punctuation.definition.markdown.code.block.begin.before.js}
+        '2': {name: punctuation.definition.markdown.code.block.begin.js}
+        '3': {name: comment.markdown.code.block.syntax.js}
+        '4': {name: meta.punctuation.definition.markdown.code.block.begin.after.js}
+      endCaptures:
+        '1': {name: meta.punctuation.definition.markdown.code.block.end.before.js}
+        '2': {name: punctuation.definition.markdown.code.block.end.js}
+        '3': {name: meta.punctuation.definition.markdown.code.block.end.after.js}
+      patterns:
+      - match: ^(\s*)(\*|//)(?=\s)
+        captures:
+          '1': {name: meta.punctuation.definition.comment.edge.before.js}
+          '2': {name: punctuation.definition.comment.edge.js}
+      - match: ^(\s*)(//)(\s+(?!```))?
+        captures:
+          '1': {name: meta.punctuation.definition.comment.before.js}
+          '2': {name: punctuation.definition.comment.js}
+          '3': {name: meta.punctuation.definition.comment.after.js}
+    - name: comment.markdown.code.block.js
+      begin: (\s*)(~~~~*)([^~\s]*)(\s*)
+      end: (\s*)(\2~*)(\s*)
+      beginCaptures:
+        '1': {name: meta.punctuation.definition.markdown.code.block.begin.before.js}
+        '2': {name: punctuation.definition.markdown.code.block.begin.js}
+        '3': {name: comment.markdown.code.block.syntax.js}
+        '4': {name: meta.punctuation.definition.markdown.code.block.begin.after.js}
+      endCaptures:
+        '1': {name: meta.punctuation.definition.markdown.code.block.end.before.js}
+        '2': {name: punctuation.definition.markdown.code.block.end.js}
+        '3': {name: meta.punctuation.definition.markdown.code.block.end.after.js}
+      patterns:
+      - match: ^(\s*)(\*|//)(?=\s)
+        captures:
+          '1': {name: meta.punctuation.definition.comment.edge.before.js}
+          '2': {name: punctuation.definition.comment.edge.js}
+      - match: ^(\s*)(//)(\s+(?!~~~))?
+        captures:
+          '1': {name: meta.punctuation.definition.comment.before.js}
+          '2': {name: punctuation.definition.comment.js}
+          '3': {name: meta.punctuation.definition.comment.after.js}
+
   function-declaration-parameters:
     patterns:
     - begin: \(
@@ -170,6 +588,7 @@ repository:
           '0': {name: keyword.operator.assignment.js}
         end: '(?=[,)])'
         patterns:
+        #- include: '#literal-method-call'
         - include: '#expression'
       - include: '#comments'
 
@@ -221,6 +640,7 @@ repository:
           (?:\b(static)\s+)?
           (?:\b(async)\s+)?
           (?:(\*)\s*)?([_$a-zA-Z][$\w]*)\s*
+          #(?=\(.*\)(?:\s|/\*.*\*/)*\{)
           (?=\([^())]*\)(?:\s|/\*.*\*/)*\{)
       beginCaptures:
         '1': {name: storage.type.js}
@@ -643,7 +1063,7 @@ repository:
           ([_$a-zA-Z][$\w]*)\s*
           (\(\s*\))
       captures:
-        '1': {name: entity.name.function.js}
+        '1': {name: variable.function.js}
         '2': {name: meta.group.braces.round.function.arguments.js}
 
     - name: meta.function-call.with-arguments.js
@@ -652,7 +1072,7 @@ repository:
           ([_$a-zA-Z][$\w]*)\s*
           (?=\()
       captures:
-        '1': {name: entity.name.function.js}
+        '1': {name: variable.function.js}
 
   literal-method-call:
     patterns:
@@ -666,7 +1086,7 @@ repository:
       captures:
         '1': {name: variable.other.class.js}
         '2': {name: keyword.operator.accessor.js}
-        '3': {name: entity.name.function.js}
+        '3': {name: variable.function.js}
         '4': {name: meta.group.braces.round.function.arguments.js}
 
     - name: meta.function-call.static.with-arguments.js
@@ -679,7 +1099,7 @@ repository:
       captures:
         '1': {name: variable.other.class.js}
         '2': {name: keyword.operator.accessor.js}
-        '3': {name: entity.name.function.js}
+        '3': {name: variable.function.js}
 
     - name: meta.function-call.method.without-arguments.js
       match: >-
@@ -688,7 +1108,7 @@ repository:
           ([_$a-zA-Z][$\w]*)\s*
           (\(\s*\))
       captures:
-        '1': {name: entity.name.function.js}
+        '1': {name: variable.function.js}
         '2': {name: meta.group.braces.round.function.arguments.js}
 
     - name: meta.function-call.method.with-arguments.js
@@ -698,7 +1118,7 @@ repository:
           ([_$a-zA-Z][$\w]*)\s*
           (?=\()
       captures:
-        '1': {name: entity.name.function.js}
+        '1': {name: variable.function.js}
 
   literal-language-variable:
     patterns:
@@ -754,8 +1174,8 @@ repository:
       - name: keyword.operator.accessor.js
         match: \.
 
-      - name: entity.name.type.new.js
-        match: (?<=\.)\s*[_$a-zA-Z][$\w]*(?=\s*\()
+      - name: variable.type.new.js
+        match: (?<=\s)[_$a-zA-Z][$\w]*(?=\s*\()
 
       - name: meta.property.object.js
         match: (?<=\.)\s*[_$a-zA-Z][$\w]*
@@ -984,19 +1404,6 @@ repository:
           '0': {name: punctuation.template-string.element.end.js}
         patterns:
         - include: '#expression'
-
-  literal-tagged-html:
-    patterns:
-    - contentName: text.html.basic.embedded.js
-      begin: '(html)(`)'
-      beginCaptures:
-        '1': {name: meta.function-call.tagged-template.js}
-        '2': {name: punctuation.definition.string.template.begin.js}
-      end: '`'
-      endCaptures:
-        '0': {name: punctuation.definition.string.template.end.js}
-      patterns:
-      - include: 'text.html.basic'
 
   literal-regexp:
     patterns:
