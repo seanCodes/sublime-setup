@@ -146,6 +146,137 @@ def getDocBlockRegion(view, point):
 
     return sublime.Region(start, end)
 
+def parseJSDocTag(text):
+    text = text.strip()
+    tag  = getMatch(r'^@\w+', text)
+    if not tag:
+        #print('    - TEXT HAS NO TAG -') # DEBUG
+        return None
+    tagPatternDict = {
+        '@abstract'        : '*',
+        '@access'          : '*',
+        '@alias'           : '*',
+        '@arg'             : 'type name *',
+        '@argument'        : 'type name *',
+        '@async'           : '*',
+        '@augments'        : '*',
+        '@author'          : 'personname email?',
+        '@borrows'         : 'name as name',
+        '@callback'        : '*',
+        '@class'           : '*',
+        '@classdesc'       : '*',
+        '@const'           : 'type? *',
+        '@constant'        : 'type? *',
+        '@constructor'     : '*',
+        '@constructs'      : '*',
+        '@copyright'       : '*',
+        '@default'         : '*',
+        '@defaultvalue'    : '*',
+        '@deprecated'      : '*',
+        '@desc'            : '*',
+        '@description'     : '*',
+        '@emits'           : '*',
+        '@enum'            : '*',
+        '@event'           : '*',
+        '@example'         : 'caption? example?', # example could come after tag
+        '@exception'       : 'type *',
+        '@exports'         : '*',
+        '@extends'         : '*',
+        '@external'        : '*',
+        '@file'            : '*',
+        '@fileoverview'    : '*',
+        '@fires'           : '*',
+        '@func'            : '*',
+        '@function'        : '*',
+        '@global'          : '*',
+        '@generator'       : '*',
+        '@hideconstructor' : '*',
+        '@host'            : '*',
+        '@ignore'          : '*',
+        '@implements'      : '*',
+        '@inheritdoc'      : '*',
+        '@inner'           : '*',
+        '@instance'        : '*',
+        '@interface'       : '*',
+        '@kind'            : '*',
+        '@lends'           : '*',
+        '@license'         : '*',
+        '@listens'         : '*',
+        '@link'            : 'link',
+        '@linkcode'        : 'link',
+        '@linkplain'       : 'link',
+        '@member'          : 'type *',
+        '@memberof'        : '*',
+        '@method'          : '*',
+        '@mixes'           : '*',
+        '@mixin'           : '*',
+        '@module'          : '*',
+        '@name'            : '*',
+        '@namespace'       : 'type *',
+        '@override'        : '*',
+        '@overview'        : '*',
+        '@package'         : '*',
+        '@param'           : 'type name *',
+        '@private'         : '*',
+        '@prop'            : 'type name *',
+        '@property'        : 'type name *',
+        '@protected'       : '*',
+        '@public'          : '*',
+        '@readonly'        : '*',
+        '@requires'        : '*',
+        '@return'          : 'type *',
+        '@returns'         : 'type *',
+        '@see'             : '*',
+        '@since'           : '*',
+        '@static'          : '*',
+        '@summary'         : '*',
+        '@this'            : '*',
+        '@throws'          : 'type *',
+        '@todo'            : '*',
+        '@tutorial'        : '*',
+        '@type'            : '*',
+        '@typedef'         : 'type? *',
+        '@variation'       : '*',
+        '@var'             : 'type *',
+        '@version'         : '*',
+        '@virtual'         : '*',
+        '@yield'           : 'type *',
+        '@yields'          : 'type *'
+    }
+    tagPatternRegexDict = {
+        '*'                 : r'(?P<tag>@\w+)[ \t]*(?P<rest>\S.*)?',
+        'type *'            : r'(?P<tag>@\w+)[ \t]+(?P<type>\{.*?\})[ \t]*(?P<rest>\S.*)?',
+        'type? *'           : r'(?P<tag>@\w+)[ \t]*(?P<type>\{.*?\})?[ \t]+(?P<rest>\S.*)',
+        'type name *'       : r'(?P<tag>@\w+)[ \t]+(?P<type>\{.*?\})[ \t]*(?P<name>\[.*?\]|\S+)?[ \t]*(?P<rest>\S.*)?',
+        'personname email?' : r'(?P<tag>@\w+)[ \t]+(?P<name>\S+(?: +[^<\s]+)*)[ \t]*(?P<email><.*?>)?',
+        'name as name'      : r'(?P<tag>@\w+)[ \t]+(?P<name1>\S+)[ \t]+(?P<as>as)[ \t]+(?P<name2>\S+)',
+        'caption? example?' : r'(?P<tag>@\w+)[ \t]*(?P<caption><caption>.*?</caption>)?(?P<rest>\S.*)?',
+        'link'              : r''
+    }
+    pattern = tagPatternDict[tag] if tag in tagPatternDict else '*'
+    regex = tagPatternRegexDict[tagPatternDict[tag]] if tag in tagPatternDict else tagPatternRegexDict['*']
+    #match = re.match(regex, text)
+    #if match is None: return ''
+    #groups = match.groups('')
+    #length = len(groups)
+    #if length and 'rest' in match.groupdict():
+    #    print(match.groupdict('no')['rest'])
+    #else:
+    #    print('no')
+    #return groups if length else match.group(0)
+    return getMatch(regex, text)
+
+
+def getMatch(regex, text, groupIndex=None):
+    match = re.match(regex, text)
+    if match is None: return ''
+    groups = match.groups('')
+    length = len(groups)
+    if groupIndex is not None and groupIndex <= length:
+        return match.group(groupIndex)
+    return groups if length else match.group(0)
+
+
 class JsdocsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, inline=False):
@@ -166,14 +297,14 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         write(self.view, snippet)
 
-    def initialize(self, v, inline=False):
-        point = v.sel()[0].end()
+    def initialize(self, view, inline=False):
+        point = view.sel()[0].end()
 
-        self.settings = v.settings()
+        self.settings = view.settings()
 
         # trailing characters are put inside the body of the comment
-        self.trailingRgn = sublime.Region(point, v.line(point).end())
-        self.trailingString = v.substr(self.trailingRgn).strip()
+        self.trailingRgn = sublime.Region(point, view.line(point).end())
+        self.trailingString = view.substr(self.trailingRgn).strip()
         # drop trailing '*/'
         self.trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', self.trailingString))
 
@@ -184,7 +315,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         self.deepAlignTags = settingsAlignTags == 'deep'
         self.shallowAlignTags = settingsAlignTags in ('shallow', True)
 
-        self.parser = parser = getParser(v)
+        self.parser = parser = getParser(view)
         parser.inline = inline
 
         # use trailing string as a description of the function
@@ -192,7 +323,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             parser.setNameOverride(self.trailingString)
 
         # read the next line
-        self.line = parser.getDefinition(v, v.line(point).end() + 1)
+        self.line = parser.getDefinition(view, view.line(point).end() + 1)
 
     def generateSnippet(self, out, inline=False):
         # substitute any variables in the tags
@@ -1292,33 +1423,34 @@ class JsdocsIndentCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         v = self.view
-        currPos = v.sel()[0].begin()
-        currLineRegion = v.line(currPos)
-        currCol = currPos - currLineRegion.begin()  # which column we're currently in
-        prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
-        spaces = self.getIndentSpaces(prevLine)
-        if spaces:
-            toStar = len(re.search("^(\\s*\\*)", prevLine).group(1))
-            toInsert = spaces - currCol + toStar
-            if spaces is None or toInsert <= 0:
-                v.run_command(
-                    'insert_snippet', {
-                        'contents': "\t"
-                    }
-                )
-                return
+        for sel in v.sel():
+            currPos = sel.begin()
+            currLineRegion = v.line(currPos)
+            currCol = currPos - currLineRegion.begin() # the column we’re currently in
+            prevLine = v.substr(v.line(v.line(currPos).begin() - 1))
+            spaces = self.getIndentSpaces(prevLine)
+            if spaces:
+                toStar = len(re.search(r'^(\s*\*)', prevLine).group(1))
+                toInsert = spaces - currCol + toStar
+                if spaces is None or toInsert <= 0:
+                    v.run_command(
+                        'insert_snippet', {
+                            'contents': '\t'
+                        }
+                    )
+                    return
 
-            v.insert(edit, currPos, " " * toInsert)
-        else:
-            v.insert(edit, currPos, "\t")
+                v.insert(edit, currPos, ' ' * toInsert)
+            else:
+                v.insert(edit, currPos, '\t')
 
     def getIndentSpaces(self, line):
         hasTypes = getParser(self.view).settings['typeInfo']
         extraIndent = '\\s+\\S+' if hasTypes else ''
-        res = re.search("^\\s*\\*(?P<fromStar>\\s*@(?:param|property)%s\\s+\\S+\\s+)\\S" % extraIndent, line) \
-           or re.search("^\\s*\\*(?P<fromStar>\\s*@(?:returns?|define)%s\\s+\\S+\\s+)\\S" % extraIndent, line) \
-           or re.search("^\\s*\\*(?P<fromStar>\\s*@[a-z]+\\s+)\\S", line) \
-           or re.search("^\\s*\\*(?P<fromStar>\\s*)", line)
+        res = re.search(r'^\s*\*(?P<fromStar>\s*@(?:param|property)%s\s+\S+\s+(?:-\s+)?)\S' % extraIndent, line) \
+           or re.search(r'^\s*\*(?P<fromStar>\s*@(?:returns?|define)%s\s+(?:-\s+)?)\S'      % extraIndent, line) \
+           or re.search(r'^\s*\*(?P<fromStar>\s*@[a-z]+\s+(?:-\s+)?)\S', line) \
+           or re.search(r'^\s*\*(?P<fromStar>\s*(?:-\s+)?)',             line)
         if res:
             return len(res.group('fromStar'))
         return None
@@ -1329,7 +1461,15 @@ class JsdocsJoinCommand(sublime_plugin.TextCommand):
         v = self.view
         for sel in v.sel():
             for lineRegion in reversed(v.lines(sel)):
-                v.replace(edit, v.find("[ \\t]*\\n[ \\t]*((?:\\*|//[!/]?|#)[ \\t]*)?", lineRegion.begin()), ' ')
+                joinWith = ' '
+                textAtLineBreak = v.substr(v.find(r'\S?[ \t]*\n[ \t]*(?:(?:\*(?!/(?:\s|$))|//[!/]?|#)[ \t]*\S?)?', lineRegion.begin()))
+
+                # If the last char of the line is a hyphen and the next line does _not_ begin with a
+                # hyphen, join the lines with no space in-between.
+                if textAtLineBreak.startswith('-') and not textAtLineBreak.endswith('-'):
+                    joinWith = ''
+
+                v.replace(edit, v.find(r'[ \t]*\n[ \t]*(?:(?:\*(?!/(?:\s|$))|//[!/]?|#)[ \t]*)?', lineRegion.begin()), joinWith)
 
 
 class JsdocsDecorateCommand(sublime_plugin.TextCommand):
@@ -1382,21 +1522,24 @@ class JsdocsReparse(sublime_plugin.TextCommand):
     def run(self, edit):
         tabIndex = counter()
 
-        def tabStop(m):
-            return "${%d:%s}" % (next(tabIndex), m.group(1))
+        def tabStop(match):
+            return "${%d:%s}" % (next(tabIndex), match.group(1))
 
         v = self.view
         v.run_command('clear_fields')
         sel = getDocBlockRegion(v, v.sel()[0].begin())
 
+        # Remove the newline at the end of the region.
+        sel = sublime.Region(sel.begin(), sel.end() - 1)
+
         # escape string, so variables starting with $ won't be removed
         text = escape(v.substr(sel))
 
         # strip out leading spaces, since inserting a snippet keeps the indentation
-        text = re.sub("\\n\\s+\\*", "\n *", text)
+        text = re.sub(r'\n\s+\*', '\n *', text)
 
         # replace [bracketed] [text] with a tabstop
-        text = re.sub("(\\[.+?\\])", tabStop, text)
+        text = re.sub(r'(\[.+?\])', tabStop, text)
 
         v.erase(edit, sel)
         write(v, text)
@@ -1414,13 +1557,12 @@ class JsdocsTrimAutoWhitespace(sublime_plugin.TextCommand):
         v.replace(edit, lineRegion, re.sub("^(\\s*\\*)\\s*$", "\\1\n\\1" + (" " * spaces), line))
 
 
-class JsdocsWrapLines(sublime_plugin.TextCommand):
+class JsdocsWrapLinesOld(sublime_plugin.TextCommand):
     """
     Reformat description text inside a comment block to wrap at the correct length.
     Wrap column is set by the first ruler (set in Default.sublime-settings), or 80 by default.
     Shortcut Key: alt+q
     """
-
     def run(self, edit):
         v = self.view
         settings = v.settings()
@@ -1430,16 +1572,17 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         wrapLength = rulers[0] if (len(rulers) > 0) else 80
         numIndentSpaces = max(0, settings.get("jsdocs_indentation_spaces", 1))
         indentSpaces = " " * numIndentSpaces
-        indentSpacesSamePara = " " * max(0, settings.get("jsdocs_indentation_spaces_same_para", numIndentSpaces))
+        numIndentSpacesSamePara = settings.get("jsdocs_indentation_spaces_same_para", numIndentSpaces)
+        indentSpacesSamePara = " " * max(0, numIndentSpacesSamePara) if type(numIndentSpaces) is type(int()) else numIndentSpacesSamePara
         spacerBetweenSections = settings.get("jsdocs_spacer_between_sections") == True
         spacerBetweenDescriptionAndTags = settings.get("jsdocs_spacer_between_sections") == "after_description"
 
         dbRegion = getDocBlockRegion(v, v.sel()[0].begin())
 
         # find the first word
-        startPoint = v.find(r"\n\s*\* ", dbRegion.begin()).begin()
+        startPoint = v.find(r'/\*\*\s*', dbRegion.begin()).end()
         # find the first tag, or the end of the comment
-        endPoint = v.find(r"\s*\n\s*\*(/)", dbRegion.begin()).begin()
+        endPoint = v.find(r'\s*\n\s*\*(/)', dbRegion.begin()).begin()
 
         # replace the selection with this ^ new selection
         v.sel().clear()
@@ -1448,14 +1591,14 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         text = v.substr(v.sel()[0])
 
         # find the indentation level
-        indentation = len(re.sub('\t', ' ' * tabSize, re.search("\n(\\s*\\*)", text).group(1)))
+        indentation = len(re.sub('\t', ' ' * tabSize, re.search(r'\n(\s*\*)', text).group(1)))
         wrapLength -= indentation - tabSize
 
         # join all the lines, collapsing "empty" lines
-        text = re.sub("\n(\\s*\\*\\s*\n)+", "\n\n", text)
+        text = re.sub(r'\n(\s*\*\s*\n)+', '\n\n', text)
 
         def wrapPara(para):
-            para = re.sub("(\n|^)\\s*\\*\\s*", " ", para)
+            para = re.sub(r'(\n|^)\s*\*\s*', ' ', para)
 
             # split the paragraph into words
             words = para.strip().split(' ')
@@ -1489,24 +1632,30 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 lineIsNew = False
 
             text += line.rstrip()
-            return {'text':       text,
-                    'lineTagged': lineTagged,
-                    'tagged':     paraTagged,
-                    'tag':        tag}
+            return {
+                'text'       : text,
+                'lineTagged' : lineTagged,
+                'tagged'     : paraTagged,
+                'tag'        : tag
+            }
 
-        # split the text into paragraphs, where each paragraph is eighter
+        # split the text into paragraphs, where each paragraph is either
         # defined by an empty line or the start of a doc parameter
-        paragraphs = re.split('\n{2,}|\n\\s*\\*\\s*(?=@)', text)
+        paragraphs = re.split(r'\n{2,}|\n\s*\*\s*(?=@)', text)
         wrappedParas = []
         text = ''
-        for p, para in enumerate(paragraphs):
+
+        for para in paragraphs:
+            if para[0] == '@':
+                para = re.sub(r'\n[ \t]+\*[ \t]+(?!@)', ' ', para)
             # wrap the lines in the current paragraph
             wrappedParas.append(wrapPara(para))
 
+        lastParaIndex = len(wrappedParas) - 1
+
         # combine all the paragraphs into a single piece of text
-        for i in range(0, len(wrappedParas)):
-            para = wrappedParas[i]
-            last = i == len(wrappedParas) - 1
+        for i, para in enumerate(wrappedParas):
+            last = i == lastParaIndex
 
             nextIsTagged = not last and wrappedParas[i + 1]['tagged']
             nextIsSameTag = nextIsTagged and para['tag'] == wrappedParas[i + 1]['tag']
@@ -1520,6 +1669,565 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         text = escape(text)
         write(v, text)
+
+
+class JsdocsWrapLines(sublime_plugin.TextCommand):
+    """
+    Reformat description text inside a comment block to wrap at the correct length.
+    Wrap column is set by the first ruler (set in Default.sublime-settings), or 80 by default.
+    Shortcut Key: alt+q
+    """
+    def run(self, edit):
+        v = self.view
+        settings = v.settings()
+        rulers = settings.get('rulers')
+        tabSize = sublime.load_settings('Preferences.sublime-settings').get('tab_size')
+
+        wrapLength = rulers[0] if len(rulers) > 0 else 80
+        columnSpacesCount = settings.get('jsdocs_min_spaces_between_columns', 1)
+        columnSpaces      = (' ' * columnSpacesCount)
+        docIndentSpacesCount = max(0, settings.get('jsdocs_indentation_spaces', 1))
+        docIndent            = (' ' * docIndentSpacesCount)
+        paragraphIndentSpacesCount = settings.get('jsdocs_indentation_spaces_same_para', docIndentSpacesCount)
+        paragraphIndent            = (' ' * max(0, paragraphIndentSpacesCount)) if type(paragraphIndentSpacesCount) is type(int()) else paragraphIndentSpacesCount
+        spacerBetweenSections           = settings.get('jsdocs_spacer_between_sections') == True
+        spacerBetweenDescriptionAndTags = settings.get('jsdocs_spacer_between_sections') == 'after_description'
+        dashBeforeDescription = settings.get('jsdocs_dash_before_description')
+        descriptionSeparator = ('-' + columnSpaces) if dashBeforeDescription else ''
+        descriptionSeparatorLength = len(descriptionSeparator)
+        descriptionSeparatorPlaceholder = '-' * descriptionSeparatorLength
+        alignTagsExcludeList = settings.get('jsdocs_align_tags_exclude', [])
+
+        dbRegion = getDocBlockRegion(v, v.sel()[0].begin())
+        originalLineCount = len(v.lines(dbRegion))
+
+        # find the first character that is not whitespace, a slash or an asterisk
+        startPoint = v.find(r'/\*\*', dbRegion.begin()).end()
+        # find the end of the comment
+        endPoint = v.find(r'\*/', dbRegion.begin()).begin()
+
+        # Determine the doc’s region.
+        docRegion = sublime.Region(startPoint, endPoint)
+        # replace the selection with this ^ new selection
+        v.sel().clear()
+        v.sel().add(docRegion)
+        # Get the doc text.
+        text = v.substr(docRegion)
+
+        # find the indentation level
+        if originalLineCount == 1:
+            indent = re.search(r'^.*?(?=/\*\*)', v.substr(v.line(dbRegion.begin()))).group(0)
+            lineStart = indent + '/**'
+        else:
+            indent = re.search(r'^\s*', v.substr(v.line(dbRegion.begin()))).group(0)
+            lineStart = indent + ' *' + docIndent
+        lineStartLength = len(re.sub(r'\t', ' ' * tabSize, lineStart))
+        wrapLength -= lineStartLength
+        #print('  - indent:     "' + indent + '"') # DEBUG
+        #print('  - line start: "' + lineStart + '"') # DEBUG
+        #print('  - line start length:', lineStartLength) # DEBUG
+        #print('  - wrap length:', wrapLength) # DEBUG
+
+        def trimBlankLines(out):
+            while len(out) and out[0] is '':
+                out = out[1:]
+            while len(out) and out[-1] is '':
+                out = out[:-1]
+            return out
+
+        lines = trimBlankLines(text.split('\n'))
+        context = ''
+        paragraph = ''
+        inCodeBlock  = False
+        inListItem   = False
+        inBlockquote = False
+        inExampleTag = False
+        listIndent       = ''
+        blockquoteIndent = ''
+        out = []
+        tags = []
+        tagColumnWidths = []
+
+        lineType     = ''
+        prevLineType = ''
+        nextLineType = ''
+        docLinePrefix = re.compile(r'^\s*\* {,' + str(docIndentSpacesCount) + '}')
+
+        def addLine(lineToAdd):
+            nonlocal paragraph
+            strippedParagraph = paragraph.strip()
+            strippedLine = lineToAdd.strip()
+            #if paragraph.strip() and strippedLine and not getMatch(r'-\w', strippedLine):
+            if strippedParagraph and strippedLine:
+                if strippedParagraph.endswith('-') and not strippedLine.startswith('-'):
+                    paragraph = paragraph.rstrip() + lineToAdd
+                else:
+                    paragraph += (' ' + lineToAdd)
+                return
+            paragraph += lineToAdd
+
+        def addParagraph(paragraphToAdd, force=False):
+            nonlocal docIndent
+            nonlocal tags
+            nonlocal out
+            nonlocal wrapLength
+            nonlocal paragraph
+            nonlocal context
+            nonlocal inListItem
+            nonlocal listIndent
+            nonlocal inBlockquote
+            nonlocal blockquoteIndent
+            indent = docIndent
+            paragraphToAddType = getLineType(paragraphToAdd)
+            if inListItem and paragraphToAddType not in {'LIST', 'LIST ORDERED'}:
+                indent += listIndent
+            if inBlockquote and paragraphToAddType is not 'BLOCKQUOTE':
+                indent += blockquoteIndent
+            if paragraphToAdd.strip() or force:
+                if context == 'tags':
+                    tags.append(splitTag(paragraphToAdd))
+                elif len((indent + paragraphToAdd).rstrip()) > wrapLength + 1:
+                    out += wrapDoc(indent, paragraphToAdd, False)
+                else:
+                    out.append((indent + paragraphToAdd).rstrip())
+                #print('> ¶' + paragraphToAdd) # DEBUG
+            paragraph = ''
+
+        def splitTag(tagParagraph):
+            nonlocal tagColumnWidths
+            parsedTag = parseJSDocTag(tagParagraph)
+            tagParts = list(parsedTag or (tagParagraph,))
+            #print('PARTS', tagParts) # DEBUG
+            if parsedTag and (tagParts[0] not in alignTagsExcludeList):
+                for i, tagPart in enumerate(tagParts):
+                    # Add another item to the tag-column-widths list if necessary.
+                    if i == len(tagColumnWidths):
+                        tagColumnWidths += [0]
+                    # Set the width of the column to this tag-part’s width (if it’s larger).
+                    tagColumnWidths[i] = max(tagColumnWidths[i], len(tagPart))
+                #print('    · TAG COLUMN WIDTHS:', tagColumnWidths) # DEBUG
+            #elif parsedTag: # DEBUG
+                #print('    · TAG EXCLUDED FROM ALIGNMENT') # DEBUG
+            return tagParts
+
+        def splitMarkdownParagraph(text):
+            return re.findall(r'(?<=[^a-zA-Z0-9])(?:`(?=\S).*?\S`|{@link \S*})(?=[^a-zA-Z0-9])\S*|\S*\[(?=\S).*?\S\]\(\S*?\)\S*|\S+', text)
+
+        def wrapDoc(currentText, remainingText, indent=True):
+            nonlocal columnSpacesCount
+            nonlocal docIndent
+            nonlocal docIndentSpacesCount
+            nonlocal paragraphIndentSpacesCount
+            nonlocal paragraphIndent
+            nonlocal wrapLength
+            nonlocal descriptionSeparator
+            nonlocal descriptionSeparatorLength
+            nonlocal inListItem
+            nonlocal listIndent
+            nonlocal inBlockquote
+            nonlocal blockquoteIndent
+            lines = []
+            #print('WRAP ----------------------------') # DEBUG
+            if ' ' in remainingText:
+                #print('    · LINE HAS WORDS') # DEBUG
+                words = splitMarkdownParagraph(remainingText)
+                # Determine the amount of indent that the paragraph should have.
+                if paragraphIndentSpacesCount == 'auto':
+                    paragraphIndent = (' ' * (len(currentText) - docIndentSpacesCount + descriptionSeparatorLength))
+                # Wrap.
+                for i, word in enumerate(words):
+                    #print(currentText) # DEBUG
+                    # If the next word would put us over the limit, wrap.
+                    if len(currentText + word) > wrapLength + 1:
+                        # If there’s a hyphen in the word and the word is not one of the following:
+                        #
+                        # - a Markdown code span
+                        # - a Markdown link
+                        # - a JSDoc inline link
+                        # - a word starting with a dash (<-- is this actually handled??)
+                        # - two or more hyphens suggesting an en-/em-dash
+                        #
+                        # then try breaking the word at each hyphen and continuing to add to the
+                        # line until over the limit.
+                        if '-' in word and word[0] not in {'`', '[', '{'} and not re.match(r'^-{2,}$', word):
+                            subwords = re.findall(r'-*[^-]+-*', word)
+
+                            while len(currentText + subwords[0]) <= wrapLength + 1:
+                                currentText += subwords.pop(0)
+
+                            # Set `word` to be whatever’s left over from the word.
+                            word = ''.join(subwords)
+
+                        #print('--WRAP') # DEBUG
+                        lines.append(currentText.rstrip())
+                        if indent:
+                            #print('----INDENT') # DEBUG
+                            currentText = docIndent + paragraphIndent
+                        elif inListItem:
+                            #print('----IN LIST') # DEBUG
+                            currentText = docIndent + listIndent
+                        elif inBlockquote:
+                            #print('----IN BLOCKQUOTE') # DEBUG
+                            currentText = docIndent + blockquoteIndent
+                        else:
+                            currentText = docIndent
+                        #print(currentText) # DEBUG
+                    # Add the word to the output.
+                    currentText += word + ' '
+                else:
+                    lines.append(currentText.rstrip())
+            else:
+                lines.append(currentText.rstrip())
+                currentText = docIndent
+                # If the next part would _still_ put us over the limit, add it anyway (rare).
+                if len(currentText + remainingText) > wrapLength + 1:
+                    if indent:
+                        lines.append(currentText + paragraphIndent + remainingText)
+                    else:
+                        lines.append(currentText + remainingText)
+                    currentText = docIndent
+            return lines
+
+        def getLineType(line):
+            lineType = ''
+            if line.strip() is '':
+                lineType = 'EMPTY'
+            #elif getMatch(re.compile(docIndent + '    '), line):
+            #    lineType = 'code indented'
+            elif getMatch(r'^[ \t]*@\w+(?=\s|$)', line):
+                lineType = 'TAG'
+            elif getMatch(r'^[ \t]*#+\s+\S', line):
+                lineType = 'HEADING'
+            elif getMatch(r'^[ \t]*[*+-]\s+', line):
+                lineType = 'LIST'
+            elif getMatch(r'^[ \t]*\d+\.\s+', line):
+                lineType = 'LIST ORDERED'
+            elif getMatch(r'^[ \t]*````*[\w+-]*\s*$', line):
+                lineType = 'CODE'
+            elif getMatch(r'^[ \t]*>+\s+\S', line):
+                lineType = 'BLOCKQUOTE'
+            elif getMatch(r'^[ \t]*([^a-zA-Z0-9]*[a-zA-Z0-9]|`[^`]+`)', line): # code spans are text
+                lineType = 'TEXT'
+            else:
+                lineType = 'SYMBOLS'
+            return lineType
+
+        for i, line in enumerate(lines):
+            prevLine = re.sub(docLinePrefix, '', lines[i - 1]) if i > 0 else None
+            lineRaw  = re.sub(docLinePrefix, '', line)
+            nextLine = re.sub(docLinePrefix, '', lines[i + 1]) if i < len(lines) - 1 else None
+
+            line = lineRaw.strip()
+
+            prevLineType    = lineType
+            currentLineType = nextLineType or getLineType(line)
+            nextLineType    = getLineType(nextLine) if nextLine != None else None
+
+            # ·→
+            #print('[' + currentLineType + ']', line) # DEBUG
+            #if line != lineRaw: # DEBUG
+                #print(' (RAW)', lineRaw) # DEBUG
+
+            # IF this IS the first line AND it IS NOT a tag-line
+                # current-context is 'description'
+            if i == 0 and currentLineType != 'TAG':
+                context = 'description'
+
+            # IF IN example
+                # add raw line to paragraph
+                # add paragraph
+                # IF next-line IS tag
+                    # exit example
+                # CONTINUE
+            if inExampleTag:
+                addLine(lineRaw) # preserve leading whitespace
+                addParagraph(paragraph, True) # preserve empty lines
+                if nextLineType == 'TAG':
+                    inExampleTag = False
+                continue
+
+            # IF current-line IS fenced-code
+                # IF IN fenced-code
+                    # add raw line to paragraph
+                    # add paragraph
+                    # exit fenced-code
+                    # CONTINUE
+                # enter fenced-code
+            # IF IN fenced-code
+                # add raw line to paragraph
+                # add paragraph
+                # CONTINUE
+            if currentLineType == 'CODE':
+                if inCodeBlock:
+                    addLine(lineRaw) # preserve leading whitespace
+                    addParagraph(paragraph, True) # preserve empty lines
+                    inCodeBlock = False
+                    continue
+                inCodeBlock = True
+            if inCodeBlock:
+                addLine(lineRaw) # preserve leading whitespace
+                addParagraph(paragraph, True) # preserve empty lines
+                continue
+
+            # IF current-line IS list-item
+                # add paragraph
+                # IF NOT IN list
+                    # enter list
+                    # cache indent
+            # IF IN list
+                # IF current-line IS list-item
+                    # add raw line to paragraph
+                # ELSE
+                    # add line to paragraph
+                # IF current-line IS empty
+                    # add paragraph
+                    # IF next-line IS NOT empty
+                        # add empty paragraph
+                        # IF next-line IS text and does NOT have list indent
+                            # exit list
+                            # uncache indent
+                # IF next-line IS NOT empty/text AND does NOT have list indent
+                    # add paragraph
+                    # exit list
+                    # uncache indent
+                # CONTINUE
+            if currentLineType in {'LIST', 'LIST ORDERED'}:
+                addParagraph(paragraph)
+                if not inListItem:
+                    inListItem = True
+                listIndent = (' ' * len(getMatch(r'^[ \t]*(?:\d+\.|\*|\+|-)\s+', lineRaw)))
+                #print('INDENT "' + listIndent + '"') # DEBUG
+            if inListItem:
+                if currentLineType in {'LIST', 'LIST ORDERED'}:
+                    addLine(lineRaw.rstrip())
+                else:
+                    addLine(line)
+                #print('   "' + paragraph + '"') # DEBUG
+                nextLineIsIndented = nextLine and getMatch(listIndent, nextLine)
+                if currentLineType == 'EMPTY':
+                    addParagraph(paragraph) # end/add the current ¶
+                    if nextLineType != 'EMPTY':
+                        addParagraph('', True) # add empty ¶ now that the next line won’t be empty
+                        if nextLineType == 'TEXT' and not nextLineIsIndented:
+                            inListItem = False
+                            listIndent = ''
+                if nextLineType not in {'EMPTY', 'TEXT'} and not nextLineIsIndented:
+                    addParagraph(paragraph)
+                    inListItem = False
+                    listIndent = ''
+                continue
+
+            # IF current-line IS blockquote
+                # add paragraph
+                # IF NOT IN blockquote
+                    # enter blockquote
+                    # cache indent
+            # IF IN blockquote
+                # IF current-line IS blockquote
+                    # add raw line to paragraph
+                # ELSE
+                    # add line to paragraph
+                # IF current-line IS empty
+                    # add paragraph
+                    # IF next-line IS NOT empty
+                        # add empty paragraph
+                        # IF next-line IS text and does NOT have blockquote indent
+                            # exit blockquote
+                            # uncache indent
+                # IF next-line IS NOT empty/text AND does NOT have blockquote indent
+                    # add paragraph
+                    # exit blockquote
+                    # uncache indent
+                # CONTINUE
+            if currentLineType == 'BLOCKQUOTE':
+                addParagraph(paragraph)
+                if not inBlockquote:
+                    inBlockquote = True
+                blockquoteIndent = (' ' * len(getMatch(r'^[ \t]*>\s+', lineRaw)))
+                #print('INDENT "' + blockquoteIndent + '"') # DEBUG
+            if inBlockquote:
+                if currentLineType == 'BLOCKQUOTE':
+                    addLine(lineRaw.rstrip())
+                else:
+                    addLine(line)
+                #print('"' + paragraph + '"') # DEBUG
+                nextLineIsIndented = nextLine and getMatch(blockquoteIndent, nextLine)
+                if currentLineType == 'EMPTY':
+                    addParagraph(paragraph) # end/add the current ¶
+                    if nextLineType != 'EMPTY':
+                        addParagraph('', True) # add empty ¶ now that the next line won’t be empty
+                        if nextLineType == 'TEXT' and not nextLineIsIndented:
+                            inBlockquote = False
+                            blockquoteIndent = ''
+                if nextLineType not in {'EMPTY', 'TEXT'} and not nextLineIsIndented:
+                    addParagraph(paragraph)
+                    inBlockquote = False
+                    blockquoteIndent = ''
+                continue
+
+            # IF current-line IS tag
+                # set context (exit description)
+                # add paragraph
+                # add line to paragraph
+                # IF tag IS @example
+                    # add paragraph
+                    # enter example
+                # CONTINUE
+            # IF current-context IS tags
+                # IF next-line IS indented-code
+                    # change next-line type to 'text'
+            if currentLineType == 'TAG':
+                context = 'tags'
+                addParagraph(paragraph)
+                addLine(line)
+                if line.startswith('@example'):
+                    #print('    · EXAMPLE TAG') # DEBUG
+                    addParagraph(paragraph)
+                    inExampleTag = True
+                continue
+
+            # IF current-line IS empty
+                # add paragraph
+                # IF current-context IS NOT tags
+                    # add empty paragraph
+                # CONTINUE
+            if currentLineType == 'EMPTY':
+                addParagraph(paragraph)
+                # Only preserve blank lines for the description (don’t include in the tags section).
+                if context == 'description':
+                    addParagraph('', True)
+                continue
+
+            # IF current-line IS text
+                # IF next-line IS text
+                    # add line to paragraph
+                # ELSE IF next-line IS {empty, blockquote, list-item, fenced-code, tag}
+                    # add line to paragraph
+                    # add paragraph
+                # CONTINUE
+            if currentLineType == 'TEXT':
+                if nextLineType == 'TEXT' or nextLine == None:
+                    addLine(line)
+                elif nextLineType in {'EMPTY', 'BLOCKQUOTE', 'LIST', 'LIST ORDERED', 'CODE', 'TAG', 'SYMBOLS'}:
+                    addLine(line)
+                    addParagraph(paragraph)
+                continue
+
+            ## IF current-line IS blockquote
+            #    # IF next-line IS blockquote
+            #        # add line to paragraph
+            #    # IF next-line IS {empty, blockquote, list-item, fenced-code, tag}
+            #        # add line to paragraph
+            #        # add paragraph
+            #    # CONTINUE
+            #if currentLineType == 'BLOCKQUOTE':
+            #    if nextLineType == 'BLOCKQUOTE':
+            #        addLine(line)
+            #    elif nextLineType in {'EMPTY', 'LIST', 'LIST ORDERED', 'CODE', 'TAG'}:
+            #        addLine(line)
+            #        addParagraph(paragraph)
+            #    continue
+
+            addParagraph(paragraph)
+            addLine(lineRaw.rstrip())
+            addParagraph(paragraph)
+        else:
+           addParagraph(paragraph)
+
+        out = trimBlankLines(out)
+
+        if spacerBetweenDescriptionAndTags and len(out) and len(tags):
+            out.append('')
+
+        # Wrap Tag Parts
+        for tagParts in tags:
+            tagPartsLength = len(tagParts)
+            align = tagParts[0] not in alignTagsExcludeList
+            tagOut = docIndent
+
+            if tagPartsLength == 1:
+                out.append((tagOut + tagParts[0]).rstrip())
+                continue
+
+            #print('COLUMN WIDTHS:', tagColumnWidths) # DEBUG
+
+            for ii, tagPart in enumerate(tagParts):
+                # If the next part would put us over the limit, wrap it.
+                isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
+                addDescriptionSeparator = isTagPartDescription and descriptionSeparator
+
+                # If tags description should be separated with a dash, add a placeholder separator
+                # to the beginning of the first word of the description so that the wrapping will be
+                # calculated correctly.
+                if addDescriptionSeparator:
+                    tagPart = re.sub(r'^ *- *', descriptionSeparatorPlaceholder, tagPart)
+                else:
+                    tagPart = re.sub(r'^ *- *', '', tagPart)
+
+                # Check if adding the tag part as-is would cause us to go over the wrap limit.
+                if len(tagOut + tagPart) > wrapLength + 1:
+                   wrappedTag = wrapDoc(tagOut, tagPart)
+                   # Swap the placeholder description separator for the real separator.
+                   if addDescriptionSeparator:
+                       wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                   out += wrappedTag
+                   # Reset `tagOut`.
+                   tagOut = docIndent
+                   continue
+
+                # Swap the placeholder description separator for the real separator.
+                if addDescriptionSeparator:
+                    tagPart = tagPart.replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                # Add the tag part.
+                if align:
+                    # Pad the string on the right with spaces so that the next bit of text will be
+                    # aligned with the next column.
+                    tagOut += tagPart.ljust(tagColumnWidths[ii] + columnSpacesCount)
+                else:
+                    tagOut += tagPart + columnSpaces
+
+            if tagOut != docIndent:
+                out.append(tagOut.rstrip())
+
+        #print(out) # DEBUG
+
+        if originalLineCount == 1:
+            if len(out) == 1:
+                out = out[0] + docIndent
+            else:
+                lineStart = '\n' + (' ' * (lineStartLength - 3)) + ' *'
+                out = lineStart + lineStart.join(out) + lineStart[:-1]
+        else:
+            out = '\n *' + '\n *'.join(out) + '\n '
+
+        #print(out)
+        #out = escape(out)
+        #return
+        #v.replace(edit, docRegion, out)
+        write(v, out)
+
+
+class JsdocsFoldCommand(sublime_plugin.TextCommand):
+    """
+    Fold a doc block.
+    Shortcut Key: super+alt+[
+    """
+
+    def run(self, edit):
+        view = self.view
+
+        docBlockRegion = getDocBlockRegion(view, view.sel()[0].begin())
+
+        # find the first character that is not whitespace, a slash or an asterisk
+        startPoint = view.find(r'/\*\*', docBlockRegion.begin()).end()
+        # find the end of the comment
+        endPoint = view.find(r'\*/', docBlockRegion.begin()).begin()
+
+        # Determine the doc’s region.
+        docRegion = sublime.Region(startPoint, endPoint)
+
+        view.fold(docRegion)
+
 
 
 class JsdocsTypescript(JsdocsParser):
