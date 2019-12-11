@@ -124,11 +124,26 @@
 		]
 	},
 
+	// Add semicolon at EOL.
+	{ "keys": ["super+shift+;"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Add Semicolon at EOL.sublime-macro"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal", "operand": true, "match_all": true },
+		]
+	},
+
 	// Add close parenthesis at EOL.
 	{ "keys": ["super+shift+0"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Add Paren at EOL.sublime-macro"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
 			{ "key": "selection_empty",            "operator": "equal", "operand": true, "match_all": true },
+		]
+	},
+
+	// Convert string to template string.
+	{ "keys": ["super+alt+`"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Convert String to Template String.sublime-macro"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal", "operand": true,            "match_all": true },
+			{ "key": "selector",                   "operator": "equal", "operand": "string.quoted", "match_all": true },
 		]
 	},
 
@@ -163,7 +178,7 @@
 
 
 
-	// Insert variables in JS template strings.
+	// Insert interpolated code brackets in JS template strings.
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${$0}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
@@ -174,6 +189,7 @@
 			//{ "key": "preceding_text",             "operator": "not_regex_contains", "operand": "[`a-zA-Z0-9_]$",         "match_all": true },
 		]
 	},
+	// Wrap JS template string selection in interpolated code brackets.
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${${0:$SELECTION}}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
