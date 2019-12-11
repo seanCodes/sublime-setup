@@ -31,40 +31,45 @@
 
 /* Highlight text, that has been inserted. /
 {{wrapper_class}} .gitgutter-hi-inserted {
-	line-height: 1.35;
+	/*line-height: 1.35; OLD VERSION /
 	border-radius: 3px;
-	background-color: rgba(34, 255, 169, 0.17);
+	/*background-color: rgba(34, 255, 169, 0.17); OLD VERSION /
 	/*background-color: rgba(34, 255, 169, 0.1);/
+	background-color: rgba(34, 255, 169, 0.2);
 	opacity: 0.6;
 	color: rgba(18, 255, 169, 0.73);
 }
 
 /* Highlight text, that has been deleted. /
 {{wrapper_class}} .gitgutter-hi-deleted {
-	line-height: 1.35;
+	/*line-height: 1.35; OLD VERSION /
 	border-radius: 3px;
-	background-color: rgba(232, 48, 79, 0.22);
+	/*background-color: rgba(232, 48, 79, 0.22); OLD VERSION /
 	/*background-color: rgba(232, 48, 79, 0.15);/
+	background-color: rgba(232, 48, 79, 0.3);
 	opacity: 0.6;
-	color: rgba(255, 102, 132, 1);
+	/*color: rgba(255, 102, 132, 1); OLD VERSION /
 	/*color: rgba(255, 92, 122, 1);/
 	/*color: rgba(255, 102, 108, 1);/
+	color: rgba(255, 77, 107, 1);
 	text-decoration: none;
 }
 
 /* Highlight text, that has been inserted and substitutes other text. /
 {{wrapper_class}} .gitgutter-hi-changed .gitgutter-hi-inserted {
-	line-height: 1.35;
+	/*line-height: 1.35; OLD VERSION /
 	border-radius: 3px;
-	background-color: rgba(244, 229, 72, 0.2);
+	/*background-color: rgba(244, 229, 72, 0.2); OLD VERSION /
+	background-color: rgba(224, 229, 72, 0.2);
 	color: rgba(224, 229, 72, 1);
 }
 
 /* Highlight text, that has been deleted and is substituted by other text. /
 {{wrapper_class}} .gitgutter-hi-changed .gitgutter-hi-deleted {
-	line-height: 1.35;
+	/*line-height: 1.35; OLD VERSION /
 	border-radius: 3px;
-	background-color: rgba(244, 229, 72, 0.2);
+	/*background-color: rgba(244, 229, 72, 0.2); OLD VERSION /
+	background-color: rgba(224, 229, 72, 0.2);
 	/*color: yellow;/
 	color: rgba(224, 229, 72, 1);
 }
@@ -84,10 +89,10 @@
 	NOTE: You can use all jinja2 template variables of mdpopups.
 
 		Examples:
-		  var.is_dark
-		  var.is_light
-		  var.sublime_version       (mdpopups 2.0.0+)
-		  var.mdpopups_version      (mdpopups 2.0.0+)
+			var.is_dark
+			var.is_light
+			var.sublime_version       (mdpopups 2.0.0+)
+			var.mdpopups_version      (mdpopups 2.0.0+)
 
 	The popup's HTML structure:
 
@@ -122,13 +127,13 @@ html.dark {
 	--diffpopup-ins-bg:     rgba(34, 255, 169, 0.17);
 	--diffpopup-ins-fg:     rgba(18, 255, 169, 0.73);
 	--diffpopup-chg-ins-bg: rgba(244, 229, 72, 0.2);
-	/*--diffpopup-chg-ins-fg: rgba(224, 229, 72, 1);*/
+	/*--diffpopup-chg-ins-fg: rgba(224, 229, 72, 1); DEFAULT */
 	/*--diffpopup-chg-ins-bg: rgba(34, 255, 169, 0.17);*/
 	--diffpopup-chg-ins-fg: rgba(18, 255, 169, 0.73);
 	--diffpopup-del-bg:     rgba(232, 48, 79, 0.22);
 	--diffpopup-del-fg:     rgba(255, 102, 132, 1);
 	--diffpopup-chg-del-bg: rgba(244, 229, 72, 0.2);
-	/*--diffpopup-chg-del-fg: rgba(224, 229, 72, 1);*/
+	/*--diffpopup-chg-del-fg: rgba(224, 229, 72, 1); DEFAULT */
 	/*--diffpopup-chg-del-bg: rgba(232, 48, 79, 0.22);*/
 	--diffpopup-chg-del-fg: rgba(255, 102, 132, 1);
 }
