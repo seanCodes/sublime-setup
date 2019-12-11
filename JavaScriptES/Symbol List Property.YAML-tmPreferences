@@ -1,0 +1,7 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Property Symbols
+scope: >-
+  source.js.es meta.class.js meta.accessor.js
+settings:
+  #symbolTransformation: s/^\s*((?:static)?\s+[gs]et)\s+([^(\s]+)\s*\(.*\)\s*$/$1 $2/g;
+  symbolTransformation: 's/^(static )? *([gs]et) +([^\s(]+).*$/$1$2: $3/g;'

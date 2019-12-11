@@ -1,0 +1,7 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Class Symbols
+uuid: de002020-4d50-49a8-b997-170cac8a67b3
+scope: >-
+  source.js.es meta.class.js entity.name.class.js
+settings:
+  symbolTransformation: s/^/class  /g;

@@ -11,3 +11,5 @@ scope: >-
 settings:
   showInSymbolList: '0'
   showInIndexedSymbolList: '1'
+  #symbolTransformation:      s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1fn  )$2 \((?3 )$3(?3 )\) {…}/g;
+  symbolIndexTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ )$2\($3\) {…}/g;

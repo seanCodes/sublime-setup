@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>name</key>
-	<string>Banned Symbols</string>
+	<string>Indexed Symbols</string>
 	<key>scope</key>
-	<string>source.js.es meta.group meta.method, source.js.es meta.group meta.function.arrow, source.js.es meta.group meta.function.js</string>
+	<string>source.js.es meta.class meta.method entity.name.method</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>
 		<string>1</string>
 		<key>showInSymbolList</key>
-		<string>0</string>
+		<string>1</string>
 	</dict>
 	<key>uuid</key>
-	<string>efd94393-b78f-4327-8d81-bcc7a0b5ab76</string>
+	<string>dfb1d56a-4bcc-49df-9080-de4a35eee10d</string>
 </dict>
 </plist>

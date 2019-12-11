@@ -1,0 +1,14 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Indexed References
+# scope: >-
+#   source.js.es  meta.function-call.method                   entity.name.function,
+#   source.js.es  meta.function-call.method.with-arguments    entity.name.function,
+#   source.js.es  meta.function-call.method.without-arguments entity.name.function,
+#   source.js.es  meta.function-call.with-arguments        entity.name.function,
+#   source.js.es  meta.function-call.without-arguments     entity.name.function,
+#   source.js.es  meta.instance.constructor,
+#   source.js.es  meta.class.js  meta.group.braces.curly  meta.function-call.method.with-arguments.js  entity.name.function.js
+scope: >-
+  source.js.es  meta.instance.constructor  variable.type
+settings:
+  showInIndexedReferenceList: '1'

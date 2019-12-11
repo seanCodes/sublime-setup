@@ -1,0 +1,8 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Indented Symbols
+uuid: 32f1211a-fbc0-4619-9b2a-06c107a4c471
+scope: >-
+  source.js.es  meta.group.braces  meta.instance.constructor
+settings:
+  showInSymbolList: '1'
+  symbolTransformation: s/^/---/g;

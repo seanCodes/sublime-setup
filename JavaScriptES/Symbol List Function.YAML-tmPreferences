@@ -14,6 +14,6 @@ scope: >-
   source.js.es entity.name.method - source.js.es meta.group.braces.curly meta.group.braces.curly entity.name.method,
   source.js.es meta.class meta.method entity.name.method - source.js.es meta.class meta.group.braces.curly meta.group.braces.curly meta.method entity.name.method
 settings:
-  showInSymbolList: '1'
-  showInIndexedSymbolList: '1'
-  symbolTransformation: s/\s+/ /g;
+  symbolTransformation:      s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )$2 \((?3 )$3(?3 )\) {…}/g;
+  symbolIndexTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ )$2\($3\) {…}/g;
+  #symbolTransformation: s/\s+/ /g;
