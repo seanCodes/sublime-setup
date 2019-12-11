@@ -23,3 +23,11 @@ User/One Dark Remix Color Scheme/*
 !User/*.css
 !User/*.sublime-color-scheme
 !User/*.sublime-keymap
+
+!/PackageDev/
+
+
+
+# Ignore system files.
+
+.DS_Store
