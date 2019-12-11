@@ -28,7 +28,8 @@
 
   // Whether the words following the tags should align. Possible values are “no”, “shallow”, “deep”.
   // For backwards compatibility, `false` is equivalent to “no” and `true` is equivalent to
-  // “shallow”.
+  // “shallow”. Note that not all tags are aligned by default (since it’s impractical in some cases)
+  // but this can be configured using the `jsdocs_align_tags_exclude` setting.
   //
   // “shallow” will just align the first words after the tag, for example:
   //
@@ -42,6 +43,9 @@
   // @return   {String}        foo        desc2
   // @property {Number}        blahblah   desc3
   "jsdocs_align_tags": "deep",
+
+  // A list of tags to ignore when aligning tags. (Tag names should include the initial `@`.)
+  "jsdocs_align_tags_exclude": ["@see"],
 
   // Any additional boilerplate tags which should be added to each block. Should be an array of
   // strings. Note that this only applies when a docblock is opened directly preceding a function.
@@ -58,6 +62,12 @@
   // Since there seems to be no agreed standard for `@return` or `@returns`, use this setting to
   // determine which to use when outputting a default template.
   "jsdocs_return_tag": "@return",
+
+  // Whether or not to add a `-` (hyphen) before description placeholders when outputting default
+  // templates, for example:
+  //
+  // @param {[type]} paramName - [description]
+  "jsdocs_dash_before_description": false,
 
   // Add a `[description]` placeholder for the `@function` block?
   "jsdocs_function_description": true,
