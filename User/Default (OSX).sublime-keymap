@@ -139,14 +139,6 @@
 		]
 	},
 
-	// Convert string to template string.
-	{ "keys": ["super+alt+`"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Convert String to Template String.sublime-macro"}, "context":
-		[
-			{ "key": "selection_empty",            "operator": "equal", "operand": true,            "match_all": true },
-			{ "key": "selector",                   "operator": "equal", "operand": "string.quoted", "match_all": true },
-		]
-	},
-
 	// Delete matching bracket (from start).
 	{ "keys": ["super+alt+backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Delete Matching Bracket (Left).sublime-macro"}, "context":
 		[
