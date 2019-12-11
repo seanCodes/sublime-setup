@@ -1,8 +1,8 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
-name: Regular Expressions (Javascript Next)
-scopeName: source.regexp.js
+name: Regular Expressions (JavaScriptES)
+uuid: 70e7e428-56da-411d-9ead-372452b8d575
+scopeName: source.regexp.js.es
 fileTypes: [re]
-uuid: 6D74161E-E1A2-4AF3-922D-759E88DEFF63
 foldingStartMarker: (/\*|\{|\()
 foldingStopMarker: (\*/|\}|\))
 

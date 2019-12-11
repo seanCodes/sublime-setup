@@ -1,9 +1,9 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
-name: JSON (Javascript Next)
-scopeName: source.json
+name: JSON (JavaScriptES)
+uuid: 6d960be2-8f9b-4ae5-b667-b6ab93782289
+scopeName: source.json.es
 fileTypes: [json, sublime-settings, sublime-menu, sublime-keymap, sublime-mousemap,
   sublime-theme, sublime-build, sublime-project, sublime-completions]
-uuid: 8f97457b-516e-48ce-83c7-08ae12fb327a
 foldingStartMarker: >-
   (?x)       # turn on extended mode
     ^        # a line beginning with

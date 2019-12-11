@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Comments</string>
 	<key>scope</key>
-	<string>source.js, source.json</string>
+	<string>source.js.es, source.json.es</string>
 	<key>settings</key>
 	<dict>
 		<key>shellVariables</key>
@@ -31,6 +31,6 @@
 		</array>
 	</dict>
 	<key>uuid</key>
-	<string>A67A8BD9-A951-406F-9175-018DD4B52FD1</string>
+	<string>877d8393-0169-482e-a4c7-625f7461a75f</string>
 </dict>
 </plist>

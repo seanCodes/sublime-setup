@@ -1,7 +1,13 @@
 # [PackageDev] target_format: plist, ext: tmPreferences
-name: Symbol List Banned
-uuid: 71B2B356-23EC-43B8-80A7-CB32E8F2718F
-scope: source.js meta.function-call, source.js meta.instance.constructor
+name: Banned Symbols
+uuid: efd94393-b78f-4327-8d81-bcc7a0b5ab76
+# scope: >-
+#   source.js.es meta.function-call,
+#   source.js.es meta.instance.constructor
+scope: >-
+  source.js.es meta.group meta.method,
+  source.js.es meta.group meta.function.arrow,
+  source.js.es meta.group meta.function.js
 settings:
   showInSymbolList: '0'
   showInIndexedSymbolList: '1'

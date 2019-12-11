@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>name</key>
-	<string>Symbol List Banned</string>
+	<string>Banned Symbols</string>
 	<key>scope</key>
-	<string>source.js meta.function-call, source.js meta.instance.constructor</string>
+	<string>source.js.es meta.group meta.method, source.js.es meta.group meta.function.arrow, source.js.es meta.group meta.function.js</string>
 	<key>settings</key>
 	<dict>
 		<key>showInIndexedSymbolList</key>
@@ -14,6 +14,6 @@
 		<string>0</string>
 	</dict>
 	<key>uuid</key>
-	<string>71B2B356-23EC-43B8-80A7-CB32E8F2718F</string>
+	<string>efd94393-b78f-4327-8d81-bcc7a0b5ab76</string>
 </dict>
 </plist>

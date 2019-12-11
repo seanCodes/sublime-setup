@@ -1,10 +1,9 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
-name: JavaScript Next
-scopeName: source.js
+name: JavaScriptES
+scopeName: source.js.es
 fileTypes: [js, htc, jsx]
-uuid: 487CF323-A3F9-48FA-B140-DCE8C893E664
 firstLineMatch: ^#!/.*\b(node|js)$\n?
-keyEquivalent: ^~J
+keyEquivalent: ^~E
 
 patterns:
 - include: '#core'

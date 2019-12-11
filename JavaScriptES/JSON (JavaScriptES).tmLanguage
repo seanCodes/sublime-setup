@@ -38,7 +38,7 @@
 	<key>keyEquivalent</key>
 	<string>^~J</string>
 	<key>name</key>
-	<string>JSON (Javascript Next)</string>
+	<string>JSON (JavaScriptES)</string>
 	<key>patterns</key>
 	<array>
 		<dict>
@@ -337,8 +337,8 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.json</string>
+	<string>source.json.es</string>
 	<key>uuid</key>
-	<string>8f97457b-516e-48ce-83c7-08ae12fb327a</string>
+	<string>6d960be2-8f9b-4ae5-b667-b6ab93782289</string>
 </dict>
 </plist>

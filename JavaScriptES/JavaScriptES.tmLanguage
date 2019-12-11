@@ -11,9 +11,9 @@
 	<key>firstLineMatch</key>
 	<string>^#!/.*\b(node|js)$\n?</string>
 	<key>keyEquivalent</key>
-	<string>^~J</string>
+	<string>^~E</string>
 	<key>name</key>
-	<string>JavaScript Next</string>
+	<string>JavaScriptES</string>
 	<key>patterns</key>
 	<array>
 		<dict>
@@ -2992,8 +2992,6 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.js</string>
-	<key>uuid</key>
-	<string>487CF323-A3F9-48FA-B140-DCE8C893E664</string>
+	<string>source.js.es</string>
 </dict>
 </plist>
