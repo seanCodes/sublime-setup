@@ -44,6 +44,15 @@
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*",      "match_all": true }
     ]
   },
+  // extend a docblock list item or blockquote by adding an asterisk and indenting
+  { "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*)[>*+-](\\s+).*$/$1 $2/}"},
+    "context": [
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                     "match_all": true },
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block",          "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                    "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*[>*+-]\\s+", "match_all": true }
+    ]
+  },
   // extend a docblock with keypad enter by adding an asterisk at the start
   { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*).*$/$1/}"},
     "context": [
@@ -73,6 +82,32 @@
       { "key": "setting.trim_automatic_white_space", "operator": "equal",          "operand": true,            "match_all": true },
       { "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true },
       { "key": "following_text",                     "operator": "regex_contains", "operand": "^\\s*$",        "match_all": true }
+    ]
+  },
+  // delete all preceding whitespace when pressing backspace on an empty docblock line
+  { "keys": ["backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete Preceding Whitespace.sublime-macro" },
+    "context": [
+      { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,               "match_all": true },
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block",    "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,              "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s{2,}$", "match_all": true },
+      { "key": "following_text",        "operator": "regex_contains", "operand": "^\\s*$",           "match_all": true }
+    ]
+  },
+  // delete to the end of the preceding line when deleting to BOL
+  { "keys": ["super+backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete To BOL Plus One.sublime-macro" },
+    "context": [
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block",   "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,             "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*.*$", "match_all": true }
+    ]
+  },
+  // delete to the end of the preceding line when deleting words on an empty line
+  { "keys": ["alt+backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete To BOL Plus One.sublime-macro" },
+    "context": [
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block", "match_all": true },
+      { "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true }
     ]
   },
   // extend line comments (// and #)
@@ -178,6 +213,15 @@
       { "key": "selection_empty", "operator": "equal",          "operand": true,                           "match_all": true },
       { "key": "preceding_text",  "operator": "regex_contains", "operand": "^\\s*(?:\\/\\*|###)?\\*\\s*$", "match_all": true },
       { "key": "selector",        "operator": "equal",          "operand": "comment.block",                "match_all": true }
+    ]
+  },
+  // show the autocomplete
+  { "keys": ["a"], "command": "auto_complete",
+    "context": [
+      { "key": "setting.auto_complete", "operator": "equal",          "operand": true,                            "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,                            "match_all": true },
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*(?:\\/\\*|###)?\\*\\s*@$", "match_all": true },
+      { "key": "selector",              "operator": "equal",          "operand": "comment.block",                 "match_all": true }
     ]
   },
   // show the autocomplete in a coffee doc block
