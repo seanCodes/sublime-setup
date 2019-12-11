@@ -1,7 +1,7 @@
 [
 	// Find + Replace
-	//{ "keys": ["super+alt+f"],       "command": "show_panel", "args": {"panel": "find",    "reverse": false} },
-	//{ "keys": ["super+f"],   "command": "show_panel", "args": {"panel": "replace", "reverse": false} },
+	//{ "keys": ["super+alt+f"],      "command": "show_panel", "args": {"panel": "find",    "reverse": false} },
+	//{ "keys": ["super+f"],          "command": "show_panel", "args": {"panel": "replace", "reverse": false} },
 	{ "keys": ["super+ctrl+g"],     "command": "replace_next"                               },
 	{ "keys": ["super+alt+ctrl+g"], "command": "replace_all", "args": {"close_panel": true} },
 	{ "keys": ["super+g"],          "command": "find_next" },
@@ -80,20 +80,20 @@
 			{ "key": "selector",        "operator": "equal", "operand": "comment.line" },
 		]
 	},
-	{ "keys": ["super+alt+q"], "command": "jsdocs_wrap_lines",
-		"context": [
+	{ "keys": ["super+alt+q"], "command": "jsdocs_wrap_lines", "context":
+		[
 			{ "key": "selector",        "operator": "equal", "operand": "comment.block", "match_all": true },
 		]
 	},
-	{ "keys": ["super+alt+["], "command": "jsdocs_fold",
-		"context": [
+	{ "keys": ["super+alt+["], "command": "jsdocs_fold", "context":
+		[
 			{ "key": "selector",        "operator": "equal", "operand": "comment.block", "match_all": true },
 			{ "key": "selection_empty", "operator": "equal", "operand": true,            "match_all": true },
 		]
 	},
 	// add line after, in a DocBlock
-	{ "keys": ["super+enter"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/Add DocBlockr Line.sublime-macro"},
-		"context": [
+	{ "keys": ["super+enter"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/Add DocBlockr Line.sublime-macro"}, "context":
+		[
 			{ "key": "setting.auto_indent",   "operator": "equal",          "operand": true,            "match_all": true },
 			{ "key": "selector",              "operator": "equal",          "operand": "comment.block", "match_all": true },
 			{ "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
@@ -101,8 +101,8 @@
 		]
 	},
 	// add line before, in a DocBlock
-	{ "keys": ["super+shift+enter"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/Add DocBlockr Line Before.sublime-macro"},
-		"context": [
+	{ "keys": ["super+shift+enter"], "command": "run_macro_file", "args": {"file": "Packages/DocBlockr/Add DocBlockr Line Before.sublime-macro"}, "context":
+		[
 			{ "key": "setting.auto_indent",   "operator": "equal",          "operand": true,            "match_all": true },
 			{ "key": "selector",              "operator": "equal",          "operand": "comment.block", "match_all": true },
 			{ "key": "auto_complete_visible", "operator": "equal",          "operand": false,           "match_all": true },
@@ -119,7 +119,7 @@
 	// Wrap-to-EOL in parentheses.
 	{ "keys": ["super+shift+9"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Wrap to EOL in Parens.sublime-macro"}, "context":
 		[
-			{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+			{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true                    },
 			{ "key": "selection_empty",            "operator": "equal", "operand": true, "match_all": true },
 		]
 	},
@@ -134,7 +134,7 @@
 	// Add close parenthesis at EOL.
 	{ "keys": ["super+shift+0"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Add Paren at EOL.sublime-macro"}, "context":
 		[
-			{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+			{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true                    },
 			{ "key": "selection_empty",            "operator": "equal", "operand": true, "match_all": true },
 		]
 	},
@@ -182,9 +182,9 @@
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${$0}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
-			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                      "match_all": true },
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                     "match_all": true },
 			{ "key": "selector",                   "operator": "equal",              "operand": "string.template-string - entity, string.template-string entity punctuation.template-string.element.begin", "match_all": true },
-			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^{",                      "match_all": true },
+			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^{",                     "match_all": true },
 			//{ "key": "following_text",             "operator": "regex_contains",     "operand": "^(?:\t| |\\)|]|\\}|$)",  "match_all": true },
 			//{ "key": "preceding_text",             "operator": "not_regex_contains", "operand": "[`a-zA-Z0-9_]$",         "match_all": true },
 		]
@@ -193,8 +193,8 @@
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${${0:$SELECTION}}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
-			{ "key": "selection_empty",            "operator": "equal",              "operand": false,                     "match_all": true },
-			{ "key": "selector",                   "operator": "equal",              "operand": "string.template-string",  "match_all": true },
+			{ "key": "selection_empty",            "operator": "equal",              "operand": false,                    "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "string.template-string", "match_all": true },
 		]
 	},
 
@@ -204,9 +204,9 @@
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${${1:0}:${2:label}}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
-			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                      "match_all": true },
-			{ "key": "selector",                   "operator": "equal",              "operand": "string source.sublime",   "match_all": true },
-			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^{",                      "match_all": true },
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                     "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "string source.sublime",  "match_all": true },
+			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^{",                     "match_all": true },
 			//{ "key": "following_text",             "operator": "regex_contains",     "operand": "^(?:\t| |\\)|]|\\}|$)",  "match_all": true },
 			//{ "key": "preceding_text",             "operator": "not_regex_contains", "operand": "[`a-zA-Z0-9_]$",         "match_all": true },
 		]
@@ -214,8 +214,8 @@
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${${1:0}:${2:$SELECTION}}"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",              "operand": true },
-			{ "key": "selection_empty",            "operator": "equal",              "operand": false,                     "match_all": true },
-			{ "key": "selector",                   "operator": "equal",              "operand": "string source.sublime",   "match_all": true },
+			{ "key": "selection_empty",            "operator": "equal",              "operand": false,                    "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "string source.sublime",  "match_all": true },
 		]
 	},
 
