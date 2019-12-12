@@ -1690,7 +1690,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         docIndent            = (' ' * docIndentSpacesCount)
         deepIndentWrappedLines = settings.get('jsdocs_deep_indent')
         paragraphIndentSpacesCount = settings.get('jsdocs_indentation_spaces_same_para', docIndentSpacesCount)
-        paragraphIndent            = (' ' * max(0, paragraphIndentSpacesCount)) if type(paragraphIndentSpacesCount) is type(int()) else paragraphIndentSpacesCount
+        paragraphIndent            = (' ' * max(0, paragraphIndentSpacesCount))
         spacerBetweenSections           = settings.get('jsdocs_spacer_between_sections') == True
         spacerBetweenDescriptionAndTags = settings.get('jsdocs_spacer_between_sections') == 'after_description'
         dashBeforeDescription = settings.get('jsdocs_dash_before_description')
@@ -1837,7 +1837,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 #print('    · LINE HAS WORDS') # DEBUG
                 words = splitMarkdownParagraph(remainingText)
                 # Determine the amount of indent that the paragraph should have.
-                if paragraphIndentSpacesCount == 'auto' or deepIndentWrappedLines:
+                if deepIndentWrappedLines:
                     paragraphIndent = (' ' * (len(currentText) - docIndentSpacesCount + descriptionSeparatorLength))
                 # Wrap.
                 for i, word in enumerate(words):
