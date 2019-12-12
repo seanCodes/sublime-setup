@@ -2166,14 +2166,14 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
                 # Check if adding the tag part as-is would cause us to go over the wrap limit.
                 if len(tagOut + tagPart) > wrapLength + 1:
-                   wrappedTag = wrapDoc(tagOut, tagPart)
-                   # Swap the placeholder description separator for the real separator.
-                   if addDescriptionSeparator:
-                       wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholder, descriptionSeparator)
-                   out += wrappedTag
-                   # Reset `tagOut`.
-                   tagOut = docIndent
-                   continue
+                    wrappedTag = wrapDoc(tagOut, tagPart)
+                    # Swap the placeholder description separator for the real separator.
+                    if addDescriptionSeparator:
+                        wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                    out += wrappedTag
+                    # Reset `tagOut`.
+                    tagOut = docIndent
+                    continue
 
                 # Swap the placeholder description separator for the real separator.
                 if addDescriptionSeparator:
