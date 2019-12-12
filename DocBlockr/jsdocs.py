@@ -1688,6 +1688,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         columnSpaces      = (' ' * columnSpacesCount)
         docIndentSpacesCount = max(0, settings.get('jsdocs_indentation_spaces', 1))
         docIndent            = (' ' * docIndentSpacesCount)
+        deepIndentWrappedLines = settings.get('jsdocs_deep_indent')
         paragraphIndentSpacesCount = settings.get('jsdocs_indentation_spaces_same_para', docIndentSpacesCount)
         paragraphIndent            = (' ' * max(0, paragraphIndentSpacesCount)) if type(paragraphIndentSpacesCount) is type(int()) else paragraphIndentSpacesCount
         spacerBetweenSections           = settings.get('jsdocs_spacer_between_sections') == True
@@ -1695,8 +1696,12 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         dashBeforeDescription = settings.get('jsdocs_dash_before_description')
         descriptionSeparator = ('-' + columnSpaces) if dashBeforeDescription else ''
         descriptionSeparatorLength = len(descriptionSeparator)
-        descriptionSeparatorPlaceholder = '-' * descriptionSeparatorLength
+        descriptionSeparatorPlaceholder = '§' * descriptionSeparatorLength
+        alignTags = settings.get('jsdocs_align_tags', False)
         alignTagsExcludeList = settings.get('jsdocs_align_tags_exclude', [])
+
+        if type(alignTags) != bool:
+            alignTags = True if alignTags in {'shallow', 'deep'} else False
 
         dbRegion = getDocBlockRegion(v, v.sel()[0].begin())
         originalLineCount = len(v.lines(dbRegion))
@@ -1832,7 +1837,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 #print('    · LINE HAS WORDS') # DEBUG
                 words = splitMarkdownParagraph(remainingText)
                 # Determine the amount of indent that the paragraph should have.
-                if paragraphIndentSpacesCount == 'auto':
+                if paragraphIndentSpacesCount == 'auto' or deepIndentWrappedLines:
                     paragraphIndent = (' ' * (len(currentText) - docIndentSpacesCount + descriptionSeparatorLength))
                 # Wrap.
                 for i, word in enumerate(words):
@@ -2147,7 +2152,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         # Wrap Tag Parts
         for tagParts in tags:
             tagPartsLength = len(tagParts)
-            align = tagParts[0] not in alignTagsExcludeList
+            excludeTagFromAlignment = tagParts[0] in alignTagsExcludeList
             tagOut = docIndent
 
             #print('\nPARTS:', tagParts) # DEBUG
@@ -2191,8 +2196,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     tagPart = tagPart.replace(descriptionSeparatorPlaceholder, descriptionSeparator)
                     #print('    · ADD REAL SEPARATOR:', tagPart) # DEBUG
 
-                # Add the tag part.
-                if align:
+                # Add the tag part (optionally aligned).
+                if alignTags and not excludeTagFromAlignment:
                     # Pad the string on the right with spaces so that the next bit of text will be
                     # aligned with the next column.
                     tagOut += tagPart.ljust(tagColumnWidths[ii] + columnSpacesCount)
