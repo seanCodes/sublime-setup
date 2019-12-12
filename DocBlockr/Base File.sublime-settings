@@ -45,7 +45,7 @@
   "jsdocs_align_tags": "deep",
 
   // A list of tags to ignore when aligning tags. (Tag names should include the initial `@`.)
-  "jsdocs_align_tags_exclude": ["@see"],
+  "jsdocs_align_tags_exclude": ["@function", "@return", "@returns", "@see"],
 
   // Any additional boilerplate tags which should be added to each block. Should be an array of
   // strings. Note that this only applies when a docblock is opened directly preceding a function.
