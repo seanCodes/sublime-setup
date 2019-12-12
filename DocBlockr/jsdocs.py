@@ -1875,6 +1875,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # Add the word to the output.
                     currentText += word + ' '
                 else:
+                    #print(currentText) # DEBUG
                     lines.append(currentText.rstrip())
             else:
                 lines.append(currentText.rstrip())
@@ -2139,28 +2140,37 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         if spacerBetweenDescriptionAndTags and len(out) and len(tags):
             out.append('')
 
+        #print('\nCOLUMN WIDTHS:', tagColumnWidths) # DEBUG
+        #print('\nWRAP TAGS -----------------------') # DEBUG
+        #print('    · NO ALIGN' if not alignTags else '    · ALIGN') # DEBUG
+
         # Wrap Tag Parts
         for tagParts in tags:
             tagPartsLength = len(tagParts)
             align = tagParts[0] not in alignTagsExcludeList
             tagOut = docIndent
 
+            #print('\nPARTS:', tagParts) # DEBUG
+            #if alignTags and excludeTagFromAlignment: # DEBUG
+                #print('--EXCLUDE TAG FROM ALIGNMENT') # DEBUG
+
             if tagPartsLength == 1:
                 out.append((tagOut + tagParts[0]).rstrip())
                 continue
-
-            #print('COLUMN WIDTHS:', tagColumnWidths) # DEBUG
 
             for ii, tagPart in enumerate(tagParts):
                 # If the next part would put us over the limit, wrap it.
                 isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
                 addDescriptionSeparator = isTagPartDescription and descriptionSeparator
+                #if isTagPartDescription: # DEBUG
+                    #print('--PART IS DESCRIPTION') # DEBUG
 
                 # If tags description should be separated with a dash, add a placeholder separator
                 # to the beginning of the first word of the description so that the wrapping will be
                 # calculated correctly.
                 if addDescriptionSeparator:
                     tagPart = re.sub(r'^ *- *', descriptionSeparatorPlaceholder, tagPart)
+                    #print('    · ADD TEMP SEPARATOR:', tagPart) # DEBUG
                 else:
                     tagPart = re.sub(r'^ *- *', '', tagPart)
 
@@ -2170,6 +2180,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # Swap the placeholder description separator for the real separator.
                     if addDescriptionSeparator:
                         wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                        #print('    · ADD REAL SEPARATOR:', wrappedTag[0]) # DEBUG
                     out += wrappedTag
                     # Reset `tagOut`.
                     tagOut = docIndent
@@ -2178,6 +2189,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # Swap the placeholder description separator for the real separator.
                 if addDescriptionSeparator:
                     tagPart = tagPart.replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                    #print('    · ADD REAL SEPARATOR:', tagPart) # DEBUG
+
                 # Add the tag part.
                 if align:
                     # Pad the string on the right with spaces so that the next bit of text will be
@@ -2186,10 +2199,12 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 else:
                     tagOut += tagPart + columnSpaces
 
+                #print('|' + tagOut + '|') # DEBUG
+
             if tagOut != docIndent:
                 out.append(tagOut.rstrip())
 
-        #print(out) # DEBUG
+        #print('\nPARAGRAPHS:\n', out) # DEBUG
 
         if originalLineCount == 1:
             if len(out) == 1:
