@@ -1289,11 +1289,6 @@
 			"foreground": "#ef6aa7dd",
 			"background": "#ff0000", // '#ef6aa710'
 		},
-		{"name": "Support Type",
-			"scope": "support.type.scala",
-			"foreground": "var(powder-blue-fg)",
-			"background": "var(powder-blue-bg)",
-		},
 
 		{"name": "Invalid",
 			"scope": "invalid",
