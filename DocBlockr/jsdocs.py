@@ -1753,8 +1753,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         tags = []
         tagColumnWidths = []
 
-        lineType     = ''
-        prevLineType = ''
+        #lineType     = ''
+        #prevLineType = ''
         nextLineType = ''
         docLinePrefix = re.compile(r'^\s*\* {,' + str(docIndentSpacesCount) + '}')
 
@@ -1772,7 +1772,6 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             paragraph += lineToAdd
 
         def addParagraph(paragraphToAdd, force=False):
-            nonlocal docIndent
             nonlocal tags
             nonlocal out
             nonlocal wrapLength
@@ -1919,13 +1918,13 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             return lineType
 
         for i, line in enumerate(lines):
-            prevLine = re.sub(docLinePrefix, '', lines[i - 1]) if i > 0 else None
+            #prevLine = re.sub(docLinePrefix, '', lines[i - 1]) if i > 0 else None
             lineRaw  = re.sub(docLinePrefix, '', line)
             nextLine = re.sub(docLinePrefix, '', lines[i + 1]) if i < len(lines) - 1 else None
 
             line = lineRaw.strip()
 
-            prevLineType    = lineType
+            #prevLineType    = lineType
             currentLineType = nextLineType or getLineType(line)
             nextLineType    = getLineType(nextLine) if nextLine is not None else None
 
