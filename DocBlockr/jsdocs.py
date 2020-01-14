@@ -2138,7 +2138,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             addLine(lineRaw.rstrip())
             addParagraph(paragraph)
         else:
-           addParagraph(paragraph)
+            addParagraph(paragraph)
 
         out = trimBlankLines(out)
 
