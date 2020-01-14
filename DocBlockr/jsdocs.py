@@ -1734,9 +1734,9 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         #print('  - wrap length:', wrapLength) # DEBUG
 
         def trimBlankLines(out):
-            while len(out) and out[0] is '':
+            while len(out) and out[0] == '':
                 out = out[1:]
-            while len(out) and out[-1] is '':
+            while len(out) and out[-1] == '':
                 out = out[:-1]
             return out
 
@@ -1786,7 +1786,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             paragraphToAddType = getLineType(paragraphToAdd)
             if inListItem and paragraphToAddType not in {'LIST', 'LIST ORDERED'}:
                 indent += listIndent
-            if inBlockquote and paragraphToAddType is not 'BLOCKQUOTE':
+            if inBlockquote and paragraphToAddType != 'BLOCKQUOTE':
                 indent += blockquoteIndent
             if paragraphToAdd.strip() or force:
                 if context == 'tags':
@@ -1896,7 +1896,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         def getLineType(line):
             lineType = ''
-            if line.strip() is '':
+            if line.strip() == '':
                 lineType = 'EMPTY'
             #elif getMatch(re.compile(docIndent + '    '), line):
             #    lineType = 'code indented'
@@ -1927,7 +1927,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
             prevLineType    = lineType
             currentLineType = nextLineType or getLineType(line)
-            nextLineType    = getLineType(nextLine) if nextLine != None else None
+            nextLineType    = getLineType(nextLine) if nextLine is not None else None
 
             # ·→
             #print('[' + currentLineType + ']', line) # DEBUG
@@ -2112,7 +2112,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # add paragraph
                 # CONTINUE
             if currentLineType == 'TEXT':
-                if nextLineType == 'TEXT' or nextLine == None:
+                if nextLineType == 'TEXT' or nextLine is None:
                     addLine(line)
                 elif nextLineType in {'EMPTY', 'BLOCKQUOTE', 'LIST', 'LIST ORDERED', 'CODE', 'TAG', 'SYMBOLS'}:
                     addLine(line)
