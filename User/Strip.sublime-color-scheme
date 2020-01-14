@@ -3810,6 +3810,12 @@
 			//"background": "var(medium-gray-bg)",
 		},
 
+		{"name": "Constant",
+			"scope": "source.scss support.constant",
+			"foreground": "var(bright-powder-blue-fg)",
+			"background": "var(bright-powder-blue-bg)",
+		},
+
 		{"name": "Selector - Element",
 			// Random bits of whitespace that need to be normalized
 			//"scope": "entity.name.tag.css.sass",
@@ -3940,17 +3946,6 @@
 			"scope": "constant.numeric.scss, support.constant.mathematical-symbols",
 			//"foreground": "var(royal-blue-fg)",
 			//"background": "var(royal-blue-bg)",
-		},
-
-
-
-		//
-		//!  SCSS
-		//
-		{"name": "& (SCSS-only)",
-			"scope": "entity.name.tag.reference",
-			//"foreground": "var(powder-blue-fg)",
-			//"background": "var(powder-blue-bg)",
 		},
 
 
