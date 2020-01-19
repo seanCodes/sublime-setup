@@ -7,6 +7,7 @@ file_extensions:
   - mdown
   - markdown
   - markdn
+first_line_match: ^Package Control Messages
 scope: text.html.markdown.gfm
 contexts:
   main:
