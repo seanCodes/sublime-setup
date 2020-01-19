@@ -2827,7 +2827,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>source.regexp.js</string>
+							<string>source.regexp.js.es</string>
 						</dict>
 					</array>
 				</dict>
