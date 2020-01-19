@@ -9,6 +9,10 @@
 
 !/JavaScriptES/
 
+!/MarkdownEditing/
+/MarkdownEditing/*
+!/MarkdownEditing/*.sublime-syntax
+
 !/User/
 /User/*
 
