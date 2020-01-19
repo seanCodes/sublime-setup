@@ -1421,7 +1421,7 @@ repository:
           (?!/|\*|$)
       beginCaptures:
         '1': {name: punctuation.definition.string.begin.js}
-      end: (/)([gimy]*)
+      end: (/)([gimyus]*)
       endCaptures:
         '1': {name: punctuation.definition.string.end.js}
         '2': {name: keyword.other.js}
