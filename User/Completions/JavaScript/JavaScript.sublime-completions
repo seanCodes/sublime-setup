@@ -2,6 +2,9 @@
 	"scope": "source.js - comment - string.quoted",
 
 	"completions": [
+		{ "trigger": "async",                  "contents": "async " },
+		{ "trigger": "await",                  "contents": "await " },
+
 		{ "trigger": "f\tFunction",            "contents": "function $1($2) {$3}" },
 		{ "trigger": "af\tArrow Function",     "contents": "($1) => ${2:{ ${3} \\}}" },
 		{ "trigger": "mf\tMethod",             "contents": "${1:name}: function ($2) {$3}" },
