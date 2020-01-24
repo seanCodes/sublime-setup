@@ -1672,36 +1672,59 @@ class JsdocsWrapLinesOld(sublime_plugin.TextCommand):
 
 
 class JsdocsWrapLines(sublime_plugin.TextCommand):
+    def setupSettings(self):
+        preferences = sublime.load_settings('Preferences.sublime-settings')
+        settings = self.view.settings()
+
+        rulers                       = settings.get('rulers')
+        columnSpacesCount            = settings.get('jsdocs_min_spaces_between_columns', 1)
+        columnSpacesStr              = (' ' * columnSpacesCount)
+        docIndentSpacesCount         = max(0, settings.get('jsdocs_indentation_spaces', 1))
+        paragraphIndentSpacesCount   = settings.get('jsdocs_indentation_spaces_same_para', docIndentSpacesCount)
+        spacerBetweenSections        = settings.get('jsdocs_spacer_between_sections')
+        addDashBeforeTagDescriptions = settings.get('jsdocs_dash_before_description')
+        descriptionSeparatorStr      = (('-' + columnSpacesStr) if addDashBeforeTagDescriptions else '')
+        descriptionSeparatorLength   = len(descriptionSeparatorStr)
+        alignTags                    = settings.get('jsdocs_align_tags')
+
+        # Handle backwards-compatible boolean values of `alignTags`
+        if type(alignTags) == bool:
+            alignTagsStyle = 'shallow' if alignTags is True else 'no'
+        else:
+            alignTagsStyle = alignTags
+            alignTags = True if alignTagsStyle in {'shallow', 'deep'} else False
+
+        return {
+            'tabSize'                            : preferences.get('tab_size'),
+            'rulers'                             : rulers,
+            'wrapLength'                         : (rulers[0] if len(rulers) > 0 else 80),
+            'columnSpacesCount'                  : columnSpacesCount,
+            'columnSpacesStr'                    : columnSpacesStr,
+            'docIndentSpacesCount'               : docIndentSpacesCount,
+            'docIndentStr'                       : (' ' * docIndentSpacesCount),
+            'deepIndentWrappedLines'             : settings.get('jsdocs_deep_indent'),
+            'paragraphIndentSpacesCount'         : paragraphIndentSpacesCount,
+            'paragraphIndentStr'                 : (' ' * max(0, paragraphIndentSpacesCount)),
+            'addSpacerBetweenDescriptionAndTags' : (spacerBetweenSections == 'after_description'),
+            'addSpacerBetweenSections'           : (spacerBetweenSections is True),
+            'addDashBeforeTagDescriptions'       : addDashBeforeTagDescriptions,
+            'descriptionSeparatorStr'            : descriptionSeparatorStr,
+            'descriptionSeparatorLength'         : descriptionSeparatorLength,
+            'descriptionSeparatorPlaceholderStr' : ('§' * descriptionSeparatorLength),
+            'alignTags'                          : alignTags,
+            'alignTagsStyle'                     : alignTagsStyle,
+            'alignTagsExcludeList'               : settings.get('jsdocs_align_tags_exclude'),
+        }
+
     """
     Reformat description text inside a comment block to wrap at the correct length.
     Wrap column is set by the first ruler (set in Default.sublime-settings), or 80 by default.
     Shortcut Key: alt+q
     """
     def run(self, edit):
+        settings = self.setupSettings()
+
         v = self.view
-        settings = v.settings()
-        rulers = settings.get('rulers')
-        tabSize = sublime.load_settings('Preferences.sublime-settings').get('tab_size')
-
-        wrapLength = rulers[0] if len(rulers) > 0 else 80
-        columnSpacesCount = settings.get('jsdocs_min_spaces_between_columns', 1)
-        columnSpaces      = (' ' * columnSpacesCount)
-        docIndentSpacesCount = max(0, settings.get('jsdocs_indentation_spaces', 1))
-        docIndent            = (' ' * docIndentSpacesCount)
-        deepIndentWrappedLines = settings.get('jsdocs_deep_indent')
-        paragraphIndentSpacesCount = settings.get('jsdocs_indentation_spaces_same_para', docIndentSpacesCount)
-        paragraphIndent            = (' ' * max(0, paragraphIndentSpacesCount))
-        spacerBetweenSections           = settings.get('jsdocs_spacer_between_sections') == True
-        spacerBetweenDescriptionAndTags = settings.get('jsdocs_spacer_between_sections') == 'after_description'
-        dashBeforeDescription = settings.get('jsdocs_dash_before_description')
-        descriptionSeparator = ('-' + columnSpaces) if dashBeforeDescription else ''
-        descriptionSeparatorLength = len(descriptionSeparator)
-        descriptionSeparatorPlaceholder = '§' * descriptionSeparatorLength
-        alignTags = settings.get('jsdocs_align_tags', False)
-        alignTagsExcludeList = settings.get('jsdocs_align_tags_exclude', [])
-
-        if type(alignTags) != bool:
-            alignTags = True if alignTags in {'shallow', 'deep'} else False
 
         dbRegion = getDocBlockRegion(v, v.sel()[0].begin())
         originalLineCount = len(v.lines(dbRegion))
@@ -1725,9 +1748,9 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             lineStart = indent + '/**'
         else:
             indent = re.search(r'^\s*', v.substr(v.line(dbRegion.begin()))).group(0)
-            lineStart = indent + ' *' + docIndent
-        lineStartLength = len(re.sub(r'\t', ' ' * tabSize, lineStart))
-        wrapLength -= lineStartLength
+            lineStart = indent + ' *' + settings.get('docIndentStr')
+        lineStartLength = len(re.sub(r'\t', ' ' * settings.get('tabSize'), lineStart))
+        wrapLength = settings.get('wrapLength') - lineStartLength
         #print('  - indent:     "' + indent + '"') # DEBUG
         #print('  - line start: "' + lineStart + '"') # DEBUG
         #print('  - line start length:', lineStartLength) # DEBUG
@@ -1756,7 +1779,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         #lineType     = ''
         #prevLineType = ''
         nextLineType = ''
-        docLinePrefix = re.compile(r'^\s*\* {,' + str(docIndentSpacesCount) + '}')
+        docIndent = settings.get('docIndentStr')
+        docLinePrefix = re.compile(r'^\s*\* {,' + str(settings.get('docIndentSpacesCount')) + '}')
 
         def addLine(lineToAdd):
             nonlocal paragraph
@@ -1802,7 +1826,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             parsedTag = parseJSDocTag(tagParagraph)
             tagParts = list(parsedTag or (tagParagraph,))
             #print('PARTS', tagParts) # DEBUG
-            if parsedTag and (tagParts[0] not in alignTagsExcludeList):
+            if parsedTag and (tagParts[0] not in settings.get('alignTagsExcludeList')):
                 for i, tagPart in enumerate(tagParts):
                     # Add another item to the tag-column-widths list if necessary.
                     if i == len(tagColumnWidths):
@@ -1818,26 +1842,22 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             return re.findall(r'(?<=[^a-zA-Z0-9])(?:`(?=\S).*?\S`|{@link \S*})(?=[^a-zA-Z0-9])\S*|\S*\[(?=\S).*?\S\]\(\S*?\)\S*|\S+', text)
 
         def wrapDoc(currentText, remainingText, indent=True):
-            nonlocal columnSpacesCount
+            nonlocal settings
             nonlocal docIndent
-            nonlocal docIndentSpacesCount
-            nonlocal paragraphIndentSpacesCount
-            nonlocal paragraphIndent
             nonlocal wrapLength
-            nonlocal descriptionSeparator
-            nonlocal descriptionSeparatorLength
             nonlocal inListItem
             nonlocal listIndent
             nonlocal inBlockquote
             nonlocal blockquoteIndent
+            paragraphIndentStr = settings.get('paragraphIndentStr')
             lines = []
             #print('WRAP ----------------------------') # DEBUG
             if ' ' in remainingText:
                 #print('    · LINE HAS WORDS') # DEBUG
                 words = splitMarkdownParagraph(remainingText)
                 # Determine the amount of indent that the paragraph should have.
-                if deepIndentWrappedLines:
-                    paragraphIndent = (' ' * (len(currentText) - docIndentSpacesCount + descriptionSeparatorLength))
+                if settings.get('deepIndentWrappedLines'):
+                    paragraphIndentStr = (' ' * (len(currentText) - settings.get('docIndentSpacesCount') + settings.get('descriptionSeparatorLength')))
                 # Wrap.
                 for i, word in enumerate(words):
                     #print(currentText) # DEBUG
@@ -1866,7 +1886,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                         lines.append(currentText.rstrip())
                         if indent:
                             #print('----INDENT') # DEBUG
-                            currentText = docIndent + paragraphIndent
+                            currentText = docIndent + paragraphIndentStr
                         elif inListItem:
                             #print('----IN LIST') # DEBUG
                             currentText = docIndent + listIndent
@@ -1887,7 +1907,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # If the next part would _still_ put us over the limit, add it anyway (rare).
                 if len(currentText + remainingText) > wrapLength + 1:
                     if indent:
-                        lines.append(currentText + paragraphIndent + remainingText)
+                        lines.append(currentText + paragraphIndentStr + remainingText)
                     else:
                         lines.append(currentText + remainingText)
                     currentText = docIndent
@@ -2141,17 +2161,20 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         out = trimBlankLines(out)
 
-        if spacerBetweenDescriptionAndTags and len(out) and len(tags):
+        if settings.get('addSpacerBetweenDescriptionAndTags') and len(out) and len(tags):
             out.append('')
 
         #print('\nCOLUMN WIDTHS:', tagColumnWidths) # DEBUG
         #print('\nWRAP TAGS -----------------------') # DEBUG
         #print('    · NO ALIGN' if not alignTags else '    · ALIGN') # DEBUG
 
+        descriptionSeparatorPlaceholderStr = settings.get('descriptionSeparatorPlaceholderStr')
+        descriptionSeparatorStr = settings.get('descriptionSeparatorStr')
+
         # Wrap Tag Parts
         for tagParts in tags:
             tagPartsLength = len(tagParts)
-            excludeTagFromAlignment = tagParts[0] in alignTagsExcludeList
+            excludeTagFromAlignment = tagParts[0] in settings.get('alignTagsExcludeList')
             tagOut = docIndent
 
             #print('\nPARTS:', tagParts) # DEBUG
@@ -2165,7 +2188,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             for ii, tagPart in enumerate(tagParts):
                 # If the next part would put us over the limit, wrap it.
                 isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
-                addDescriptionSeparator = isTagPartDescription and descriptionSeparator
+                addDescriptionSeparator = isTagPartDescription and descriptionSeparatorStr
                 #if isTagPartDescription: # DEBUG
                     #print('--PART IS DESCRIPTION') # DEBUG
 
@@ -2173,7 +2196,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # to the beginning of the first word of the description so that the wrapping will be
                 # calculated correctly.
                 if addDescriptionSeparator:
-                    tagPart = re.sub(r'^ *- *', descriptionSeparatorPlaceholder, tagPart)
+                    tagPart = re.sub(r'^ *- *', descriptionSeparatorPlaceholderStr, tagPart)
                     #print('    · ADD TEMP SEPARATOR:', tagPart) # DEBUG
                 else:
                     tagPart = re.sub(r'^ *- *', '', tagPart)
@@ -2183,7 +2206,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     wrappedTag = wrapDoc(tagOut, tagPart)
                     # Swap the placeholder description separator for the real separator.
                     if addDescriptionSeparator:
-                        wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                        wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholderStr, descriptionSeparatorStr)
                         #print('    · ADD REAL SEPARATOR:', wrappedTag[0]) # DEBUG
                     out += wrappedTag
                     # Reset `tagOut`.
@@ -2192,16 +2215,16 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
                 # Swap the placeholder description separator for the real separator.
                 if addDescriptionSeparator:
-                    tagPart = tagPart.replace(descriptionSeparatorPlaceholder, descriptionSeparator)
+                    tagPart = tagPart.replace(descriptionSeparatorPlaceholderStr, descriptionSeparatorStr)
                     #print('    · ADD REAL SEPARATOR:', tagPart) # DEBUG
 
                 # Add the tag part (optionally aligned).
-                if alignTags and not excludeTagFromAlignment:
+                if settings.get('alignTags') and not excludeTagFromAlignment:
                     # Pad the string on the right with spaces so that the next bit of text will be
                     # aligned with the next column.
-                    tagOut += tagPart.ljust(tagColumnWidths[ii] + columnSpacesCount)
+                    tagOut += tagPart.ljust(tagColumnWidths[ii] + settings.get('columnSpacesCount'))
                 else:
-                    tagOut += tagPart + columnSpaces
+                    tagOut += tagPart + settings.get('columnSpacesStr')
 
                 #print('|' + tagOut + '|') # DEBUG
 
