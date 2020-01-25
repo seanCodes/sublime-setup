@@ -1937,6 +1937,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 lineType = 'SYMBOLS'
             return lineType
 
+        #print('\n%s\n' % ('-' * 120)) # DEBUG
+
         for i, line in enumerate(lines):
             #prevLine = re.sub(docLinePrefix, '', lines[i - 1]) if i > 0 else None
             lineRaw  = re.sub(docLinePrefix, '', line)
@@ -1949,8 +1951,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             nextLineType    = getLineType(nextLine) if nextLine is not None else None
 
             # ·→
-            #print('[' + currentLineType + ']', line) # DEBUG
-            #if line != lineRaw: # DEBUG
+            #print('[' + ('    ' if currentLineType == 'EMPTY' else currentLineType) + ']', line) # DEBUG
+            #if line != lineRaw and lineRaw: # DEBUG
                 #print(' (RAW)', lineRaw) # DEBUG
 
             # IF this IS the first line AND it IS NOT a tag-line
@@ -2021,7 +2023,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 if not inListItem:
                     inListItem = True
                 listIndent = (' ' * len(getMatch(r'^[ \t]*(?:\d+\.|\*|\+|-)\s', lineRaw)))
-                #print('INDENT "' + listIndent + '"') # DEBUG
+                #print('         ' + listIndent.replace(' ', '·') + '"') # DEBUG
             if inListItem:
                 if currentLineType in {'LIST', 'LIST ORDERED'}:
                     addLine(lineRaw.rstrip())
@@ -2031,12 +2033,15 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 if currentLineType == 'EMPTY':
                     addParagraph(paragraph) # end/add the current ¶
                     if nextLineType != 'EMPTY':
+                        #print('    · ADD BLANK LINE') # DEBUG
                         addParagraph('', True) # add empty ¶ now that the next line won’t be empty
                         if nextLineType == 'TEXT' and not nextLineIsIndented:
+                            #print('/LIST (current line is empty and next line is text)') # DEBUG
                             inListItem = False
                             listIndent = ''
                 if nextLineType not in {'EMPTY', 'TEXT'} and not nextLineIsIndented:
                     addParagraph(paragraph)
+                    #print('/LIST (next line does not continue list item)') # DEBUG
                     inListItem = False
                     listIndent = ''
                 continue
@@ -2068,7 +2073,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 if not inBlockquote:
                     inBlockquote = True
                 blockquoteIndent = (' ' * len(getMatch(r'^[ \t]*>\s+', lineRaw)))
-                #print('INDENT "' + blockquoteIndent + '"') # DEBUG
+                #print('         ' + listIndent.replace(' ', '·') + '"') # DEBUG
             if inBlockquote:
                 if currentLineType == 'BLOCKQUOTE':
                     addLine(lineRaw.rstrip())
