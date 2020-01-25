@@ -2020,7 +2020,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 addParagraph(paragraph)
                 if not inListItem:
                     inListItem = True
-                listIndent = (' ' * len(getMatch(r'^[ \t]*(?:\d+\.|\*|\+|-)\s+', lineRaw)))
+                listIndent = (' ' * len(getMatch(r'^[ \t]*(?:\d+\.|\*|\+|-)\s', lineRaw)))
                 #print('INDENT "' + listIndent + '"') # DEBUG
             if inListItem:
                 if currentLineType in {'LIST', 'LIST ORDERED'}:
