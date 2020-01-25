@@ -2039,7 +2039,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                             #print('/LIST (current line is empty and next line is text)') # DEBUG
                             inListItem = False
                             listIndent = ''
-                if nextLineType not in {'EMPTY', 'TEXT'} and not nextLineIsIndented:
+                if nextLineType not in {'EMPTY', 'TEXT'}:
                     addParagraph(paragraph)
                     #print('/LIST (next line does not continue list item)') # DEBUG
                     inListItem = False
