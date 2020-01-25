@@ -2166,7 +2166,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         #print('\nCOLUMN WIDTHS:', tagColumnWidths) # DEBUG
         #print('\nWRAP TAGS -----------------------') # DEBUG
-        #print('    · NO ALIGN' if not alignTags else '    · ALIGN') # DEBUG
+        #print('    · NO ALIGN' if not settings.get('alignTags') else '    · ALIGN') # DEBUG
 
         descriptionSeparatorPlaceholderStr = settings.get('descriptionSeparatorPlaceholderStr')
         descriptionSeparatorStr = settings.get('descriptionSeparatorStr')
@@ -2178,7 +2178,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             tagOut = docIndent
 
             #print('\nPARTS:', tagParts) # DEBUG
-            #if alignTags and excludeTagFromAlignment: # DEBUG
+            #if settings.get('alignTags') and excludeTagFromAlignment: # DEBUG
                 #print('--EXCLUDE TAG FROM ALIGNMENT') # DEBUG
 
             if tagPartsLength == 1:
