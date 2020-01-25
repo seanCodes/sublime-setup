@@ -1757,9 +1757,9 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         #print('  - wrap length:', wrapLength) # DEBUG
 
         def trimBlankLines(out):
-            while len(out) and out[0].strip() == '':
+            while len(out) and re.match(r'^\s*\*?\s*$', out[0]):
                 out = out[1:]
-            while len(out) and out[-1].strip() == '':
+            while len(out) and re.match(r'^\s*\*?\s*$', out[-1]):
                 out = out[:-1]
             return out
 
