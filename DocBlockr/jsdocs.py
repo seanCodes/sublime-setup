@@ -2027,7 +2027,6 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     addLine(lineRaw.rstrip())
                 else:
                     addLine(line)
-                #print('   "' + paragraph + '"') # DEBUG
                 nextLineIsIndented = nextLine and getMatch(listIndent, nextLine)
                 if currentLineType == 'EMPTY':
                     addParagraph(paragraph) # end/add the current ¶
@@ -2075,7 +2074,6 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     addLine(lineRaw.rstrip())
                 else:
                     addLine(line)
-                #print('"' + paragraph + '"') # DEBUG
                 nextLineIsIndented = nextLine and getMatch(blockquoteIndent, nextLine)
                 if currentLineType == 'EMPTY':
                     addParagraph(paragraph) # end/add the current ¶
