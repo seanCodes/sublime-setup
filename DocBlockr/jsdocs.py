@@ -2196,10 +2196,10 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # to the beginning of the first word of the description so that the wrapping will be
                 # calculated correctly.
                 if addDescriptionSeparator:
-                    tagPart = re.sub(r'^ *- *', descriptionSeparatorPlaceholderStr, tagPart)
+                    tagPart = re.sub(r'^ *-? *', descriptionSeparatorPlaceholderStr, tagPart)
                     #print('    · ADD TEMP SEPARATOR:', tagPart) # DEBUG
                 else:
-                    tagPart = re.sub(r'^ *- *', '', tagPart)
+                    tagPart = re.sub(r'^ *-? *', '', tagPart)
 
                 # Check if adding the tag part as-is would cause us to go over the wrap limit.
                 if len(tagOut + tagPart) > wrapLength + 1:
