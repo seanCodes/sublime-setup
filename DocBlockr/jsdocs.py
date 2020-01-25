@@ -2006,7 +2006,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # add raw line to paragraph
                 # ELSE
                     # add line to paragraph
-                # IF current-line IS empty
+                # IF current-line IS empty AND next-line IS NOT list-item
                     # add paragraph
                     # IF next-line IS NOT empty
                         # add empty paragraph
@@ -2030,7 +2030,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 else:
                     addLine(line)
                 nextLineIsIndented = nextLine and getMatch(listIndent, nextLine)
-                if currentLineType == 'EMPTY':
+                if currentLineType == 'EMPTY' and nextLineType not in {'LIST', 'LIST ORDERED'}:
                     addParagraph(paragraph) # end/add the current ¶
                     if nextLineType != 'EMPTY':
                         #print('    · ADD BLANK LINE') # DEBUG
