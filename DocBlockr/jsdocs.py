@@ -2169,7 +2169,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
 
         #print('\nCOLUMN WIDTHS:', tagColumnWidths) # DEBUG
         #print('\nWRAP TAGS -----------------------') # DEBUG
-        #print('    · NO ALIGN' if not settings.get('alignTags') else '    · ALIGN') # DEBUG
+        #print('    · %s ALIGN' % settings.get('alignTagsStyle').upper()) # DEBUG
 
         descriptionSeparatorPlaceholderStr = settings.get('descriptionSeparatorPlaceholderStr')
         descriptionSeparatorStr = settings.get('descriptionSeparatorStr')
@@ -2179,10 +2179,11 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             tagPartsLength = len(tagParts)
             excludeTagFromAlignment = tagParts[0] in settings.get('alignTagsExcludeList')
             tagOut = docIndent
+            #debugInfo = '' # DEBUG
 
             #print('\nPARTS:', tagParts) # DEBUG
             #if settings.get('alignTags') and excludeTagFromAlignment: # DEBUG
-                #print('--EXCLUDE TAG FROM ALIGNMENT') # DEBUG
+                #debugInfo += '←——EXCLUDED FROM ALIGN' # DEBUG
 
             if tagPartsLength == 1:
                 # Check if adding the tag part as-is would cause us to go over the wrap limit.
@@ -2210,8 +2211,11 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # If the next part would put us over the limit, wrap it.
                 isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
                 addDescriptionSeparator = isTagPartDescription and descriptionSeparatorStr
+
                 #if isTagPartDescription: # DEBUG
                     #print('--PART IS DESCRIPTION') # DEBUG
+                #if settings.get('alignTagsStyle') == 'shallow' and ii > 0: # DEBUG
+                    #debugInfo += '←——SKIPPED ALIGN ' # DEBUG
 
                 # If tags description should be separated with a dash, add a placeholder separator
                 # to the beginning of the first word of the description so that the wrapping will be
@@ -2240,14 +2244,17 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     #print('    · ADD REAL SEPARATOR:', tagPart) # DEBUG
 
                 # Add the tag part (optionally aligned).
-                if settings.get('alignTags') and not excludeTagFromAlignment:
+                if (excludeTagFromAlignment
+                    or settings.get('alignTagsStyle') == 'no'
+                    or (settings.get('alignTagsStyle') == 'shallow' and ii > 0)):
+                    tagOut += tagPart + settings.get('columnSpacesStr')
+                else:
                     # Pad the string on the right with spaces so that the next bit of text will be
                     # aligned with the next column.
                     tagOut += tagPart.ljust(tagColumnWidths[ii] + settings.get('columnSpacesCount'))
-                else:
-                    tagOut += tagPart + settings.get('columnSpacesStr')
 
-                #print('|' + tagOut + '|') # DEBUG
+                #print('│' + tagOut + '│' + debugInfo) # DEBUG
+                #debugInfo = '' # DEBUG
 
             if tagOut != docIndent:
                 out.append(tagOut.rstrip())
