@@ -313,6 +313,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         settingsAlignTags = self.settings.get("jsdocs_align_tags", 'deep')
         self.deepAlignTags = settingsAlignTags == 'deep'
+        self.mediumAlignTags = settingsAlignTags == 'medium'
         self.shallowAlignTags = settingsAlignTags in ('shallow', True)
 
         self.parser = parser = getParser(view)
@@ -332,7 +333,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             out = self.substituteVariables(out)
 
         # align the tags
-        if out and (self.shallowAlignTags or self.deepAlignTags) and not inline:
+        if out and (self.shallowAlignTags or self.mediumAlignTags or self.deepAlignTags) and not inline:
             out = self.alignTags(out)
 
         # fix all the tab stops so they're consecutive
@@ -1692,7 +1693,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             alignTagsStyle = 'shallow' if alignTags is True else 'no'
         else:
             alignTagsStyle = alignTags
-            alignTags = True if alignTagsStyle in {'shallow', 'deep'} else False
+            alignTags = True if alignTagsStyle in {'shallow', 'medium', 'deep'} else False
 
         return {
             'tabSize'                            : preferences.get('tab_size'),
@@ -2216,6 +2217,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     #print('--PART IS DESCRIPTION') # DEBUG
                 #if settings.get('alignTagsStyle') == 'shallow' and ii > 0: # DEBUG
                     #debugInfo += '←——SKIPPED ALIGN' # DEBUG
+                #if settings.get('alignTagsStyle') == 'medium' and ii > 1: # DEBUG
+                    #debugInfo += '←——SKIPPED ALIGN' # DEBUG
 
                 # If tags description should be separated with a dash, add a placeholder separator
                 # to the beginning of the first word of the description so that the wrapping will be
@@ -2246,7 +2249,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 # Add the tag part (optionally aligned).
                 if (excludeTagFromAlignment
                     or settings.get('alignTagsStyle') == 'no'
-                    or (settings.get('alignTagsStyle') == 'shallow' and ii > 0)):
+                    or (settings.get('alignTagsStyle') == 'shallow' and ii > 0)
+                    or (settings.get('alignTagsStyle') == 'medium' and ii > 1)):
                     tagOut += tagPart + settings.get('columnSpacesStr')
                 else:
                     # Pad the string on the right with spaces so that the next bit of text will be

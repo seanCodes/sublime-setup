@@ -26,16 +26,22 @@
   //  */
   "jsdocs_indentation_spaces_same_para": 1,
 
-  // Whether the words following the tags should align. Possible values are “no”, “shallow”, “deep”.
-  // For backwards compatibility, `false` is equivalent to “no” and `true` is equivalent to
-  // “shallow”. Note that not all tags are aligned by default (since it’s impractical in some cases)
-  // but this can be configured using the `jsdocs_align_tags_exclude` setting.
+  // Whether the words following the tags should align. Possible values are “no”, “shallow”,
+  // “medium” or “deep”. For backwards compatibility, `false` is equivalent to “no” and `true` is
+  // equivalent to “shallow”. Note that not all tags are aligned by default (since it’s impractical
+  // in some cases) but this can be configured using the `jsdocs_align_tags_exclude` setting.
   //
-  // “shallow” will just align the first words after the tag, for example:
+  // “shallow” will only align the second components of the tags, for example:
   //
   // @param    {MyCustomClass} myVariable desc1
   // @return   {String} foo desc2
   // @property {Number} blahblah desc3
+  //
+  // “medium” will align the second and third components of the tags, for example:
+  //
+  // @param    {MyCustomClass} myVariable desc1
+  // @return   {String}        foo desc2
+  // @property {Number}        blahblah desc3
   //
   // “deep” will align each component of the tags, for example:
   //
