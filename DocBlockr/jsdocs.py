@@ -1751,8 +1751,8 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             lineStart = indent + ' *' + settings.get('docIndentStr')
         lineStartLength = len(re.sub(r'\t', ' ' * settings.get('tabSize'), lineStart))
         wrapLength = settings.get('wrapLength') - lineStartLength
-        #print('  - indent:     "' + indent + '"') # DEBUG
-        #print('  - line start: "' + lineStart + '"') # DEBUG
+        #print('  - indent:     "%s"' % indent) # DEBUG
+        #print('  - line start: "%s"' % lineStart) # DEBUG
         #print('  - line start length:', lineStartLength) # DEBUG
         #print('  - wrap length:', wrapLength) # DEBUG
 
@@ -1780,7 +1780,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
         #prevLineType = ''
         nextLineType = ''
         docIndent = settings.get('docIndentStr')
-        docLinePrefix = re.compile(r'^\s*\* {,' + str(settings.get('docIndentSpacesCount')) + '}')
+        docLinePrefix = re.compile(r'^\s*\* {,%s}' % settings.get('docIndentSpacesCount'))
 
         def addLine(lineToAdd):
             nonlocal paragraph
@@ -1951,7 +1951,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             nextLineType    = getLineType(nextLine) if nextLine is not None else None
 
             # ·→
-            #print('[' + ('    ' if currentLineType == 'EMPTY' else currentLineType) + ']', line) # DEBUG
+            #print('[%s] %s' % ('    ' if currentLineType == 'EMPTY' else currentLineType, line)) # DEBUG
             #if line != lineRaw and lineRaw: # DEBUG
                 #print(' (RAW)', lineRaw) # DEBUG
 
@@ -2199,12 +2199,12 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     wrappedTag = wrapDoc(tempIndent, tagParts[0].strip(), False)
                     # Manually re-add the indent to the beginning of each wrapped line.
                     wrappedTag = [tempIndent + tagPart.lstrip() for tagPart in wrappedTag]
-                    #[print('│' + tagPart + '│') for tagPart in wrappedTag] # DEBUG
+                    #[print('│%s│' % tagPart) for tagPart in wrappedTag] # DEBUG
                     # Append the wrapped parts to the current output.
                     out += wrappedTag
                 else:
                     out.append((tagOut + tagParts[0]).rstrip())
-                    #print('│' + (tagOut + tagParts[0]).rstrip() + '│') # DEBUG
+                    #print('│%s│' % (tagOut + tagParts[0]).rstrip()) # DEBUG
                 continue
 
             for ii, tagPart in enumerate(tagParts):
@@ -2253,7 +2253,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # aligned with the next column.
                     tagOut += tagPart.ljust(tagColumnWidths[ii] + settings.get('columnSpacesCount'))
 
-                #print('│' + tagOut + '│' + debugInfo) # DEBUG
+                #print('│%s│%s' % (tagOut, debugInfo)) # DEBUG
                 #debugInfo = '' # DEBUG
 
             if tagOut != docIndent:
@@ -2265,10 +2265,10 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
             if len(out) == 1:
                 out = out[0] + docIndent
             else:
-                lineStart = '\n' + (' ' * (lineStartLength - 3)) + ' *'
+                lineStart = '\n%s *' % (' ' * (lineStartLength - 3))
                 out = lineStart + lineStart.join(out) + lineStart[:-1]
         else:
-            out = '\n *' + '\n *'.join(out) + '\n '
+            out = '\n *%s\n ' % '\n *'.join(out)
 
         #print(out)
         #out = escape(out)
