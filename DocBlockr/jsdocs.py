@@ -2185,7 +2185,25 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 #print('--EXCLUDE TAG FROM ALIGNMENT') # DEBUG
 
             if tagPartsLength == 1:
-                out.append((tagOut + tagParts[0]).rstrip())
+                # Check if adding the tag part as-is would cause us to go over the wrap limit.
+                #
+                # > NOTE: This should almost never happen, since arbitrary text should never appear
+                #   in the tags section. However, people do weird things, so this will allow us to
+                #   at least gracefully handle random text.
+                if len(tagOut + tagParts[0]) > wrapLength + 1:
+                    # Manually determine final indentation (accounting for any whitespace that might
+                    # already be present at the beginning of the part).
+                    tempIndent = tagOut + getMatch(r'^\s*', tagParts[0])
+                    # Wrap the part using the temporary indent.
+                    wrappedTag = wrapDoc(tempIndent, tagParts[0].strip(), False)
+                    # Manually re-add the indent to the beginning of each wrapped line.
+                    wrappedTag = [tempIndent + tagPart.lstrip() for tagPart in wrappedTag]
+                    #[print('│' + tagPart + '│') for tagPart in wrappedTag] # DEBUG
+                    # Append the wrapped parts to the current output.
+                    out += wrappedTag
+                else:
+                    out.append((tagOut + tagParts[0]).rstrip())
+                    #print('│' + (tagOut + tagParts[0]).rstrip() + '│') # DEBUG
                 continue
 
             for ii, tagPart in enumerate(tagParts):
