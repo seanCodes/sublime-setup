@@ -2023,7 +2023,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 if not inListItem:
                     inListItem = True
                 listIndent = (' ' * len(getMatch(r'^[ \t]*(?:\d+\.|\*|\+|-)\s', lineRaw)))
-                #print('         ' + listIndent.replace(' ', '·') + '"') # DEBUG
+                #print('         ' + listIndent.replace(' ', '·')) # DEBUG
             if inListItem:
                 if currentLineType in {'LIST', 'LIST ORDERED'}:
                     addLine(lineRaw.rstrip())
@@ -2073,7 +2073,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 if not inBlockquote:
                     inBlockquote = True
                 blockquoteIndent = (' ' * len(getMatch(r'^[ \t]*>\s+', lineRaw)))
-                #print('         ' + listIndent.replace(' ', '·') + '"') # DEBUG
+                #print('         ' + listIndent.replace(' ', '·')) # DEBUG
             if inBlockquote:
                 if currentLineType == 'BLOCKQUOTE':
                     addLine(lineRaw.rstrip())
@@ -2215,7 +2215,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 #if isTagPartDescription: # DEBUG
                     #print('--PART IS DESCRIPTION') # DEBUG
                 #if settings.get('alignTagsStyle') == 'shallow' and ii > 0: # DEBUG
-                    #debugInfo += '←——SKIPPED ALIGN ' # DEBUG
+                    #debugInfo += '←——SKIPPED ALIGN' # DEBUG
 
                 # If tags description should be separated with a dash, add a placeholder separator
                 # to the beginning of the first word of the description so that the wrapping will be
