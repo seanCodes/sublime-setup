@@ -2232,7 +2232,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                     # Swap the placeholder description separator for the real separator.
                     if addDescriptionSeparator:
                         wrappedTag[0] = wrappedTag[0].replace(descriptionSeparatorPlaceholderStr, descriptionSeparatorStr)
-                        #print('    · ADD REAL SEPARATOR:', wrappedTag[0]) # DEBUG
+                        #print('    · ADD REAL SEPARATOR:', tagPart.replace(descriptionSeparatorPlaceholderStr, descriptionSeparatorStr)) # DEBUG
                     out += wrappedTag
                     # Reset `tagOut`.
                     tagOut = docIndent
