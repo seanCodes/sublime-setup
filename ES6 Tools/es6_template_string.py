@@ -100,7 +100,7 @@ def list_to_template_string(list):
 
 	for token in list:
 		# Strip quote marks and append raw string.
-		if token[0] == '\'' and token[-1] == '\'':
+		if (token[0] == '\'' and token[-1] == '\'') or (token[0] == '"' and token[-1] == '"'):
 			out += token[1:-1]
 
 			continue
