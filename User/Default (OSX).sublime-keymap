@@ -9,6 +9,9 @@
 	{ "keys": ["super+e"],          "command": "slurp_find_string"    },
 	{ "keys": ["super+alt+e"],      "command": "slurp_replace_string" },
 
+	// Edit Project (uses former “slurp_replace_string” keybinding)
+	{ "keys": ["super+shift+e"], "command": "open_file", "args": {"file": "${project}"} },
+
 
 	// REMAP: Set Mark (prev: `super+k, super+space`)
 	{ "keys": ["super+k", "super+s"], "command": "set_mark" },
