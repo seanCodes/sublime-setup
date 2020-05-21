@@ -1,0 +1,9 @@
+{
+	"scope": "source.js - comment - string.quoted",
+
+	"completions": [
+		{ "trigger": "assert\tQUnit",     "contents": "assert" },
+		{ "trigger": "module\tQUnit",     "contents": "module('${1:name}', function() {\n\t$3\n});" },
+		{ "trigger": "test\tQUnit",       "contents": "test('${1:name}', ${2:async }function(assert) {\n\t$3\n\tawait render(hbs`TEMPLATE`);\n\tassert.ok(true);\n});" },
+	]
+}
