@@ -284,7 +284,7 @@
 			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                       "match_all": true },
 			{ "key": "preceding_text",             "operator": "regex_contains",     "operand": "(^\\*{0,2}|\\s\\*{0,2})$", "match_all": true },
 			{ "key": "preceding_text",             "operator": "not_regex_contains", "operand": "(^|\\s)/\\*+$",            "match_all": true },
-			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^[a-zA-Z0-9]|\\*/",        "match_all": true },
+			{ "key": "following_text",             "operator": "not_regex_contains", "operand": "^[a-zA-Z0-9@]|\\*/",       "match_all": true },
 			{ "key": "selector",                   "operator": "equal",              "operand": "comment",                  "match_all": true },
 			{ "key": "selector",                   "operator": "not_equal",          "operand": "comment.markdown.code, comment.markdown.strong-emphasis, comment.block.js", "match_all": true },
 		]
