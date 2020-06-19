@@ -176,6 +176,7 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
 
 
     def on_query_completions(self, view, prefix, locations):
+        #print('JSDocs query completions') # DEBUG
         # [Sanity Check] Only trigger within JSDoc documentation scopes.
         if not view.match_selector(locations[0], 'comment'):
             return []
@@ -265,38 +266,46 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
 
 
     def get_tag_before(self, view, line):
+        #print('GET TAG BEFORE %s' % line.begin()) # DEBUG
         while True:
             # Move to the previous line.
             line = get_prev_line(view, line)
             # Try and match a tag.
             tag_match = get_tag_match(view, line)
 
+            #print('  LINE %s' % line.begin()) # DEBUG
+
             # Return the match if a tag matched.
             if tag_match:
-                print('TAG BEFORE')
+                #print('  HAS TAG BEFORE') # DEBUG
                 return tag_match
 
             # If the line is the first line or if it has the start of the doc comment then there’s
             # no match.
             if region_is_first(view, line) or region_has_doc_start(view, line):
+                #print('  LINE IS FIRST') if region_is_first(view, line) else print('LINE HAS DOC START') # DEBUG
                 return False
 
 
     def get_tag_after(self, view, line):
+        #print('GET TAG AFTER %s' % line.begin()) # DEBUG
         while True:
             # Move to the previous line.
             line = get_next_line(view, line)
             # Try and match a tag.
             tag_match = get_tag_match(view, line)
 
+            #print('  LINE %s' % line.begin()) # DEBUG
+
             # Return the match if a tag matched.
             if tag_match:
-                print('TAG AFTER')
+                #print('  HAS TAG AFTER') # DEBUG
                 return tag_match
 
             # If the line is the last line or if it has the end of the doc comment then there’s no
             # match.
             if region_is_last(view, line) or region_has_doc_end(view, line):
+                #print('  LINE IS LAST') if region_is_last(view, line) else print('LINE HAS DOC END') # DEBUG
                 return False
 
 
