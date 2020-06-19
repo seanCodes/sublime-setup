@@ -179,7 +179,7 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
         #print('JSDocs query completions') # DEBUG
         # [Sanity Check] Only trigger within JSDoc documentation scopes.
         if not view.match_selector(locations[0], 'comment'):
-            return []
+            return None
 
         # Build the default completion list if it hasn’t been built already.
         if len(self.default_completions_list_for_tags) == 0:
