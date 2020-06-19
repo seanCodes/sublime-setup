@@ -286,6 +286,11 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
                 #print('  LINE IS FIRST') if region_is_first(view, line) else print('LINE HAS DOC START') # DEBUG
                 return False
 
+            # If the line ending is no longer part of a comment there’s no need to keep looking.
+            if not view.match_selector(line.end(), 'comment'):
+                #print('  LINE ENDING IS NO LONGER IN COMMENT') # DEBUG
+                return False
+
 
     def get_tag_after(self, view, line):
         #print('GET TAG AFTER %s' % line.begin()) # DEBUG
@@ -306,6 +311,11 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
             # match.
             if region_is_last(view, line) or region_has_doc_end(view, line):
                 #print('  LINE IS LAST') if region_is_last(view, line) else print('LINE HAS DOC END') # DEBUG
+                return False
+
+            # If the line beginning is no longer part of a comment there’s no need to keep looking.
+            if not view.match_selector(line.begin(), 'comment'):
+                #print('  LINE BEGINNING IS NO LONGER IN COMMENT') # DEBUG
                 return False
 
 
