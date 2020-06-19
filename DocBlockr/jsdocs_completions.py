@@ -221,6 +221,10 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
         print('')
 
 
+        if '@' not in previous_4_chars:
+            #print('NO `@` IN PREVIOUS 4 CHARS: "%s"' % previous_4_chars) # DEBUG
+            return None
+
         # Look for a tag on the current line.
         tag_matches = get_tag_match(view, current_line)
 
