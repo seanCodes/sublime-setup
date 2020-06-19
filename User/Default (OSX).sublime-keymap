@@ -248,7 +248,7 @@
 	},
 	// Insert additional braces and auto-pair (when editing Handlebars).
 	// OVERRIDE: Auto-pair braces.
-	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{{$0}}"}, "context":
+	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{{$1}}$0"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
 			{ "key": "selection_empty",            "operator": "equal",          "operand": true,                      "match_all": true },
@@ -259,7 +259,7 @@
 	// Wrap block in double-braces (when editing Handlebars).
 	// OVERRIDE: Wrap block in braces.
 	//{ "keys": ["{"], "command": "wrap_block", "args": {"begin": "{{", "end": "}}"}, "context":
-	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{{$0}}"}, "context":
+	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{{$1}}$0"}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",       "operand": true },
 			{ "key": "indented_block",                                                         "match_all": true },
