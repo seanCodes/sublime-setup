@@ -87,8 +87,8 @@ class JSDocsTagCompletions(sublime_plugin.EventListener):
             '@callback'        : ['@callback',                               '${1:namepath}'],
             '@class'           : ['@class',           '{${1:OptionalType}}', '${2:OptionalName}'],
             '@classdesc'       : ['@classdesc',                                                           '${1:Description.}'],
-            '@const'           : ['@const',           '{${1:OptionalType}}'], # one-line includes description
-            '@constant'        : ['@constant',        '{${1:OptionalType}}'], # one-line includes description
+            '@const'           : ['@const',           '{${1:OptionalType}}'], # name is allowed but seems very uncommon
+            '@constant'        : ['@constant',        '{${1:OptionalType}}'], # name is allowed but seems very uncommon
             '@constructor'     : ['@constructor',     '{${1:OptionalType}}', '${2:OptionalName}'],
             '@constructs'      : ['@constructs',                             '${1:Class (required if not using @lends)}'],
             '@copyright'       : ['@copyright',                                                           '${1:Info}'],
