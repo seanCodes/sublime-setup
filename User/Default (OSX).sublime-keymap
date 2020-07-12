@@ -173,6 +173,16 @@
 
 
 
+	// Insert `!important` in CSS contexts.
+	{ "keys": ["!"], "command": "insert_snippet", "args": {"contents": "!important$0"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,          "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.css, source.less, source.sass, source.scss", "match_all": true },
+		]
+	},
+
+
+
 	// Insert interpolated code brackets in JS template strings.
 	{ "keys": ["$"], "command": "insert_snippet", "args": {"contents": "\\${$0}"}, "context":
 		[
