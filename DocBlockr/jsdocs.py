@@ -298,6 +298,10 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
         write(self.view, snippet)
 
+        # > TODO: Fix this hack used to get the generated snippet to be formatted correctly.
+        self.view.run_command('jsdocs_wrap_lines')
+        self.view.run_command('jsdocs_reparse')
+
     def initialize(self, view, inline=False):
         point = view.sel()[0].end()
         settings = view.settings()
