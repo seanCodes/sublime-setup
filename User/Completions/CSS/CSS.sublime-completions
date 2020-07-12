@@ -1,0 +1,7 @@
+{
+	"scope": "source.css, source.less, source.sass, source.scss",
+
+	"completions": [
+		{ "trigger": "var\tVariable", "contents": "var(--${1:name})$0" },
+	]
+}
