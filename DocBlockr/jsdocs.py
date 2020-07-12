@@ -299,8 +299,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
 
     def initialize(self, view, inline=False):
         point = view.sel()[0].end()
-
-        self.settings = view.settings()
+        settings = view.settings()
 
         # trailing characters are put inside the body of the comment
         self.trailingRgn = sublime.Region(point, view.line(point).end())
@@ -308,13 +307,25 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         # drop trailing '*/'
         self.trailingString = escape(re.sub('\\s*\\*\\/\\s*$', '', self.trailingString))
 
-        self.indentSpaces = " " * max(0, self.settings.get("jsdocs_indentation_spaces", 1))
+        self.settings = settings
+
+        columnSpacesCount = settings.get('jsdocs_min_spaces_between_columns', 1)
+        self.columnSpacesCount = columnSpacesCount
+        self.spacerBetweenSections = settings.get('jsdocs_spacer_between_sections')
+        self.perSectionIndent = settings.get('jsdocs_per_section_indent')
+
+        self.indentSpaces = " " * max(0, settings.get("jsdocs_indentation_spaces", 1))
         self.prefix = "*"
 
-        settingsAlignTags = self.settings.get("jsdocs_align_tags", 'deep')
+        settingsAlignTags = settings.get("jsdocs_align_tags", 'deep')
         self.deepAlignTags = settingsAlignTags == 'deep'
         self.mediumAlignTags = settingsAlignTags == 'medium'
         self.shallowAlignTags = settingsAlignTags in ('shallow', True)
+
+        self.returnTag = settings.get('jsdocs_return_tag')
+
+        self.addFunctionDescription = settings.get('jsdocs_function_description') == True
+        self.newlineAfterBlock = settings.get('jsdocs_newline_after_block') == True;
 
         self.parser = parser = getParser(view)
         parser.inline = inline
@@ -346,7 +357,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
             else:
                 return " $0 */"
         else:
-            return self.createSnippet(out) + ('\n' if self.settings.get('jsdocs_newline_after_block') else '')
+            return self.createSnippet(out) + ('\n' if self.newlineAfterBlock else '')
 
     def alignTags(self, out):
         def outputWidth(str):
@@ -360,8 +371,8 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         widths = []
 
         # Grab the return tag if required.
-        if self.settings.get('jsdocs_per_section_indent'):
-            returnTag = self.settings.get('jsdocs_return_tag') or '@return'
+        if self.perSectionIndent:
+            returnTag = self.returnTag or '@return'
         else:
             returnTag = False
 
@@ -390,7 +401,7 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         maxWidths = dict(enumerate(maxWidths))
 
         # Minimum spaces between line columns
-        minColSpaces = self.settings.get('jsdocs_min_spaces_between_columns', 1)
+        minColSpaces = self.columnSpacesCount
 
         for index, line in enumerate(out):
             # format the spacing of columns, but ignore the author tag. (See #197)
@@ -440,18 +451,18 @@ class JsdocsCommand(sublime_plugin.TextCommand):
         snippet = ""
         closer = self.parser.settings['commentCloser']
         if out:
-            if self.settings.get('jsdocs_spacer_between_sections') == True:
+            if self.spacerBetweenSections == True:
                 lastTag = None
                 for idx, line in enumerate(out):
                     res = re.match("^\\s*@([a-zA-Z]+)", line)
                     if res and (lastTag != res.group(1)):
-                        if self.settings.get('jsdocs_function_description') == False:
+                        if not self.addFunctionDescription:
                             if lastTag != None:
                                 out.insert(idx, "")
                         else:
                             out.insert(idx, "")
                         lastTag = res.group(1)
-            elif self.settings.get('jsdocs_spacer_between_sections') == 'after_description' and self.settings.get('jsdocs_function_description'):
+            elif self.spacerBetweenSections == 'after_description' and self.addFunctionDescription:
                 lastLineIsTag = False
                 for idx, line in enumerate(out):
                     res = re.match("^\\s*@([a-zA-Z]+)", line)
