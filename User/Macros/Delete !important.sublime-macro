@@ -1,0 +1,4 @@
+[
+	{ "command": "delete_word", "args": { "forward": false, "sub_words": true },                        },
+	{ "command": "left_delete"                                                },
+]

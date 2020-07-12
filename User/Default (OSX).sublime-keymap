@@ -180,6 +180,14 @@
 			{ "key": "selector",                   "operator": "equal",              "operand": "source.css, source.less, source.sass, source.scss", "match_all": true },
 		]
 	},
+	// Delete `!important` in CSS contexts.
+	{ "keys": ["backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Delete !important.sublime-macro"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,          "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.css, source.less, source.sass, source.scss", "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains",     "operand": "!important$", "match_all": true },
+		]
+	},
 
 
 
