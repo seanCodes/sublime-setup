@@ -2220,7 +2220,11 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 continue
 
             for ii, tagPart in enumerate(tagParts):
-                # If the next part would put us over the limit, wrap it.
+                # > NOTE: This is a hacky way of figuring out of something is the description simply
+                #   by checking to see if it’s the last part and also has a space in it.
+                #
+                # > TODO: Determine which part is the description based on the tag _type_ and not
+                #   the part position/contents.
                 isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
                 addDescriptionSeparator = isTagPartDescription and descriptionSeparatorStr
 
