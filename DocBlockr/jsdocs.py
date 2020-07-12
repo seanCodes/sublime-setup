@@ -2225,7 +2225,7 @@ class JsdocsWrapLines(sublime_plugin.TextCommand):
                 #
                 # > TODO: Determine which part is the description based on the tag _type_ and not
                 #   the part position/contents.
-                isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart
+                isTagPartDescription = (ii == tagPartsLength - 1) and ' ' in tagPart and tagParts[0] not in {'@const', '@constant', '@default', '@defaultvalue', '@author'}
                 addDescriptionSeparator = isTagPartDescription and descriptionSeparatorStr
 
                 #if isTagPartDescription: # DEBUG
