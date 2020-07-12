@@ -219,9 +219,6 @@ class Es6ObjectMultilineCommand(sublime_plugin.TextCommand):
 		#new_selections = []
 		#selections = []
 
-		if not view.match_selector(0, 'source.js'):
-			return
-
 		# DEBUG
 		#print('\nSTART:\n')
 		#
@@ -232,6 +229,10 @@ class Es6ObjectMultilineCommand(sublime_plugin.TextCommand):
 		#print('\nDO:\n')
 
 		for selection in view.sel():
+			if not view.match_selector(selection.begin(), 'source.js'):
+				sublime.status_message('View is not JS')
+				continue
+
 			#print(selection)
 			object_start_index = self.find_prev_containing_bracket('{', selection.begin(), EXCLUDE_SCOPE)
 
