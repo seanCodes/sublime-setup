@@ -170,8 +170,8 @@ def parseJSDocTag(text):
         '@constructor'     : '*',
         '@constructs'      : '*',
         '@copyright'       : '*',
-        '@default'         : '*',
-        '@defaultvalue'    : '*',
+        '@default'         : 'value',
+        '@defaultvalue'    : 'value',
         '@deprecated'      : '*',
         '@desc'            : '*',
         '@description'     : '*',
@@ -245,6 +245,7 @@ def parseJSDocTag(text):
     }
     tagPatternRegexDict = {
         '*'                 : r'(?P<tag>@\w+)[ \t]*(?P<rest>\S.*)?',
+        'value'             : r'(?P<tag>@\w+)[ \t]*(?P<value>\S.*)',
         'type *'            : r'(?P<tag>@\w+)[ \t]+(?P<type>\{.*?\})[ \t]*(?P<rest>\S.*)?',
         'type? *'           : r'(?P<tag>@\w+)[ \t]*(?P<type>\{.*?\})?[ \t]+(?P<rest>\S.*)',
         'type name *'       : r'(?P<tag>@\w+)[ \t]+(?P<type>\{.*?\})[ \t]*(?P<name>\[.*?\]|\S+)?[ \t]*(?P<rest>\S.*)?',
