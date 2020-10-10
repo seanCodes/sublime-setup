@@ -67,7 +67,7 @@
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                     "match_all": true },
       { "key": "selector",              "operator": "equal",          "operand": "comment.block",          "match_all": true },
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                    "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:[>*+-]|\\d\\.)\\s+", "match_all": true }
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:\\d\\.)\\s+", "match_all": true }
     ]
   },
   { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*)\\d\\.(\\s+).*$/$1  $2/}"},
@@ -75,7 +75,7 @@
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                     "match_all": true },
       { "key": "selector",              "operator": "equal",          "operand": "comment.block",          "match_all": true },
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                    "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:[>*+-]|\\d\\.)\\s+", "match_all": true }
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:\\d\\.)\\s+", "match_all": true }
     ]
   },
   // extend a docblock double-digit numbered list by indenting
@@ -84,7 +84,7 @@
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                     "match_all": true },
       { "key": "selector",              "operator": "equal",          "operand": "comment.block",          "match_all": true },
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                    "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:[>*+-]|\\d\\d\\.)\\s+", "match_all": true }
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:\\d\\d\\.)\\s+", "match_all": true }
     ]
   },
   { "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^\\s*(\\*\\s*)\\d\\d\\.(\\s+).*$/$1   $2/}"},
@@ -92,7 +92,7 @@
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                     "match_all": true },
       { "key": "selector",              "operator": "equal",          "operand": "comment.block",          "match_all": true },
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,                    "match_all": true },
-      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:[>*+-]|\\d\\d\\.)\\s+", "match_all": true }
+      { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*(?:\\d\\d\\.)\\s+", "match_all": true }
     ]
   },
   // trim the automatically added whitespace
