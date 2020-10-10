@@ -23,6 +23,7 @@
 		{ "trigger": "const\tconst",           "contents": "const ${1:name} = ${2:'value'}" },
 		{ "trigger": "let\tlet",               "contents": "let ${1:name} = ${2:'value'}" },
 		{ "trigger": "return\treturn",         "contents": "return" },
+		{ "trigger": "mapp\tMap property",     "contents": "map(({ ${1:prop} }) => $1)$0" },
 
 		// Backbone
 		{ "trigger": "listenTo\tBackbone",     "contents": "listenTo(${1:subject}, '${2:event}', ${3:handler})" },
