@@ -576,8 +576,11 @@ repository:
       endCaptures:
         '0': {name: punctuation.definition.parameters.end.js}
       patterns:
-      - name: keyword.operator.spread.js
-        match: (?<!\.)\.\.\.
+      - name: meta.spread.js
+        match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
+        captures:
+          '1': {name: keyword.operator.spread.js}
+          '2': {name: variable.other.readwrite.js}
       - name: variable.parameter.function.js
         match: '[_$a-zA-Z][$\w]*'
       - name: punctuation.separator.parameter.function.js
@@ -1324,8 +1327,11 @@ repository:
     - name: keyword.operator.ternary.js
       match: '\?|:'
 
-    - name: keyword.operator.spread.js
-      match: (?<!\.)\.\.\.
+    - name: meta.spread.js
+      match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
+      captures:
+        '1': {name: keyword.operator.spread.js}
+        '2': {name: variable.other.readwrite.js}
 
     - name: keyword.operator.accessor.js
       match: \.

@@ -853,10 +853,23 @@
 					<key>patterns</key>
 					<array>
 						<dict>
+							<key>captures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>keyword.operator.spread.js</string>
+								</dict>
+								<key>2</key>
+								<dict>
+									<key>name</key>
+									<string>variable.other.readwrite.js</string>
+								</dict>
+							</dict>
 							<key>match</key>
-							<string>(?&lt;!\.)\.\.\.</string>
+							<string>(?&lt;!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?</string>
 							<key>name</key>
-							<string>keyword.operator.spread.js</string>
+							<string>meta.spread.js</string>
 						</dict>
 						<dict>
 							<key>match</key>
@@ -2674,10 +2687,23 @@
 					<string>keyword.operator.ternary.js</string>
 				</dict>
 				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.operator.spread.js</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>variable.other.readwrite.js</string>
+						</dict>
+					</dict>
 					<key>match</key>
-					<string>(?&lt;!\.)\.\.\.</string>
+					<string>(?&lt;!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?</string>
 					<key>name</key>
-					<string>keyword.operator.spread.js</string>
+					<string>meta.spread.js</string>
 				</dict>
 				<dict>
 					<key>match</key>
