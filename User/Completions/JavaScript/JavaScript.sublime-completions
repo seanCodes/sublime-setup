@@ -2,6 +2,8 @@
 	"scope": "source.js - comment - string.quoted",
 
 	"completions": [
+		{ "trigger": "this",                   "contents": "this" },
+
 		{ "trigger": "async",                  "contents": "async " },
 		{ "trigger": "await",                  "contents": "await " },
 
