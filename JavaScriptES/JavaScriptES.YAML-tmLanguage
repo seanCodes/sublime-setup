@@ -457,7 +457,7 @@ repository:
   comments-markdown-strong:
     patterns:
     - name: comment.markdown.strong.js
-      begin: (\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\b(?!_)|\S\*(?![a-zA-Z0-9]))) #(\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*)
+      begin: (\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\*\b(?!_)|\S\*\*(?![a-zA-Z0-9]))) #(\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*)
       end: (\b(?<!_)\*\*\b(?!_)|(?<!\s)\*\*(?![a-zA-Z0-9])) #(?<![\s\\*])(\*\*)
       beginCaptures:
         '1': {name: punctuation.definition.markdown.strong.begin.js}
