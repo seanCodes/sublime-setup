@@ -33,5 +33,8 @@
 		{ "trigger": "cget\tBackbone",         "contents": "const ${1:attribute} = ${2:this}.get('$1')" },
 		{ "trigger": "lget\tBackbone",         "contents": "let ${1:attribute} = ${2:this}.get('$1')" },
 		{ "trigger": "set\tBackbone",          "contents": "set('${1:key}', ${2:value}${3:, ${4:options}})" },
+
+		// ESLint
+		{ "trigger": "edl\tESLint",            "contents": "// eslint-disable-line" },
 	]
 }
