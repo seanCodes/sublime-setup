@@ -2188,8 +2188,31 @@
 					<string>(?&lt;!\.)\b(yield)\b(?:\s*(\*))?</string>
 				</dict>
 				<dict>
+					<key>begin</key>
+					<string>(?&lt;!\.)\b(return)\b</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.flow.js</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>\n|^</string>
+					<key>name</key>
+					<string>meta.return.js</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#core</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
 					<key>match</key>
-					<string>(?&lt;!\.)\b(await|return)\b</string>
+					<string>(?&lt;!\.)\bawait\b</string>
 					<key>name</key>
 					<string>keyword.control.flow.js</string>
 				</dict>
