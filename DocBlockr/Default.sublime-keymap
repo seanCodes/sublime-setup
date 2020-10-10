@@ -121,6 +121,7 @@
   { "keys": ["backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete Preceding Whitespace.sublime-macro" },
     "context": [
       { "key": "setting.auto_indent",   "operator": "equal",          "operand": true,               "match_all": true },
+      { "key": "selection_empty",       "operator": "equal",          "operand": true,               "match_all": true },
       { "key": "selector",              "operator": "equal",          "operand": "comment.block",    "match_all": true },
       { "key": "auto_complete_visible", "operator": "equal",          "operand": false,              "match_all": true },
       { "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s{2,}$", "match_all": true },
