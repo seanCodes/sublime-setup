@@ -34,10 +34,10 @@ def is_match(str, regex):
         return None
 
 def region_is_first(view, region):
-    return region.end() >= view.size()
+    return region.begin() <= 0
 
 def region_is_last(view, region):
-    return region.begin() == 0
+    return region.end() >= view.size()
 
 def region_has_doc_start(view, region):
     return is_match(view.substr(region), HAS_DOC_START_REGEX)
