@@ -9,8 +9,8 @@
 
 		{ "trigger": "f\tFunction",            "contents": "function $1($2) {$3}" },
 		{ "trigger": "af\tArrow Function",     "contents": "($1) => ${2:{ ${3} \\}}" },
-		{ "trigger": "mf\tMethod",             "contents": "${1:name}: function ($2) {$3}" },
-		{ "trigger": "ms\tMethod Shorthand",   "contents": "${1:name}($2) {$3}" },
+		{ "trigger": "mf\tMethod",             "contents": "${1:name}: function ($2) {$3}," },
+		{ "trigger": "ms\tMethod Shorthand",   "contents": "${1:name}($2) {$3}," },
 
 		{ "trigger": "import\tES6 Module",     "contents": "import ${1:{ ${2:var} \\}} from '${3:path}'" },
 		{ "trigger": "export\tES6 Module",     "contents": "export ${1:default} ${2:type}" },
