@@ -642,7 +642,13 @@ repository:
         (?x)
           (?:\b(static)\s+)?
           (?:\b(async)\s+)?
-          (?:(\*)\s*)?([_$a-zA-Z][$\w]*)\s*
+          #(?:(\*)\s*)?([_$a-zA-Z][$\w]*)\s* # BEFORE
+          (?:(\*)\s*)? # AFTER
+          # Poor man’s dynamic property (e.g. `{ [foo]: … }`) handling:
+          (?:
+            ([_$a-zA-Z][$\w]*)|
+            ((\[)([_$a-zA-Z][$\w]*)(\]))
+          )\s* # AFTER
           #(?=\(.*\)(?:\s|/\*.*\*/)*\{)
           (?=\([^())]*\)(?:\s|/\*.*\*/)*\{)
       beginCaptures:
