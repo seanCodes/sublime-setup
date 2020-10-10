@@ -850,6 +850,8 @@
 							<string>punctuation.definition.parameters.end.js</string>
 						</dict>
 					</dict>
+					<key>name</key>
+					<string>meta.function.declaration.parameters.js</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -2410,6 +2412,26 @@
 							<key>name</key>
 							<string>entity.name.method.js</string>
 						</dict>
+						<key>5</key>
+						<dict>
+							<key>name</key>
+							<string>meta.group.braces.square</string>
+						</dict>
+						<key>6</key>
+						<dict>
+							<key>name</key>
+							<string>meta.brace.square.js</string>
+						</dict>
+						<key>7</key>
+						<dict>
+							<key>name</key>
+							<string>variable.other.readwrite.js</string>
+						</dict>
+						<key>8</key>
+						<dict>
+							<key>name</key>
+							<string>meta.brace.square.js</string>
+						</dict>
 					</dict>
 					<key>end</key>
 					<string>(?&lt;=\))</string>
@@ -2419,7 +2441,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>#function-declaration-parameters</string>
+							<string>#method-declaration-parameters</string>
 						</dict>
 					</array>
 				</dict>
@@ -3201,6 +3223,97 @@
 					<string>[_$a-zA-Z][$\w]*</string>
 					<key>name</key>
 					<string>variable.other.readwrite.js</string>
+				</dict>
+			</array>
+		</dict>
+		<key>method-declaration-parameters</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>\(</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.parameters.begin.js</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>\)</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.parameters.end.js</string>
+						</dict>
+					</dict>
+					<key>name</key>
+					<string>meta.method.declaration.parameters.js</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>captures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>keyword.operator.spread.js</string>
+								</dict>
+								<key>2</key>
+								<dict>
+									<key>name</key>
+									<string>variable.other.readwrite.js</string>
+								</dict>
+							</dict>
+							<key>match</key>
+							<string>(?&lt;!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?</string>
+							<key>name</key>
+							<string>meta.spread.js</string>
+						</dict>
+						<dict>
+							<key>match</key>
+							<string>[_$a-zA-Z][$\w]*</string>
+							<key>name</key>
+							<string>variable.parameter.function.js</string>
+						</dict>
+						<dict>
+							<key>match</key>
+							<string>,</string>
+							<key>name</key>
+							<string>punctuation.separator.parameter.function.js</string>
+						</dict>
+						<dict>
+							<key>begin</key>
+							<string>=</string>
+							<key>beginCaptures</key>
+							<dict>
+								<key>0</key>
+								<dict>
+									<key>name</key>
+									<string>keyword.operator.assignment.js</string>
+								</dict>
+							</dict>
+							<key>end</key>
+							<string>(?=[,)])</string>
+							<key>name</key>
+							<string>meta.parameter.optional.js</string>
+							<key>patterns</key>
+							<array>
+								<dict>
+									<key>include</key>
+									<string>#expression</string>
+								</dict>
+							</array>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+					</array>
 				</dict>
 			</array>
 		</dict>
