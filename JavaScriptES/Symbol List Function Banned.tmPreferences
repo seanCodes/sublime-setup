@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Banned Function Symbols</string>
+	<key>scope</key>
+	<string>source.js.es  meta.group.braces.curly  meta.group.braces.round  meta.function.arrow.js</string>
+	<key>settings</key>
+	<dict>
+		<key>showInSymbolList</key>
+		<string>0</string>
+	</dict>
+</dict>
+</plist>

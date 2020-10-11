@@ -1,0 +1,13 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Object Arrow Symbols
+scope: >-
+  source.js.es  meta.group  meta.function.json.arrow
+settings:
+  showInSymbolList: '1'
+  showInIndexedSymbolList: '0'
+  symbolTransformation: >
+    s/^/---/g;
+    s/\s+/SPACE/g;
+    s/\S/x/g;
+  # symbolTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )ƒ$2 \((?3 )$3(?3 )\) {…}/g;
+  # s/^ *([^:\s]+) *: *(.*?) *=> *$/𝘮 $1$2/g;

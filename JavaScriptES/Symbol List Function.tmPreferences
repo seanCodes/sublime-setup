@@ -5,15 +5,13 @@
 	<key>name</key>
 	<string>Function Symbols</string>
 	<key>scope</key>
-	<string>source.js.es meta.group meta.function.js, source.js.es meta.function, source.js.es entity.name.method - source.js.es meta.group.braces.curly meta.group.braces.curly entity.name.method, source.js.es meta.class meta.method entity.name.method - source.js.es meta.class meta.group.braces.curly meta.group.braces.curly meta.method entity.name.method</string>
+	<string>source.js.es  meta.group  meta.function.js, xsource.js.es  entity.name.method - source.js.es  meta.group.braces.curly  meta.group.braces.curly  entity.name.method, xsource.js.es  meta.class  meta.method  entity.name.method - source.js.es  meta.class  meta.group.braces.curly  meta.group.braces.curly  meta.method  entity.name.method</string>
 	<key>settings</key>
 	<dict>
 		<key>symbolIndexTransformation</key>
-		<string>s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ )$2\($3\) {…}/g;</string>
+		<string>s/^(.*)$/~ $1/g;</string>
 		<key>symbolTransformation</key>
-		<string>s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )$2 \((?3 )$3(?3 )\) {…}/g;</string>
+		<string>s/^(.*)$/~ $1/g;</string>
 	</dict>
-	<key>uuid</key>
-	<string>4fa206e4-00f9-491d-8f8c-8a78f4175c61</string>
 </dict>
 </plist>

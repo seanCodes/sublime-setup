@@ -1,0 +1,28 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Symbols
+scope: >-
+  source.js.es  meta.function.js - meta.return.js,
+  source.js.es  meta.function.arrow.js - meta.return.js,
+  source.js.es  meta.group  meta.function.json,
+  source.js.es  meta.method.js
+settings:
+  showInSymbolList: '1'
+  # symbolTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )ƒ$2 \((?3 )$3(?3 )\) {…}/g;
+  # s/^ *([^:\s]+) *: *(.*?) *=> *$/𝘮 $1$2/g;
+  #
+  # TODO: FIX TO HANDLE GENERATORS
+  symbolTransformation: |+
+
+    s/\s+/ /g;
+    s/^\s+|\s+$//g;
+    s/^(async |static |)([^\( ]+) ?\((.+)?\)$/𝘮  $1$2 \((?3 $3 )\)/;
+    s/^([^: ]+) ?: ?(async |)(\w+) ?=>$/𝘮  $2$1  \( $3 \)/;
+    s/^([^: ]+) ?: ?(async |)\((.+?)?\) ?=>$/𝘮  $2$1  \((?3 $3 )\)/;
+    s/^([^: ]+) ?: ?(async |)function ?\((.+)?\)$/𝘮  $2$1  \((?3 $3 )\)/;
+    s/^([^= ]+) ?= ?(async |)(\w+) ?=>$/ƒ  $2$1 \( $3 \)/;
+    s/^([^= ]+) ?= ?(async |)\((.+?)?\) ?=>$/ƒ  $2$1 \((?3 $3 )\)/;
+    s/^([^= ]+) ?= ?(async |)function ?\((.+)?\)$/ƒ  $2$1 \((?3 $3 )\)/;
+    s/^(async |)function (\w+|\[.*?\]) ?\((.+)?\)$/ƒ  $1$2 \((?3 $3 )\)/;
+    s/^(async |)(\w+) ?=>$/ƒ  $1\( $2 \)/;
+    s/^(async |)\((.+?)?\) ?=>$/ƒ  $1\((?2 $2 )\)/;
+    s/^([^ƒ𝘮].*)$/- $1/;

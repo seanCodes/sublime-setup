@@ -1,0 +1,7 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Indexed Symbols
+scope: >-
+  source.js.es  meta.class  meta.method  entity.name.method
+settings:
+  showInSymbolList: '1'
+  showInIndexedSymbolList: '1'

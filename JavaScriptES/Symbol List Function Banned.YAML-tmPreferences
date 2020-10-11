@@ -1,0 +1,6 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Banned Function Symbols
+scope: >-
+  source.js.es  meta.group.braces.curly  meta.group.braces.round  meta.function.arrow.js
+settings:
+  showInSymbolList: '0'

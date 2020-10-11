@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Symbols</string>
+	<key>scope</key>
+	<string>source.js.es  meta.function.js - meta.return.js, source.js.es  meta.function.arrow.js - meta.return.js, source.js.es  meta.group  meta.function.json, source.js.es  meta.method.js</string>
+	<key>settings</key>
+	<dict>
+		<key>showInSymbolList</key>
+		<string>1</string>
+		<key>symbolTransformation</key>
+		<string>
+s/\s+/ /g;
+s/^\s+|\s+$//g;
+s/^(async |static |)([^\( ]+) ?\((.+)?\)$/𝘮  $1$2 \((?3 $3 )\)/;
+s/^([^: ]+) ?: ?(async |)(\w+) ?=&gt;$/𝘮  $2$1  \( $3 \)/;
+s/^([^: ]+) ?: ?(async |)\((.+?)?\) ?=&gt;$/𝘮  $2$1  \((?3 $3 )\)/;
+s/^([^: ]+) ?: ?(async |)function ?\((.+)?\)$/𝘮  $2$1  \((?3 $3 )\)/;
+s/^([^= ]+) ?= ?(async |)(\w+) ?=&gt;$/ƒ  $2$1 \( $3 \)/;
+s/^([^= ]+) ?= ?(async |)\((.+?)?\) ?=&gt;$/ƒ  $2$1 \((?3 $3 )\)/;
+s/^([^= ]+) ?= ?(async |)function ?\((.+)?\)$/ƒ  $2$1 \((?3 $3 )\)/;
+s/^(async |)function (\w+|\[.*?\]) ?\((.+)?\)$/ƒ  $1$2 \((?3 $3 )\)/;
+s/^(async |)(\w+) ?=&gt;$/ƒ  $1\( $2 \)/;
+s/^(async |)\((.+?)?\) ?=&gt;$/ƒ  $1\((?2 $2 )\)/;
+s/^([^ƒ𝘮].*)$/- $1/;
+</string>
+	</dict>
+</dict>
+</plist>

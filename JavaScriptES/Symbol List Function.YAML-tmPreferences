@@ -1,6 +1,5 @@
 # [PackageDev] target_format: plist, ext: tmPreferences
 name: Function Symbols
-uuid: 4fa206e4-00f9-491d-8f8c-8a78f4175c61
 # scope: >-
 #   source.js.es meta.function,
 #   source.js.es meta.accessor.js,
@@ -9,11 +8,14 @@ uuid: 4fa206e4-00f9-491d-8f8c-8a78f4175c61
 #   source.js.es meta.prototype.function.arrow.js,
 #   source.js.es meta.class.js entity.name.class.js
 scope: >-
-  source.js.es meta.group meta.function.js,
-  source.js.es meta.function,
-  source.js.es entity.name.method - source.js.es meta.group.braces.curly meta.group.braces.curly entity.name.method,
-  source.js.es meta.class meta.method entity.name.method - source.js.es meta.class meta.group.braces.curly meta.group.braces.curly meta.method entity.name.method
+  source.js.es  meta.group  meta.function.js,
+  xsource.js.es  entity.name.method
+  - source.js.es  meta.group.braces.curly  meta.group.braces.curly  entity.name.method,
+  xsource.js.es  meta.class  meta.method  entity.name.method
+  - source.js.es  meta.class  meta.group.braces.curly  meta.group.braces.curly  meta.method  entity.name.method
 settings:
-  symbolTransformation:      s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )$2 \((?3 )$3(?3 )\) {…}/g;
-  symbolIndexTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ )$2\($3\) {…}/g;
+  # symbolTransformation:      s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ  )ƒ$2 \((?3 )$3(?3 )\) {…}/g;
+  symbolTransformation:      s/^(.*)$/~ $1/g;
+  # symbolIndexTransformation: s/^ *(function )? *(.*?(?= *\()) *\((.+)?\)$/(?1ƒ )ƒ$2\($3\) {…}/g;
+  symbolIndexTransformation: s/^(.*)$/~ $1/g;
   #symbolTransformation: s/\s+/ /g;
