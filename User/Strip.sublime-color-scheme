@@ -342,10 +342,10 @@
 
 		// Brackets
 
-		//"brackets_options"            : "", // underline, stippled_underline, squiggly_underline, foreground, bold, italic
-		//"brackets_foreground"         : "",
-		"bracket_contents_options"    : "underline", // underline, stippled_underline, squiggly_underline, foreground
-		"bracket_contents_foreground" : "white",
+		"brackets_options"            : "italic bold foreground", // underline, stippled_underline, squiggly_underline, foreground, bold, italic
+		"brackets_foreground"         : "color(white alpha(0.9))",
+		"bracket_contents_options"    : "foreground", // underline, stippled_underline, squiggly_underline, foreground
+		"bracket_contents_foreground" : "color(white alpha(0.9))",
 
 		// Tags
 
