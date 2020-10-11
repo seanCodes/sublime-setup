@@ -215,6 +215,9 @@
 		// Medium Orchid (Brighter BG)
 		//"medium-bright-fg-brighter" : "var(medium-orchid-fg)",
 		"medium-bright-bg-brighter"   : "hsla(306,  26%,  58%, 0.1 )",
+		// Medium Pink
+		"medium-pink-fg"              : "hsla(332,  81%,  68%, 0.87)",
+		"medium-pink-bg"              : "hsla(332,  81%,  68%, 0.06)",
 		// Medium Fuschia
 		"medium-fuschia-fg"           : "hsla(343, 100%,  63%, 0.8 )",
 		"medium-fuschia-bg"           : "hsla(330, 100%,  60%, 0.11)",
@@ -1309,8 +1312,7 @@
 		},
 		{"name": "Support Namespace",
 			"scope": "support.other.namespace",
-			// pink
-			"foreground": "#ef6aa7dd",
+			"foreground": "var(medium-pink-fg)",
 			"background": "#ff0000", // '#ef6aa710'
 		},
 
@@ -4815,6 +4817,11 @@
 			"scope": "medium.orchid.brighter.bg",
 			"foreground": "var(medium-orchid-fg)",
 			"background": "var(medium-bright-bg-brighter)",
+		},
+		{"name": "Medium Pink",
+			"scope": "medium.pink",
+			"foreground": "var(medium-pink-fg)",
+			"background": "var(medium-pink-bg)",
 		},
 		{"name": "Medium Fuschia",
 			"scope": "medium.fuschia",
