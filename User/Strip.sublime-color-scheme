@@ -2,7 +2,7 @@
 	"author": "Sean Juárez",
 	"variables": {
 		"default-fg"                : "color(black l(+ 53.5%))",
-		"default-bg"                : "color(black l(+ 11%  ))",
+		"default-bg"                : "black", //"color(black l(+ 11%  ))",
 
 		// White
 		"white-fg"                  : "#fff",
@@ -288,10 +288,10 @@
 
 		"foreground"     : "var(default-fg)",
 		"background"     : "var(default-bg)",
-		//"invisibles"     : "",
+		"invisibles"     : "var(darker-gray-fg)",
 		"caret"          : "hsla( 68,  10%,  84%, 1   )",
 		//"block_caret"    : "",
-		"line_highlight" : "color(black alpha(0.21))",
+		"line_highlight" : "color(white alpha(0.09))", //"color(black alpha(0.21))",
 
 		// Accents
 
@@ -319,11 +319,11 @@
 
 		// Selection
 
-		"selection"                     : "black",
+		"selection"                     : "color(black l(+ 20%))", //"color(white alpha(0.2))", //"color(black)",
 		//"selection_foreground"          : "",
 		//"selection_border"              : "",
-		//"selection_border_width"        : "", // 0-4
-		//"inactive_selection"            : "",
+		// "selection_border_width"        : "0", // 0-4
+		"inactive_selection"            : "color(white alpha(0.13))",
 		//"inactive_selection_foreground" : "",
 		//"selection_corner_style"        : "", // round (default), cut, square
 		//"selection_corner_radius"       : "", // when style is `round` or `cut`
@@ -402,6 +402,14 @@
 			"scope": "punctuation.accessor",
 			"foreground": "var(dark-gray-fg)",
 			"background": "var(dark-gray-bg)",
+		},
+		{"name": "Punctuation - Section: Block",
+			"scope": "punctuation.section.block",
+			"foreground": "var(dark-gray-fg)",
+		},
+		{"name": "Punctuation - Section: Group",
+			"scope": "punctuation.section.group",
+			"foreground": "var(dark-gray-fg)",
 		},
 		{"name": "Punctuation - Terminator (Semicolon)",
 			"scope": "punctuation.terminator",
