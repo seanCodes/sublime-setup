@@ -594,17 +594,9 @@
 		},
 		{"name": "Regex - Escape Character",
 			"scope": "constant.character.escape.regexp, constant.character.escape.general.regexp, constant.character.escape.backslash.regexp",
-			// //"foreground": "var(light-gray-fg)",
-
+			//"foreground": "var(light-gray-fg)",
 			"foreground": "var(gray-fg)",
-			//"background": "var(semi-transparent-black-bg)",
-
-			// //"foreground": "var(medium-orchid-fg)",
-			// //"background": "var(medium-orchid-bg)",
-
-			//"foreground": "var(muted-dark-purple-fg)",
-			//"background": "var(muted-dark-purple-bg)",
-
+			"background": "var(dark-purple-bg)",
 			"font_style": "bold", // "italic",
 		},
 		{"name": "Regex - Meta Character",
