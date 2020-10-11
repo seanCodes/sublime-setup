@@ -1296,6 +1296,23 @@
 			"background": "#ff0000", // '#ef6aa710'
 		},
 
+		{"name": "Annotation (Meta)",
+			"scope": "meta.annotation",
+			//"font_style": "italic",
+		},
+		{"name": "Annotation: Punctuation",
+			"scope": "punctuation.definition.annotation",
+			"foreground": "var(muted-medium-orchid-fg)",
+			"background": "var(muted-medium-orchid-bg)",
+			"font_style": "italic",
+		},
+		{"name": "Annotation: Variable",
+			"scope": "variable.annotation, variable.other.conditional", // variable.other.conditional is for ES
+			"foreground": "var(muted-medium-orchid-fg)",
+			"background": "var(muted-medium-orchid-bg)",
+			"font_style": "italic",
+		},
+
 		{"name": "Invalid",
 			"scope": "invalid",
 			"font_style": "bold",
