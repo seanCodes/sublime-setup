@@ -790,8 +790,12 @@
 		},
 		{"name": "Property - Accessor",
 			"scope": "entity.name.accessor",
-			"foreground": "var(default-fg)",
-			"background": "var(default-bg)",
+			//"foreground": "var(default-fg)",
+			//"background": "var(default-bg)",
+			//"foreground": "var(bright-lilac-fg)",
+			//"background": "var(bright-lilac-bg)",
+			"foreground": "var(lavender-fg)",
+			"background": "var(lavender-bg)",
 		},
 
 		{"name": "Includes",
@@ -816,6 +820,10 @@
 			"scope": "storage.type.module.import",
 			"foreground": "var(bright-red-orange-fg)",
 			"background": "var(bright-red-orange-bg)",
+		},
+		{"name": "Storage - Type: Accessor",
+			"scope": "storage.type.accessor",
+			"font_style": "italic",
 		},
 		{"name": "Storage - Modifier",
 			"scope": "storage.modifier",
@@ -2808,6 +2816,15 @@
 
 			// //"foreground": "var(dark-purple-fg)",
 			"background": "var(dark-purple-bg)",
+		},
+		{"name": "JavaScript Storage - Get/Set",
+			"scope": "source.js storage.type.accessor",
+			// muted yellow (slightly dimmer)
+			// "foreground": "#bdbe82dd",
+			// //"background": "var(muted-yellow-bg)",
+
+			// //"foreground": "var(dark-purple-fg)",
+			// "background": "var(dark-purple-bg)",
 		},
 		{ // FOR “JAVASCRIPT NEXT” (CUSTOMIZED) PACKAGE
 			"name": "JavaScript Comment Markdown - Code Block",
