@@ -1950,7 +1950,7 @@
 
 
 		//
-		//!  YAML-TMLANGUAGE
+		//!  TEXTMATE SYNTAX DEFINITION (YAML-TMLANGUAGE)
 		//
 		/*{"name": "tmLanguage Keyword",
 			"scope": "source.yaml-tmlanguage keyword.other",
@@ -1964,24 +1964,20 @@
 			"foreground": "var(dark-gray-fg)",
 			"background": "var(dark-gray-bg)",
 		},
-
 		{"name": "tmLanguage Value",
 			"scope": "meta.value.yaml-tmlanguage",
 			"foreground": "var(light-gray-fg)",
 			"background": "var(light-gray-bg)",
 		},
-
 		{"name": "tmLanguage List: Punctuation",
 			"scope": "keyword.control.list",
 			"foreground": "var(medium-gray-fg)",
 			"background": "var(medium-gray-bg)",
 			//"foreground": "var(dark-gray-fg)",
 			//"background": "var(medium-gray-bg)",
-
-	// tmLanguage String
-	// json-tmLanguage String
 		},
-		{"scope": "string.other, source.json-tmlanguage string",
+		{"name": "tmLanguage String,  json-tmLanguage String",
+			"scope": "string.other, source.json-tmlanguage string",
 			"foreground": "var(bright-spring-green-fg)",
 			"background": "var(bright-spring-green-bg)",
 		},
@@ -2004,14 +2000,11 @@
 			//"foreground": "var(powder-blue-fg)",
 			//"background": "var(powder-blue-bg)",
 		},
-
-
 		/*{"name": "tmLanguage Scope Name (Meta)",
 			"scope": "meta.name",
 			//"foreground": "var(orange-red-fg)",
 			//"background": "var(orange-red-bg)",
 		},*/
-
 		{"name": "tmLanguage Begin/End/Match",
 			"scope": "keyword.other.match",
 			//"foreground": "var(muted-yellow-orange-fg)",
@@ -2021,7 +2014,6 @@
 			"foreground": "var(bright-orange-yellow-fg)",
 			"background": "var(bright-orange-yellow-bg-brighter)",
 		},
-
 		{"name": "tmLanguage Captures Block",
 			"scope": "entity.other.captures",
 			"foreground": "var(muted-yellow-orange-fg)",
@@ -2031,7 +2023,6 @@
 			//"foreground": "var(bright-orange-yellow-fg)",
 			//"background": "var(bright-orange-yellow-bg-brighter)",
 		},
-
 		{"name": "tmLanguage Number Key",
 			"scope": "constant.numeric.key", // .yaml-tmlanguage
 			"foreground": "var(bluebird-fg)",
@@ -2044,7 +2035,6 @@
 			"foreground": "var(bluebird-fg)",
 			"background": "var(bluebird-bg)",
 		},
-
 		{"name": "tmLanguage Patterns Block",
 			"scope": "support.type.patterns",
 			// //"font_style": "bold",
@@ -2063,7 +2053,6 @@
 			//"foreground": "var(medium-gray-fg)",
 			//"background": "var(medium-gray-bg)",
 		},
-
 		/*{"name": "tmLanguage Include (Meta)",
 			"scope": "meta.include",
 			//"foreground": "var(orange-red-fg)",
