@@ -1,5 +1,5 @@
 # All root-level directories are ignored by default (since every environment will have different
-# requirements). To track/sync a directory or file, it must be explicitly whitelisted below.
+# requirements). To track/sync a directory or file, it must be explicitly allowlisted below.
 
 /*/
 
@@ -12,6 +12,8 @@
 !/MarkdownEditing/
 /MarkdownEditing/*
 !/MarkdownEditing/*.sublime-syntax
+
+!/Sublime Tools/
 
 !/User/
 /User/*

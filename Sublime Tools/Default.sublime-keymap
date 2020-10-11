@@ -1,0 +1,5 @@
+[
+	{ "keys": ["super+alt+backspace"], "command": "sublime_tools_delete_matching_punctuation", "context": [
+		{ "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+	] },
+]
