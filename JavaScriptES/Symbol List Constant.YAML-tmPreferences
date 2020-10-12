@@ -1,0 +1,7 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Constant Symbols
+scope: >-
+  source.js.es  variable.other.constant
+settings:
+  showInIndexedSymbolList: 1
+  showInSymbolList: 1
