@@ -349,38 +349,68 @@ class QunitCompletions(sublime_plugin.EventListener):
         #print('next_1_char:      "%s"' % escape(next_1_char)) # DEBUG
         #print('------------------') # DEBUG
 
-        qunit_dom_completion_list = self.build_completion_list_for_qunit_dom_methods(view, prefix, locations, next_char_is_open_paren)
+        qunit_dom_completion_list = []
+        qunit_dom_completion_list += self.build_completion_list_for_methods(self.qunit_dom_methods_dict, 'QUnit DOM', next_char_is_open_paren)
+        qunit_dom_completion_list += self.build_completion_list_for_method_aliases(self.qunit_dom_method_aliases_dict, self.qunit_dom_methods_dict, 'QUnit DOM (Alias)', next_char_is_open_paren)
 
         flags = sublime.INHIBIT_EXPLICIT_COMPLETIONS | sublime.INHIBIT_WORD_COMPLETIONS
 
         return (qunit_dom_completion_list, flags)
 
-    # """
-    # Generate a completion list for Qunit DOM methods.
-    # """
-    def build_completion_list_for_qunit_dom_methods(self, view, prefix, locations, next_char_is_open_paren):
+
+    """
+    Build a completion list for the given methods dictionary. The dictionary should be a map of
+    method names --> method call params.
+
+    If the `complete_method_name_only` argument is `True`, then only the method name will be auto-
+    completed (and not the method call), which is useful when the method call may already be present
+    in the source code.
+    """
+    def build_completion_list_for_methods(self, methods_dict, category_str='', complete_method_name_only=False):
         completions_list = []
 
-        for method, params in self.qunit_dom_methods_dict.items():
+        for method, params in methods_dict.items():
             completion = ''
 
-            if next_char_is_open_paren:
+            if complete_method_name_only:
                 completion = method
             else:
                 completion = ''.join([method, params])
 
-            completions_list.append((method + '\tQUnit DOM', completion))
+            completion_text = method + '\t' + category_str
 
-        for method, alias in self.qunit_dom_method_aliases_dict.items():
+            # Add the completion.
+            completions_list.append((completion_text, completion))
+
+        return completions_list
+
+
+    """
+    Build a completion list for the given method aliases dictionary. The dictionary should be a map
+    of method-name aliases --> method names. It will be used to look up the method-call definition
+    in the given methods dictionary.
+
+    If the `complete_method_name_only` argument is `True`, then only the method alias will be auto-
+    completed (and not the method call), which is useful when the method call may already be present
+    in the source code.
+    """
+    def build_completion_list_for_method_aliases(self, method_aliases_dict, methods_dict, category_str='', complete_method_name_only=False):
+        completions_list = []
+
+        for alias, method in method_aliases_dict.items():
             completion = ''
 
-            if next_char_is_open_paren:
-                completion = method
+            if complete_method_name_only:
+                completion = alias
             else:
-                params = self.qunit_dom_methods_dict.get(alias)
-                completion = ''.join([method, params])
+                # Get the actual method definition from the methods dict using the alias value.
+                params = methods_dict.get(method)
+                completion = ''.join([alias, params])
 
-            completions_list.append((method + '\tQUnit DOM (Alias)', completion))
+            completion_text = alias + '\t' + category_str
+
+            # Add the completion.
+            completions_list.append((completion_text, completion))
 
         return completions_list
 
