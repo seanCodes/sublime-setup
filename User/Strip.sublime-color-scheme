@@ -3186,7 +3186,7 @@
 
 
 		//
-		//!  Markdown
+		//!  Markdown / reStructuredText
 		//
 		{"name": "Italic",
 			"scope": "markup.italic",
@@ -3284,7 +3284,7 @@
 			"background": "#ffffff17",
 		},
 		{"name": "Code",
-			"scope": "markup.raw.inline",
+			"scope": "markup.raw.inline, markup.raw.restructuredtext",
 			// custom gray (light bg)
 			"foreground": "#ffffff60",
 			"background": "var(gray-bg)",
@@ -3293,13 +3293,13 @@
 			//"background": "#00000022",
 		},
 		{"name": "Code: Punctuation",
-			"scope": "markup.raw.inline punctuation.definition.raw markup.raw.block punctuation.definition.raw",
+			"scope": "punctuation.definition.raw",
 			// custom very dark gray
 			"foreground": "#ffffff10",
 			// //"foreground": "#ffffff22",
 		},
 		{"name": "Code Block",
-			"scope": "markup.raw.block",
+			"scope": "markup.raw.block, meta.raw.block.restructuredtext",
 			// custom gray (light bg)
 			"foreground": "#ffffff4b",
 			"background": "var(gray-bg)",
@@ -3342,12 +3342,12 @@
 			"background": "var(sea-green-bg)",
 		},
 		{"name": "Reference: Punctuation",
-			"scope": "meta.link.reference punctuation",
+			"scope": "meta.link.reference  punctuation, meta.link.footnote.def.restructuredtext  punctuation",
 			// custom darker gray
 			"foreground": "#ffffff18",
 		},
 		{"name": "Reference: Link",
-			"scope": "meta.link.reference constant",
+			"scope": "meta.link.reference  constant",
 			// custom dark gray
 			"foreground": "#ffffff29",
 
@@ -3356,7 +3356,7 @@
 			// //"background": "var(dark-purple-bg)",
 		},
 		{"name": "Reference Definition",
-			"scope": "meta.link.reference.def constant",
+			"scope": "meta.link.reference.def  constant, string.other.footnote.restructuredtext",
 			// custom dark gray
 			// //"foreground": "#ffffff29",
 
@@ -3367,7 +3367,7 @@
 			"background": "var(dark-purple-bg)",
 		},
 		{"name": "Reference Definition: URL",
-			"scope": "meta.link.reference.def markup",
+			"scope": "meta.link.reference.def  markup, constant.other.footnote.link.restructuredtext",
 			//"foreground": "var(royal-blue-fg)",
 			//"background": "var(royal-blue-bg)",
 
@@ -3392,6 +3392,19 @@
 			"scope": "text.html.markdown markup entity.name.tag",
 			"foreground": "var(muted-yellow-orange-fg)",
 			"background": "var(muted-yellow-orange-bg)",
+		},
+
+
+
+		//
+		//!  reStructuredText
+		//
+		{"name": "RST Heading: Punctuation",
+			"scope": "markup.heading punctuation.definition.heading.restructuredtext",
+			// custom lightest-gray
+			"foreground": "#ffffffcc",
+			// transparent bg
+			"background": "#00000001",
 		},
 
 
