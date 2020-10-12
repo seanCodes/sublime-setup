@@ -188,6 +188,14 @@
 		{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\s*$",                           "match_all": true },
 	]},
 
+	// Auto-pair parens in Python regular expression contexts (since this doesn’t work when the cursor is just in front of the close `'`).
+	{ "keys": ["("], "command": "insert_snippet", "args": {"contents": "($1)"}, "context": [
+		{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+		{ "key": "selection_empty",            "operator": "equal",          "operand": true,                                                                               "match_all": true },
+		{ "key": "following_text",             "operator": "regex_contains", "operand": "^'",                                                                               "match_all": true },
+		{ "key": "selector",                   "operator": "equal",          "operand": "source.python meta.string string.quoted punctuation.definition.string.end.python", "match_all": true },
+	]},
+
 
 
 	// Insert `!important` in CSS contexts.
