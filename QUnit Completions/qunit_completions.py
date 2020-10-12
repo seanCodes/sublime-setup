@@ -119,7 +119,26 @@ def get_preceding_text_match(view, point_or_region, regex):
 class QunitCompletions(sublime_plugin.EventListener):
 
     def __init__(self):
-        self.completions_dict = {}
+        self.qunit_methods_dict = {
+            'async'          : '(${1:acceptCallCount=1})',
+            'deepEqual'      : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'equal'          : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'expect'         : '(${1:amount})',
+            'notDeepEqual'   : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'notEqual'       : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'notOk'          : '(${1:state}${2:, \'${3:message}\'})',
+            'notPropEqual'   : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'notStrictEqual' : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'ok'             : '(${1:state}${2:, \'${3:message}\'})',
+            'propEqual'      : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'pushResult'     : '(${1:data = { result, actual, expected, message \\}})',
+            'rejects'        : '(${1:promise}${2:, ${3:matchStr/Rgx/Err/Fn}}${4:, \'${5:message}\'})',
+            'step'           : '(${1:message})',
+            'strictEqual'    : '(${1:actual}, ${2:expected}${3:, \'${4:message}\'})',
+            'throws'         : '(${1:errorFn}${2:, ${3:errObj/ErrConstructor/Fn}}${4:, \'${5:message}\'})',
+            'timeout'        : '(${1:waitMilliseconds})',
+            'verifySteps'    : '(${1:stepsArr}${2:, \'${4:message}\'})',
+        }
 
         self.qunit_dom_methods_dict = {
             'exists'                        : '($1)', # options.count
@@ -289,6 +308,7 @@ class QunitCompletions(sublime_plugin.EventListener):
         current_index = locations[0]
         previous_chars_index = current_index - len(prefix)
         previous_1_char  = view.substr(sublime.Region(previous_chars_index - 1, previous_chars_index))
+        next_1_char     = view.substr(sublime.Region(current_index, current_index + 1))
 
         if previous_1_char != '.':
             return None
@@ -298,32 +318,13 @@ class QunitCompletions(sublime_plugin.EventListener):
         #print('location[0]:      %s'   % current_index) # DEBUG
         #print('substr:           "%s"' % escape(view.substr(sublime.Region(current_index, current_index + 3)))) # DEBUG
         #print('previous_1_char:  "%s"' % escape(previous_1_char)) # DEBUG
+        #print('next_1_char:      "%s"' % escape(next_1_char)) # DEBUG
         #print('------------------') # DEBUG
 
-        qunit_completion_list = [
-            ['async\tQUnit'          , 'async(${1:acceptCallCount=1})'],
-            ['deepEqual\tQUnit'      , 'deepEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['equal\tQUnit'          , 'equal(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['expect\tQUnit'         , 'expect(${1:amount})'],
-            ['notDeepEqual\tQUnit'   , 'notDeepEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['notEqual\tQUnit'       , 'notEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['notOk\tQUnit'          , 'notOk(${1:state}${2:, \'${3:message}\'})'],
-            ['notPropEqual\tQUnit'   , 'notPropEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['notStrictEqual\tQUnit' , 'notStrictEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['ok\tQUnit'             , 'ok(${1:state}${2:, \'${3:message}\'})'],
-            ['propEqual\tQUnit'      , 'propEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['pushResult\tQUnit'     , 'pushResult(${1:data = { result, actual, expected, message \\}})'],
-            ['rejects\tQUnit'        , 'rejects(${1:promise}${2:, ${3:matchStr/Rgx/Err/Fn}}${4:, \'${5:message}\'})'],
-            ['step\tQUnit'           , 'step(${1:message})'],
-            ['strictEqual\tQUnit'    , 'strictEqual(${1:actual}, ${2:expected}${3:, \'${4:message}\'})'],
-            ['throws\tQUnit'         , 'throws(${1:errorFn}${2:, ${3:errObj/ErrConstructor/Fn}}${4:, \'${5:message}\'})'],
-            ['timeout\tQUnit'        , 'timeout(${1:waitMilliseconds})'],
-            ['verifySteps\tQUnit'    , 'verifySteps(${1:stepsArr}${2:, \'${4:message}\'})'],
-        ]
+        next_char_is_open_paren = next_1_char == '('
 
-        qunit_plugin_completion_list = [
-            ['dom\tQUnit DOM', 'dom(${1:elementOrSelector})$2'],
-        ]
+        qunit_completion_list = self.build_completion_list_for_methods(self.qunit_methods_dict, 'QUnit', next_char_is_open_paren)
+        qunit_plugin_completion_list = self.build_completion_list_for_methods({ 'dom': '(${1:elementOrSelector})$2' }, 'QUnit DOM', next_char_is_open_paren)
 
         flags = sublime.INHIBIT_EXPLICIT_COMPLETIONS
 
@@ -339,8 +340,6 @@ class QunitCompletions(sublime_plugin.EventListener):
         if previous_1_char != '.':
             return None
 
-        next_char_is_open_paren = next_1_char == '('
-
         #print('------------------') # DEBUG
         #print('prefix:           "%s"' % escape(prefix)) # DEBUG
         #print('location[0]:      %s'   % current_index) # DEBUG
@@ -348,6 +347,8 @@ class QunitCompletions(sublime_plugin.EventListener):
         #print('previous_1_char:  "%s"' % escape(previous_1_char)) # DEBUG
         #print('next_1_char:      "%s"' % escape(next_1_char)) # DEBUG
         #print('------------------') # DEBUG
+
+        next_char_is_open_paren = next_1_char == '('
 
         qunit_dom_completion_list = []
         qunit_dom_completion_list += self.build_completion_list_for_methods(self.qunit_dom_methods_dict, 'QUnit DOM', next_char_is_open_paren)
