@@ -1,0 +1,381 @@
+%YAML 1.2
+---
+name: CSS Blocks (SCSS)
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - block.scss
+scope: source.css.css-blocks
+
+variables:
+  BLOCK_NAME_IDENTIFIER_CHAR: '[\w-]'
+  BLOCK_NAME_IDENTIFIER: '{{BLOCK_NAME_IDENTIFIER_CHAR}}+'
+
+contexts:
+  # The prototype context is prepended to all contexts but those using
+  # `meta_include_prototype: false`.
+  prototype:
+    - include: comment
+
+  main:
+    - match: ''
+      push: SCSS.sublime-syntax
+      with_prototype:
+      - include: at-rule
+
+  at-rule:
+    - match: ((@)block-global)\b(?=\s|;)
+      captures:
+        1: keyword.control.at-rule.block-global-state.css-blocks
+        2: punctuation.definition.keyword.css-blocks
+      push:
+      - meta_content_scope: meta.at-rule.block-global-state.css-blocks
+      - include: pop-on--terminator
+
+      - match: (?=[^\s;])
+        push: Sass.sublime-syntax#selectors
+        with_prototype:
+        - include: pop-before--terminator
+
+    - match: ((@)block)\b(?=\s|;)
+      captures:
+        1: keyword.control.at-rule.block-import.css-blocks
+        2: punctuation.definition.keyword.css-blocks
+      push:
+      - meta_scope: meta.at-rule.block-import.css-blocks
+      - include: pop-on--terminator
+      - include: pop-after--terminator # in case a deeper scope marked a terminator as an error
+      - include: pop-after--block-path
+
+      - include: block-path
+      - include: from
+      # Block Import List
+      - match: (?=[^\s;])
+        push:
+        - meta_scope: meta.block-import-list.css-blocks
+        - include: pop-before--terminator
+        - include: pop-after--terminator # in case a deeper scope marked a terminator as an error
+
+        - include: as-alias
+        - include: pop-before--from-or-as
+        # Default Block Import
+        - match: '{{BLOCK_NAME_IDENTIFIER}}'
+          scope: meta.default-block-import.css-blocks  entity.name.block.css-blocks
+          push:
+
+          - include: pop-on--separator
+          - include: pop-before--from-or-as
+          - match: \S+
+            scope: invalid.illegal.expected-from-or-as-clause.css-blocks
+            pop: true
+        # Named Block Imports
+        - match: \(
+          scope: punctuation.definition.group.begin.css.css-blocks
+          push:
+          - meta_scope: meta.named-block-imports.css-blocks
+          - include: error--unexpected-terminator
+          - include: pop-after--terminator
+
+          - include: block-name
+          - include: separator
+          - include: pop-on--group-end
+          - include: error-pop--expected-group-end
+
+    - match: ((@)export)\b(?=\s|;)
+      captures:
+        1: keyword.control.at-rule.export.css-blocks
+        2: punctuation.definition.keyword.css-blocks
+      push:
+      - meta_scope: meta.at-rule.export.css-blocks
+      - include: pop-on--terminator
+      - include: pop-after--terminator # in case a deeper scope marked a terminator as an error
+      - include: pop-after--block-path
+
+      - include: block-path
+      - include: from
+      # Block Export List
+      - match: (?=[^\s;])
+        push:
+        - meta_scope: meta.block-export-list.css-blocks
+        - include: pop-before--terminator
+        - include: pop-after--terminator # in case a deeper scope marked a terminator as an error
+
+        - include: as-alias
+        - include: pop-before--from-or-as
+        - match: '{{BLOCK_NAME_IDENTIFIER}}'
+          scope: meta.default-block-export.css-blocks  entity.name.block.css-blocks
+          push:
+          - include: pop-before--terminator # unique to `@export`
+
+          - include: pop-on--separator
+          - include: pop-before--from-or-as
+          - match: '\S+'
+            scope: invalid.illegal.expected-from-or-as-clause.css-blocks
+            pop: true
+        - match: \(
+          scope: punctuation.definition.group.begin.css.css-blocks
+          push:
+          - meta_scope: meta.named-block-exports.css-blocks
+          - include: error--unexpected-terminator
+          - include: pop-after--terminator
+
+          - include: block-name
+          - include: separator
+          - include: pop-on--group-end
+          - include: error-pop--expected-group-end
+
+
+  comment:
+    - include: Sass.sublime-syntax#comment-block
+    - include: Sass.sublime-syntax#comment-line
+
+
+  #
+  # Parts
+  #
+
+
+  terminator:
+    - match: ;
+      scope: punctuation.terminator.rule.css.css-blocks
+
+
+  separator:
+    - match: \s*(,)
+      captures:
+        1: punctuation.separator.css.css-blocks
+
+
+  block-name:
+    - match: \s*({{BLOCK_NAME_IDENTIFIER}})
+      captures:
+        1: entity.name.block.css-blocks
+
+
+  from:
+    - match: from\b
+      scope: keyword.control.from.css-blocks
+
+
+  as-alias:
+    - match: as\b
+      scope: keyword.control.as.css-blocks
+      push:
+      - match: \s*({{BLOCK_NAME_IDENTIFIER}})
+        captures:
+          1: meta.block-alias.css-blocks  entity.name.block.css-blocks
+        pop: true
+      - include: error-pop--expected-block-name
+
+
+  block-path:
+    - match: (')
+      captures:
+        1: punctuation.definition.string.begin.css.css-blocks
+      push:
+      - meta_scope: meta.block-path.css-blocks  string.quoted.single.css.css-blocks
+      - include: pop-on--single-quote
+    - match: (")
+      captures:
+        1: punctuation.definition.string.begin.css.css-blocks
+      push:
+      - meta_scope: meta.block-path.css-blocks  string.quoted.double.css.css-blocks
+      - include: pop-on--double-quote
+
+
+  #
+  # Utils
+  #
+
+
+  pop-before--terminator:
+    - match: (?=;)
+      pop: true
+  pop-before--from-or-as:
+    - match: (?=(from|as)\b)
+      pop: true
+
+
+  pop-on--terminator:
+    - match: ;
+      scope: punctuation.terminator.rule.css.css-blocks
+      pop: true
+  pop-on--separator:
+    - match: \s*(,)
+      captures:
+        1: punctuation.separator.css.css-blocks
+      pop: true
+  pop-on--group-end:
+    - match: \s*(\))
+      captures:
+        1: punctuation.definition.group.end.css.css-blocks
+      pop: true
+  pop-on--single-quote:
+    - match: \s*(')
+      captures:
+        1: punctuation.definition.string.end.css.css-blocks
+      pop: true
+  pop-on--double-quote:
+    - match: \s*(")
+      captures:
+        1: punctuation.definition.string.end.css.css-blocks
+      pop: true
+
+
+  pop-after--terminator:
+    - match: (?<=;)
+      pop: true
+  pop-after--block-path:
+    - match: (?<='|")
+      pop: true
+
+
+  error--unexpected-terminator:
+    - match: ';'
+      scope: invalid.illegal.unexpected-terminator.css-blocks
+
+
+  error-pop--unexpected-default:
+    - match: '\bdefault\b'
+      scope: invalid.illegal.default-is-a-reserved-word.css-blocks
+      pop: true
+
+
+  error-pop--expected-terminator:
+    - match: '[^\s;]+'
+      scope: invalid.illegal.expected-terminator.css-blocks
+      pop: true
+  error-pop--expected-group-end:
+    - match: '[^\s)]'
+      scope: invalid.illegal.expected-close-paren.css-blocks
+      pop: true
+  error-pop--expected-block-name:
+    - match: '[^{{BLOCK_NAME_IDENTIFIER_CHAR}}]'
+      scope: invalid.illegal.expected-block-name.css-blocks
+      pop: true
+
+
+  # ------------------------------------------------------------------------------------------------
+
+
+  # > Note: This version is much more strict in that it colors syntax as an error whenever it isn’t
+  #   correct. It’s much more tedious to write, however, so this style was abandoned for the sake of
+  #   time. There might be a better way to do it that’s more terse, readable and reusable. I’d
+  #   eventually like to develop it further.
+  #
+  #   Currently it’s only missing the block name alias handling (i.e. `as foo`). And the handling of
+  #   `@export` (which is essentially the same syntax as `@block`).
+  at-rule--strict:
+    - match: \s*((@)block\b)\s*
+      captures:
+        1: keyword.control.at-rule.block-import.css-blocks
+        2: punctuation.definition.keyword.css-blocks
+      push:
+      - meta_scope: meta.at-rule.block-import.css-blocks
+      - include: comment
+      - include: pop-on--terminator
+
+      # Next we have to have a group or a block name.
+
+      # Named Block Imports
+      - include: named-block-imports--strict
+
+      # Default Block Import
+      - match: '{{BLOCK_NAME_IDENTIFIER}}'
+        scope: meta.block-import-list.css-blocks  entity.name.block.css-blocks
+        set:
+        - meta_content_scope: meta.at-rule.block-import.css-blocks
+        - include: comment
+
+        - include: block-import-from--strict
+
+        # One separator is allowed and then we better get a named block import group, a “from“
+        # or an “as”.
+        - match: \s*(,)
+          captures:
+            0: meta.block-import-list.css-blocks
+            1: punctuation.separator.css.css-blocks
+          set:
+          - meta_content_scope: meta.at-rule.block-import.css-blocks  meta.block-import-list.css-blocks
+          - include: comment
+
+          - include: named-block-imports--strict
+
+          - match: \S+
+            scope: invalid.illegal.expected-open-paren.css-blocks
+            pop: true
+
+        - match: \S+
+          scope: invalid.illegal.expected-comma-or-from-or-as.css-blocks
+          pop: true
+
+      - match: \S+
+        scope: invalid.illegal.expected-block-name-or-open-paren.css-blocks
+        pop: true
+
+  named-block-imports--strict:
+    - match: \(
+      scope: meta.named-block-imports.css-blocks  punctuation.definition.group.begin.css.css-blocks
+      set:
+      - meta_content_scope: meta.at-rule.block-import.css-blocks  meta.block-import-list.css-blocks  meta.named-block-imports.css-blocks
+      - include: comment
+
+      - match: \)
+        scope: punctuation.definition.group.end.css.css-blocks
+        set:
+        - meta_content_scope: meta.at-rule.block-import.css-blocks
+        - include: comment
+
+        - include: block-import-from--strict
+
+        - match: \S+
+          scope: invalid.illegal.expected-from.css-blocks
+          pop: true
+
+      - include: block-name
+      - include: separator
+
+      - match: \S+
+        scope: invalid.illegal.expected-block-name-or-comma-or-close-paren.css-blocks
+        pop: true
+
+  block-import-from--strict:
+    - match: \s*(from)\b
+      captures:
+        1: keyword.control.from.css-blocks
+      set:
+      - meta_content_scope: meta.at-rule.block-import.css-blocks
+      - include: comment
+
+      - match: \'
+        scope: meta.block-path.css-blocks  string.quoted.single.css.css-blocks  punctuation.definition.string.begin.css.css-blocks
+        set:
+        - meta_content_scope: meta.at-rule.block-import.css-blocks  meta.block-path.css-blocks  string.quoted.single.css.css-blocks
+        - meta_include_prototype: false
+
+        - match: \'
+          scope: punctuation.definition.string.end.css.css-blocks
+          set:
+          - meta_content_scope: meta.at-rule.block-import.css-blocks
+          - include: comment
+
+          - include: pop-on--terminator
+          - include: error-pop--expected-terminator
+
+      - match: \"
+        scope: meta.block-path.css-blocks  string.quoted.double.css.css-blocks  punctuation.definition.string.begin.css.css-blocks
+        set:
+        - meta_content_scope: meta.at-rule.block-import.css-blocks  meta.block-path.css-blocks  string.quoted.double.css.css-blocks
+        - meta_include_prototype: false
+
+        - match: \"
+          scope: punctuation.definition.string.end.css.css-blocks
+          set:
+          - meta_content_scope: meta.at-rule.block-import.css-blocks
+          - include: comment
+
+          - include: pop-on--terminator
+          - include: error-pop--expected-terminator
+
+      - match: \S+
+        scope: invalid.illegal.expected-block-path-string.css-blocks
+        pop: true
