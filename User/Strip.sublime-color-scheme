@@ -4371,7 +4371,7 @@
 
 
 		//
-		//! Git Blame
+		//!  Git Blame
 		//
 		{"name": "Git Blame Commit Hash",
 			"scope": "string.sha.git-blame",
