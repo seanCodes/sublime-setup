@@ -13,6 +13,8 @@
 /MarkdownEditing/*
 !/MarkdownEditing/*.sublime-syntax
 
+!/QUnit Completions/
+
 !/Sublime Tools/
 
 !/User/

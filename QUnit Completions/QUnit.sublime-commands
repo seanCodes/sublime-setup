@@ -1,0 +1,6 @@
+[
+	{
+		"caption": "QUnit: Test find assert",
+		"command": "qunit_test_find_assert",
+	},
+]
