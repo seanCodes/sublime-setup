@@ -2738,6 +2738,11 @@
 			"foreground": "var(orange-red-fg)",
 			"background": "var(orange-red-bg)",
 		},
+		{"name": "Python String - Placeholder",
+			"scope": "source.python constant.other.placeholder",
+			// "foreground": "var(bright-powder-blue-fg)",
+			"foreground": "var(muted-spring-green-fg)",
+		},
 
 
 
