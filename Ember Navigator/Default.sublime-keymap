@@ -1,0 +1,32 @@
+[
+	// Smart
+	{ "keys": ["super+shift+o",     "super+shift+o"],     "command": "ember_navigator" },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+o"], "command": "ember_navigator", "args": { "new_tab": true } },
+	// JS (Same as Smart)
+	{ "keys": ["super+shift+o",     "super+shift+j"],     "command": "ember_navigator" },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+j"], "command": "ember_navigator", "args": { "new_tab": true } },
+	// Route.js
+	{ "keys": ["super+shift+o",     "super+shift+r"],     "command": "ember_navigator", "args": { "open_file_type": "route_js" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+r"], "command": "ember_navigator", "args": { "open_file_type": "route_js", "new_tab": true } },
+	// Controller.js
+	{ "keys": ["super+shift+o",     "super+shift+c"],     "command": "ember_navigator", "args": { "open_file_type": "controller_js" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+c"], "command": "ember_navigator", "args": { "open_file_type": "controller_js", "new_tab": true } },
+	// Template.hbs
+	{ "keys": ["super+shift+o",     "super+shift+h"],     "command": "ember_navigator", "args": { "open_file_type": "template_hbs" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+h"], "command": "ember_navigator", "args": { "open_file_type": "template_hbs", "new_tab": true } },
+	// Test.js
+	{ "keys": ["super+shift+o",     "super+shift+t"],     "command": "ember_navigator", "args": { "open_file_type": "test_js" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+t"], "command": "ember_navigator", "args": { "open_file_type": "test_js", "new_tab": true } },
+	// Integration/Test.js
+	{ "keys": ["super+shift+o",     "super+shift+i"],     "command": "ember_navigator", "args": { "open_file_type": "integration_test" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+i"], "command": "ember_navigator", "args": { "open_file_type": "integration_test", "new_tab": true } },
+	// Unit/Test.js
+	{ "keys": ["super+shift+o",     "super+shift+u"],     "command": "ember_navigator", "args": { "open_file_type": "unit_test" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+u"], "command": "ember_navigator", "args": { "open_file_type": "unit_test", "new_tab": true } },
+	// Acceptance/Test.js
+	{ "keys": ["super+shift+o",     "super+shift+a"],     "command": "ember_navigator", "args": { "open_file_type": "acceptance_test" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+a"], "command": "ember_navigator", "args": { "open_file_type": "acceptance_test", "new_tab": true } },
+	// Style.*
+	{ "keys": ["super+shift+o",     "super+shift+s"],     "command": "ember_navigator", "args": { "open_file_type": "style" } },
+	{ "keys": ["super+shift+alt+o", "super+shift+alt+s"], "command": "ember_navigator", "args": { "open_file_type": "style", "new_tab": true } },
+]
