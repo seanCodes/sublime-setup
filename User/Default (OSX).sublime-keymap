@@ -159,7 +159,7 @@
 	// 	]
 	// },
 
-	// Wrap with Spaces
+	// Wrap with Spaces.
 	{ "keys": [" "], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Wrap with Spaces.sublime-macro"},
 		"context": [
 			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
