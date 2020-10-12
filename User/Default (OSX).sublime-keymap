@@ -171,6 +171,23 @@
 		]
 	},
 
+	// Insert `if () {}` in JS contexts.
+	{ "keys": [" "], "command": "insert_snippet", "args": {"contents": " ($1) {$2}"}, "context": [
+		{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+		{ "key": "selection_empty",            "operator": "equal",          "operand": true,                           "match_all": true },
+		{ "key": "selector",                   "operator": "equal",          "operand": "source.js - comment - string", "match_all": true },
+		{ "key": "preceding_text",             "operator": "regex_contains", "operand": "^\\s+if$",                     "match_all": true },
+		{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\s*$",                       "match_all": true },
+	]},
+	// Insert `if : pass` in Python contexts.
+	{ "keys": [" "], "command": "insert_snippet", "args": {"contents": " $1:\n\t${2:pass}"}, "context": [
+		{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+		{ "key": "selection_empty",            "operator": "equal",          "operand": true,                               "match_all": true },
+		{ "key": "selector",                   "operator": "equal",          "operand": "source.python - comment - string", "match_all": true },
+		{ "key": "preceding_text",             "operator": "regex_contains", "operand": "^\\s+if$",                         "match_all": true },
+		{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\s*$",                           "match_all": true },
+	]},
+
 
 
 	// Insert `!important` in CSS contexts.
