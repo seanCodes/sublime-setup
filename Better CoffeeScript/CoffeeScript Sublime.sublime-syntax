@@ -26,9 +26,9 @@ variables:
   dollar_only_identifier: (?:\${{identifier_break}})
   dollar_identifier: (?:(\$){{identifier_part}}*{{identifier_break}})
 
-  keyword: (?:break|by|catch|continue|else|finally|for|in|of|if|return|yield|switch|then|throw|try|unless|when|while|until|loop|do|(?<=for)\s+own)
+  keyword: (?:break|by|catch|continue|else|finally|for|in|of|if|return|yield|switch|then|throw|try|unless|when|while|until|loop|do)
+  keyword_for_own: (?<=for)\s+own
   operator_keyword: (?:instanceof|new|delete|typeof|and|or|is|isnt|not|super)
-
 
   # The prototype context is prepended to all contexts but those setting
   # meta_include_prototype: false.
@@ -100,10 +100,7 @@ contexts:
     set: regexp
   - match: >-
       (?x)
-      \b(?<![\.\$])(
-        break|by|catch|continue|else|finally|for|in|of|if|return|yield|switch|
-        then|throw|try|unless|when|while|until|loop|do|(?<=for)\s+own
-      )(?!\s*:)\b
+      \b(?<![\.\$])({{keyword}}|{{keyword_for_own}})(?!\s*:)\b
     scope: keyword.control.coffee
   - match: >-
       (?x)
@@ -478,7 +475,7 @@ contexts:
     - match: ' '
       set:
         - meta_scope: function-call-implicit-arguments
-        - match: (?=}|$)
+        - match: (?=\s*(}|$|{{keyword}}\s))
           pop: true
         #- include: expression-list # <-- FROM JS
         - include: main # ADDED
