@@ -97,7 +97,7 @@ contexts:
       - include: scope:source.regexp.js
   - match: '/(?![\s=/*+{}?])'
     scope: punctuation.definition.string.begin.js
-    set: regexp
+    push: regexp
   - match: >-
       (?x)
       \b(?<![\.\$])({{keyword}}|{{keyword_for_own}})(?!\s*:)\b
