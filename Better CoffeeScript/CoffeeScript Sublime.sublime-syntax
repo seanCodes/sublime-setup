@@ -422,11 +422,11 @@ contexts:
       scope: invalid.deprecated.js support.function.js white
 
   literal-call: # FROM JS
-    #- match: (?={{identifier}}\s*\()
-    #  set:
-    #    - call-function-meta
-    #    - function-call-arguments
-    #    - literal-variable
+    - match: (?={{identifier}}\s*\()
+      set:
+        - call-function-meta
+        - function-call-arguments
+        - call-function-name
 
     #- match: (?={{identifier}}\s*(?:\.\s*{{identifier}}\s*)+\()
     #  set:
