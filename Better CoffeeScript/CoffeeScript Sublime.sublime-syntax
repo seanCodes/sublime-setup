@@ -79,12 +79,15 @@ contexts:
   - match: /{3}
     push:
       - meta_scope: string.regexp.coffee
+      - meta_include_prototype: false
       - match: /{3}[imgy]{0,4}
         pop: true
       - include: interpolated_coffee
       - include: embedded_comment
-  - match: /(?![\s=/*+{}?])(\\.|.)*?/[igmy]{0,4}(?![a-zA-Z0-9])
-    scope: string.regexp.coffee
+      - include: scope:source.regexp.js
+  - match: '/(?![\s=/*+{}?])'
+    scope: punctuation.definition.string.begin.js
+    set: regexp
   - match: >-
       (?x)
       \b(?<![\.\$])(
@@ -279,3 +282,28 @@ contexts:
       captures:
         1: variable.assignment.coffee
       scope: variable.assignment.coffee
+
+
+
+
+  regexp:
+    - meta_include_prototype: false
+    - meta_scope: string.regexp.js
+    - match: "/"
+      scope: punctuation.definition.string.end.js
+      set:
+        - meta_include_prototype: false
+        - meta_content_scope: string.regexp.js
+        - match: '[gimyus]'
+          scope: keyword.other.js
+        - match: '[A-Za-z0-9]' # Ignore unknown flags for future-compatibility
+        - include: immediately-pop
+    - match: '(?=.|\n)'
+      push:
+        - meta_include_prototype: false
+        - match: '(?=/)'
+          pop: true
+        - include: scope:source.regexp.js
+  immediately-pop:
+    - match: ''
+      pop: true
