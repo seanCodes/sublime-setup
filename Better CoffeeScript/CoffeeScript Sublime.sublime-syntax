@@ -439,14 +439,13 @@ contexts:
     #    - call-path
     #    - literal-variable
 
-    - match: (?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}}){{identifier}})
+    - match: (?={{identifier}}\s+(?!{{operator_keyword}}|{{keyword}})(?:{{identifier_start}}|/|'|"|`|!(?!=)|@|--\s*\S|\+\+\s*\S|(-|\+)\S|\d|=>|\[|\{|\())
       #scope: bright.red-orange style.italic
       #set:
       #  - call-function-implicit-meta
       #  - function-call-implicit-arguments
       #  - call-function-name
       push:
-        - meta_scope: meta.function-call.js.implicit.coffee
         - match: (?={{identifier}})
           set:
             - call-function-implicit-meta
@@ -471,8 +470,9 @@ contexts:
 
 
   call-function-implicit-meta:
-    - meta_scope: meta.function-call.js.implicit.coffee
-    - include: else-pop
+    - meta_scope: meta.function-call.js.implicit.coffee #bright.red-orange style.italic
+    #- include: else-pop # <-- FROM JS
+    - include: immediately-pop # ADDED
 
   function-call-implicit-arguments:
     - match: ' '
