@@ -24,7 +24,10 @@ variables:
 
   identifier: (?:{{identifier_start}}{{identifier_part}}*{{identifier_break}})
   dollar_only_identifier: (?:\${{identifier_break}})
-  dollar_identifier: '(?:(\$){{identifier_part}}*{{identifier_break}})'
+  dollar_identifier: (?:(\$){{identifier_part}}*{{identifier_break}})
+
+  keyword: (?:break|by|catch|continue|else|finally|for|in|of|if|return|yield|switch|then|throw|try|unless|when|while|until|loop|do|(?<=for)\s+own)
+  operator_keyword: (?:instanceof|new|delete|typeof|and|or|is|isnt|not|super)
 
 
   # The prototype context is prepended to all contexts but those setting
@@ -234,6 +237,8 @@ contexts:
   - include: double_quoted_string
   - include: numeric
 
+  - include: literal-call
+
   - match: '{{identifier}}'
     scope: bright.red
 
@@ -269,6 +274,9 @@ contexts:
           scope: punctuation.section.embedded.coffee
           pop: true
         - include: main
+          # with_prototype:
+          #   - match: (?=\})
+          #     pop: true
     - match: <%
       scope: punctuation.section.embedded.coffee
       push:
@@ -299,7 +307,7 @@ contexts:
   ###
 
 
-  property-access:
+  property-access: # FROM JS
     # - match: '\['
     #   scope: punctuation.section.brackets.begin.coffee
     #   push:
@@ -320,6 +328,9 @@ contexts:
             - function-call-arguments
             # - call-path
             - object-property
+        #- match: '(?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}})){{identifier}}'
+        #  set:
+        #    - call-method-meta
         - include: object-property
 
   call-method-meta: # FROM JS
@@ -345,7 +356,7 @@ contexts:
       push: object-property
     - include: else-pop
 
-  object-property:
+  object-property: # FROM JS
     - meta_scope: object-property
     # - match: |-
     #     (?x)(?=
@@ -362,6 +373,9 @@ contexts:
 
     - match: '(?={{identifier}}\s*\()'
       set: call-method-name
+
+    #- match: '(?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}})){{identifier}}'
+    #  set: call-method-name
 
     - include: object-property-base
     - include: else-pop
@@ -411,6 +425,62 @@ contexts:
     - match: (?:__defineGetter__|__defineSetter__|__lookupGetter__){{identifier_break}}
       scope: invalid.deprecated.js support.function.js white
 
+  literal-call: # FROM JS
+    #- match: (?={{identifier}}\s*\()
+    #  set:
+    #    - call-function-meta
+    #    - function-call-arguments
+    #    - literal-variable
+
+    #- match: (?={{identifier}}\s*(?:\.\s*{{identifier}}\s*)+\()
+    #  set:
+    #    - call-method-meta
+    #    - function-call-arguments
+    #    - call-path
+    #    - literal-variable
+
+    - match: (?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}}){{identifier}})
+      #scope: bright.red-orange style.italic
+      set:
+        - call-function-implicit-meta
+        - function-call-implicit-arguments
+        - call-function-name
+      #push:
+      #  - meta_scope: meta.function-call.js.coffee
+      #  - match: '{{identifier}}'
+      #    scope: variable.function.js.coffee
+      #    #set:
+
+  call-function-meta:
+    - meta_scope: meta.function-call.js
+    - include: else-pop
+
+  call-function-name: # VERBATIM FROM JS
+    - match: '{{dollar_only_identifier}}'
+      scope: variable.function.js variable.other.dollar.only.js punctuation.dollar.js
+      pop: true
+    - match: '{{identifier}}'
+      scope: variable.function.js
+      pop: true
+    - include: else-pop
+
+
+  ###
+
+
+  call-function-implicit-meta:
+    - meta_scope: meta.function-call.js.implicit.coffee
+    - include: else-pop
+
+  function-call-implicit-arguments:
+    - meta_scope: function-call-implicit-arguments
+    - match: ' '
+      set:
+        - match: (?=$)
+          pop: true
+        #- include: expression-list # <-- FROM JS
+        - include: main # ADDED
+
 
   ###
 
@@ -433,6 +503,9 @@ contexts:
         - match: '(?=/)'
           pop: true
         - include: scope:source.regexp.js
+  eol-pop:
+    - match: (?=$)
+      pop: true
   else-pop: # VERBATIM FROM JS
     - match: (?=\S)
       pop: true
