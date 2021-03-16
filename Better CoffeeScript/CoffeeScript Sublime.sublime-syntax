@@ -16,8 +16,15 @@ file_extensions:
 name: CoffeeScript Sublime
 scope: source.coffee
 first_line_match: ^#!.*\bcoffee
-#variables:
+variables:
+  identifier_escape: (?:\\u(?:\h{4}|\{\h+\}))
+  identifier_start: (?:[_$\p{L}\p{Nl}]|{{identifier_escape}})
+  identifier_part: (?:[_$\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]|{{identifier_escape}})
+  identifier_break: (?!{{identifier_part}})
 
+  identifier: (?:{{identifier_start}}{{identifier_part}}*{{identifier_break}})
+  dollar_only_identifier: (?:\${{identifier_break}})
+  dollar_identifier: '(?:(\$){{identifier_part}}*{{identifier_break}})'
 
 
   # The prototype context is prepended to all contexts but those setting
@@ -213,6 +220,7 @@ contexts:
     scope: punctuation.terminator.statement.coffee
   - match: ',[ |\t]*'
     scope: meta.delimiter.object.comma.coffee
+  - include: property-access
   - match: \.
     scope: meta.delimiter.method.period.coffee
   - match: \{|\}
@@ -225,6 +233,10 @@ contexts:
   - include: single_quoted_string
   - include: double_quoted_string
   - include: numeric
+
+  - match: '{{identifier}}'
+    scope: bright.red
+
 
 
 
@@ -284,6 +296,123 @@ contexts:
       scope: variable.assignment.coffee
 
 
+  ###
+
+
+  property-access:
+    # - match: '\['
+    #   scope: punctuation.section.brackets.begin.coffee
+    #   push:
+    #     - meta_scope: meta.brackets.coffee
+    #     - match: '\]'
+    #       scope: punctuation.section.brackets.end.coffee
+    #       pop: true
+    #     - match: (?=\S)
+    #       #push: expression # <-- FROM JS
+    #       push: main
+
+    - match: \.
+      scope: punctuation.accessor.js
+      push:
+        - match: '(?={{identifier}}\s*\()'
+          set:
+            - call-method-meta
+            - function-call-arguments
+            # - call-path
+            - object-property
+        - include: object-property
+
+  call-method-meta: # FROM JS
+    - meta_scope: meta.function-call.method.js white
+    #- include: else-pop # <-- FROM JS
+    - include: immediately-pop # ADDED
+
+  function-call-arguments: # FROM JS
+    - meta_scope: function-call-arguments
+    - match: \(
+      scope: punctuation.section.group.begin.js white
+      set:
+        - meta_scope: meta.group.js white
+        - match: \)
+          scope: punctuation.section.group.end.js white
+          pop: true
+        #- include: expression-list # <-- FROM JS
+        - include: main # ADDED
+
+  call-path: # VERBATIM FROM JS
+    - match: \.
+      scope: punctuation.accessor.js white
+      push: object-property
+    - include: else-pop
+
+  object-property:
+    - meta_scope: object-property
+    # - match: |-
+    #     (?x)(?=
+    #       {{identifier}}
+    #       \s* = \s*
+    #       {{either_func_lookahead}}
+    #     )
+    #   set:
+    #     - function-initializer
+    #     - function-name-meta
+    #     - object-property-base
+
+    - include: support-property
+
+    - match: '(?={{identifier}}\s*\()'
+      set: call-method-name
+
+    - include: object-property-base
+    - include: else-pop
+
+  call-method-name: # VERBATIM FROM JS
+    - include: support-property
+    - match: '{{identifier}}'
+      scope: variable.function.js white
+      pop: true
+    - include: else-pop
+
+  object-property-base: # VERBATIM FROM JS
+    - match: '{{dollar_only_identifier}}'
+      scope: meta.property.object.dollar.only.js punctuation.dollar.js
+      pop: true
+    - match: '{{dollar_identifier}}'
+      scope: meta.property.object.dollar.js
+      captures:
+        1: punctuation.dollar.js
+      pop: true
+    - match: '{{identifier}}'
+      scope: meta.property.object.js
+      pop: true
+    - match: '{{identifier_part}}+{{identifier_break}}'
+      scope: invalid.illegal.illegal-identifier.js
+      pop: true
+
+  support-property: # VERBATIM FROM JS
+    - include: support-property-ecma
+
+  support-property-ecma: # VERBATIM FROM JS
+    - match: constructor{{identifier_break}}
+      scope: variable.language.constructor.js white
+      pop: true
+    - match: prototype{{identifier_break}}
+      scope: support.constant.prototype.js white
+      pop: true
+
+    - match: (?:hasOwnProperty|isPrototypeOf|propertyIsEnumerable|toLocaleString|toString|valueOf){{identifier_break}}
+      scope: support.function.js white
+      pop: true
+
+    # Annex B
+    - match: __proto__{{identifier_break}}
+      scope: invalid.deprecated.js variable.language.prototype.js white
+      pop: true
+    - match: (?:__defineGetter__|__defineSetter__|__lookupGetter__){{identifier_break}}
+      scope: invalid.deprecated.js support.function.js white
+
+
+  ###
 
 
   regexp:
@@ -304,6 +433,9 @@ contexts:
         - match: '(?=/)'
           pop: true
         - include: scope:source.regexp.js
-  immediately-pop:
+  else-pop: # VERBATIM FROM JS
+    - match: (?=\S)
+      pop: true
+  immediately-pop: # VERBATIM FROM JS
     - match: ''
       pop: true
