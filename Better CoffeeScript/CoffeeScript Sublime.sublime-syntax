@@ -389,18 +389,18 @@ contexts:
 
   object-property-base: # VERBATIM FROM JS
     - match: '{{dollar_only_identifier}}'
-      scope: meta.property.object.dollar.only.js punctuation.dollar.js
+      scope: meta.property.object.dollar.only.js punctuation.dollar.js white
       pop: true
     - match: '{{dollar_identifier}}'
-      scope: meta.property.object.dollar.js
+      scope: meta.property.object.dollar.js white
       captures:
-        1: punctuation.dollar.js
+        1: punctuation.dollar.js white
       pop: true
     - match: '{{identifier}}'
-      scope: meta.property.object.js
+      scope: meta.property.object.js white
       pop: true
     - match: '{{identifier_part}}+{{identifier_break}}'
-      scope: invalid.illegal.illegal-identifier.js
+      scope: invalid.illegal.illegal-identifier.js white
       pop: true
 
   support-property: # VERBATIM FROM JS
@@ -441,15 +441,17 @@ contexts:
 
     - match: (?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}}){{identifier}})
       #scope: bright.red-orange style.italic
-      set:
-        - call-function-implicit-meta
-        - function-call-implicit-arguments
-        - call-function-name
-      #push:
-      #  - meta_scope: meta.function-call.js.coffee
-      #  - match: '{{identifier}}'
-      #    scope: variable.function.js.coffee
-      #    #set:
+      #set:
+      #  - call-function-implicit-meta
+      #  - function-call-implicit-arguments
+      #  - call-function-name
+      push:
+        - meta_scope: meta.function-call.js.implicit.coffee
+        - match: (?={{identifier}})
+          set:
+            - call-function-implicit-meta
+            - function-call-implicit-arguments
+            - call-function-name
 
   call-function-meta:
     - meta_scope: meta.function-call.js
@@ -473,10 +475,10 @@ contexts:
     - include: else-pop
 
   function-call-implicit-arguments:
-    - meta_scope: function-call-implicit-arguments
     - match: ' '
       set:
-        - match: (?=$)
+        - meta_scope: function-call-implicit-arguments
+        - match: (?=}|$)
           pop: true
         #- include: expression-list # <-- FROM JS
         - include: main # ADDED
