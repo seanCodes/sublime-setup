@@ -219,9 +219,17 @@ contexts:
     scope: punctuation.terminator.statement.coffee
   - match: ',[ |\t]*'
     scope: meta.delimiter.object.comma.coffee
-  - include: property-access
+  #- include: property-access
   - match: \.
     scope: meta.delimiter.method.period.coffee
+  #- match: \{
+  #  scope: meta.brace.curly.coffee
+  #  set:
+  #    - meta_scope: meta.block.js.coffee
+  #    - match: \}
+  #      scope: meta.brace.curly.coffee
+  #      pop: true
+  #    - include: main
   - match: \{|\}
     scope: meta.brace.curly.coffee
   - match: \(|\)
@@ -235,8 +243,8 @@ contexts:
 
   - include: literal-call
 
-  - match: '{{identifier}}'
-    scope: bright.red
+  #- match: '{{identifier}}'
+  #  scope: bright.red
 
 
 
