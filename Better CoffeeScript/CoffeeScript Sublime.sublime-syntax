@@ -448,9 +448,10 @@ contexts:
             - function-call-implicit-arguments
             - call-function-name
 
-  call-function-meta:
+  call-function-meta: # FROM JS
     - meta_scope: meta.function-call.js
-    - include: else-pop
+    #- include: else-pop # <-- FROM JS
+    - include: immediately-pop # ADDED
 
   call-function-name: # VERBATIM FROM JS
     - match: '{{dollar_only_identifier}}'
