@@ -580,7 +580,7 @@ contexts:
     - match: ' +'
       set:
         - meta_scope: function-call-implicit-arguments bright.red-orange
-        - match: (?=\s*(#|}|$|{{keyword}}\s))
+        - match: (?=\s*(#|}|]|$|{{keyword}}\s))
           pop: true
         - include: expression-list # <-- FROM JS
         - include: main # ADDED
