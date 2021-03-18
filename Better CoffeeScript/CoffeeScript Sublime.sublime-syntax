@@ -195,6 +195,7 @@ contexts:
     scope: meta.brace.curly.coffee
   - match: \(|\)
     scope: meta.brace.round.coffee
+  - include: array
   - match: \[|\]\s*
     scope: meta.brace.square.coffee
   - include: instance_variable
@@ -494,6 +495,20 @@ contexts:
     - match: \,
       scope: punctuation.separator.comma.js.coffee
 
+  array: # ADDED
+    - match: (?=\[)
+      push: array-literal
+  array-literal: # FROM JS
+    - match: '\['
+      scope: punctuation.section.brackets.begin.js.coffee
+      set:
+        - meta_scope: meta.sequence.js.coffee
+        - match: '\]'
+          scope: punctuation.section.brackets.end.js.coffee
+          pop: true
+        #- include: expression-list # <-- FROM JS
+        - include: main # ADDED
+
 
   ### NEWLY ADDED, UNUSED CONTEXTS (MOSTLY COPIED FROM JS)
 
@@ -555,7 +570,7 @@ contexts:
     #- include: object-literal
 
     #- include: parenthesized-expression
-    #- include: array-literal
+    - include: array-literal
 
     - include: literal-call
     #- include: literal-variable
