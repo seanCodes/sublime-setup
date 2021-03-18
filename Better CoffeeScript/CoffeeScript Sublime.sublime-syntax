@@ -48,16 +48,6 @@ contexts:
     captures:
       1: keyword.operator.new.coffee
       2: support.class.coffee
-  - match: '`'
-    scope: punctuation.definition.string.begin.coffee
-    push:
-      - meta_include_prototype: false
-      - meta_scope: string.quoted.script.coffee
-      - match: '`'
-        pop: true
-        scope: punctuation.definition.string.end.coffee
-      - match: \\(x\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]|37[0-7]?|[4-7][0-7]?|.)
-        scope: constant.character.escape.coffee
   - match: /{3}
     push:
       - meta_scope: string.regexp.coffee
@@ -262,7 +252,11 @@ contexts:
           pop: true
 
   string:
-    - match: (?=\"|')
+    - match: ({{identifier}})(?="|')
+      scope: variable.function.tagged-template.coffee
+      push: literal-string
+
+    - match: (?="|')
       push: literal-string
   literal-string:
     - match: \'''
