@@ -497,9 +497,14 @@
 			"background": "var(muted-spring-green-bg)",
 		},
 		{"name": "String - Interpolated",
-			"scope": "string.quoted.interpolated, string.interpolated",
+			"scope": "string.quoted.interpolated, string.interpolated, meta.interpolation",
 			"foreground": "var(bright-spring-green-fg)", // aaafebee
 			"background": "var(bright-spring-green-bg)", // aaafdb09
+		},
+		{"name": "String - Interpolated: Punctuation",
+			"scope": "punctuation.definition.interpolation",
+			"foreground": "var(muted-spring-green-fg)",
+			"background": "var(muted-spring-green-bg)",
 		},
 		{"name": "String - Template",
 			"scope": "string.template-string, string.template",
