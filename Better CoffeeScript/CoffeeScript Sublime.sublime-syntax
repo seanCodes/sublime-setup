@@ -30,12 +30,12 @@ variables:
   keyword_for_own: (?<=for)\s+own
   operator_keyword: (?:instanceof|new|delete|typeof|and|or|is|isnt|not|super)
 
+contexts:
   # The prototype context is prepended to all contexts but those setting
   # meta_include_prototype: false.
-  #prototype:
-  #  - include: comments
+  prototype:
+    - include: comments
 
-contexts:
   main:
   # match stuff like: a -> …
   - match: (\([^()]*?\))\s*([=-]>)
@@ -51,6 +51,7 @@ contexts:
   - match: ''''''''
     scope: punctuation.definition.string.begin.coffee
     push:
+      - meta_include_prototype: false
       - meta_scope: string.quoted.heredoc.coffee
       - match: ''''''''
         pop: true
@@ -58,6 +59,7 @@ contexts:
   - match: '"""'
     scope: punctuation.definition.string.begin.coffee
     push:
+      - meta_include_prototype: false
       - meta_scope: string.quoted.double.heredoc.coffee
       - match: '"""'
         pop: true
@@ -68,24 +70,13 @@ contexts:
   - match: '`'
     scope: punctuation.definition.string.begin.coffee
     push:
+      - meta_include_prototype: false
       - meta_scope: string.quoted.script.coffee
       - match: '`'
         pop: true
         scope: punctuation.definition.string.end.coffee
       - match: \\(x\h{2}|[0-2][0-7]{,2}|3[0-6][0-7]|37[0-7]?|[4-7][0-7]?|.)
         scope: constant.character.escape.coffee
-  - match: (?<!#)###(?!#)
-    scope: punctuation.definition.comment.coffee
-    push:
-      - meta_scope: comment.block.coffee
-      - match: '###(?:[ \t]*\n)'
-        pop: true
-      - match: '@\w*'
-        scope: storage.type.annotation.coffeescript
-  - match: (#)(?!\{).*$\n?
-    scope: comment.line.number-sign.coffee
-    captures:
-      1: punctuation.definition.comment.coffee
   - match: /{3}
     push:
       - meta_scope: string.regexp.coffee
@@ -247,13 +238,14 @@ contexts:
   #  scope: bright.red
 
 
-
+  ### EXISTING CONTEXTS
 
 
   double_quoted_string:
     - match: '"'
       scope: punctuation.definition.string.begin.coffee
       push:
+        - meta_include_prototype: false
         - meta_scope: string.quoted.double.coffee
         - match: '"'
           pop: true
@@ -262,10 +254,7 @@ contexts:
           scope: constant.character.escape.coffee
         - include: interpolated_coffee
   embedded_comment:
-    - match: (?<!\\)(#).*$\n?
-      scope: comment.line.number-sign.coffee
-      captures:
-        1: punctuation.definition.comment.coffee
+    - include: comment-line
   instance_variable:
     - match: (@)([a-zA-Z_\$]\w*)?
       scope: variable.other.readwrite.instance.coffee
@@ -295,6 +284,7 @@ contexts:
     - match: ''''
       scope: punctuation.definition.string.begin.coffee
       push:
+        - meta_include_prototype: false
         - meta_scope: string.quoted.single.coffee
         - match: ''''
           pop: true
@@ -308,7 +298,34 @@ contexts:
       scope: variable.assignment.coffee
 
 
-  ###
+  ### REWORKED, EXISTING CONTEXTS
+
+
+  comments:
+    - include: comment-block
+    - include: comment-line
+  comment-block:
+    - match: '###(?!#)'
+      scope: punctuation.definition.comment.begin.coffee
+      push:
+        - meta_include_prototype: false
+        - meta_scope: comment.block.coffee
+        - match: '###'
+          scope: punctuation.definition.comment.end.coffee
+          pop: true
+        - match: '@\w*'
+          scope: storage.type.annotation.flow.coffee
+  comment-line:
+    - match: '#'
+      scope: punctuation.definition.comment.coffee
+      push:
+        - meta_include_prototype: false
+        - meta_scope: comment.line.number-sign.coffee
+        - match: \n
+          pop: true
+
+
+  ### NEWLY ADDED CONTEXTS (MOSTLY COPIED FROM JS)
 
 
   property-access: # FROM JS
@@ -475,7 +492,7 @@ contexts:
     - include: else-pop
 
 
-  ###
+  ### ADDED CONTEXTS
 
 
   call-method-implicit-meta:
@@ -498,7 +515,7 @@ contexts:
         - include: main # ADDED
 
 
-  ###
+  ### UTILITY CONTEXTS + REGEXP FSR
 
 
   regexp:
