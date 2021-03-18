@@ -58,7 +58,7 @@ contexts:
       - include: embedded_comment
       - include: scope:source.regexp.js
   - match: '/(?![\s=/*+{}?])'
-    scope: punctuation.definition.string.begin.js
+    scope: punctuation.definition.string.begin.js.coffee
     push: regexp
   - match: >-
       (?x)
@@ -325,18 +325,18 @@ contexts:
 
   property-access: # FROM JS
     - match: '\['
-      scope: punctuation.section.brackets.begin.js
+      scope: punctuation.section.brackets.begin.js.coffee
       push:
-        - meta_scope: meta.brackets.js
+        - meta_scope: meta.brackets.js.coffee
         - match: '\]'
-          scope: punctuation.section.brackets.end.js
+          scope: punctuation.section.brackets.end.js.coffee
           pop: true
         #- match: (?=\S)    # <-- FROM JS
         #  push: expression # <-- FROM JS
         - include: main # <-- ADDED
 
     - match: \.
-      scope: punctuation.accessor.js
+      scope: punctuation.accessor.js.coffee
       push:
         - include: object-method
         - include: object-property
@@ -356,25 +356,25 @@ contexts:
         - call-function-name
 
   call-method-meta: # FROM JS
-    - meta_scope: meta.function-call.method.js #white
+    - meta_scope: meta.function-call.method.js.coffee #white
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
   function-call-arguments: # FROM JS
     - meta_scope: function-call-arguments
     - match: \(
-      scope: punctuation.section.group.begin.js #white
+      scope: punctuation.section.group.begin.js.coffee #white
       set:
-        - meta_scope: meta.group.js #white
+        - meta_scope: meta.group.js.coffee #white
         - match: \)
-          scope: punctuation.section.group.end.js #white
+          scope: punctuation.section.group.end.js.coffee #white
           pop: true
         - include: expression-list # <-- FROM JS
         - include: main # ADDED
 
   call-path: # VERBATIM FROM JS
     - match: \.
-      scope: punctuation.accessor.js #white
+      scope: punctuation.accessor.js.coffee #white
       push: object-property
     - include: else-pop
 
@@ -396,11 +396,9 @@ contexts:
     - match: '(?={{identifier}}\s*\()'
       set: call-method-name
 
+    # ADDED:
     - match: (?={{identifier}}\s+(?!{{operator_keyword}}|{{keyword}})(?:{{identifier_start}}|/|'|"|`|!(?!=)|@|--\s*\S|\+\+\s*\S|(-|\+)\S|\d|=>|\[|\{|\())
       set: call-method-name
-
-    #- match: '(?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}})){{identifier}}'
-    #  set: call-method-name
 
     - include: object-property-base
     - include: else-pop
@@ -408,24 +406,24 @@ contexts:
   call-method-name: # VERBATIM FROM JS
     - include: support-property
     - match: '{{identifier}}'
-      scope: variable.function.js #white
+      scope: variable.function.js.coffee #white
       pop: true
     - include: else-pop
 
   object-property-base: # VERBATIM FROM JS
     - match: '{{dollar_only_identifier}}'
-      scope: meta.property.object.dollar.only.js punctuation.dollar.js #white
+      scope: meta.property.object.dollar.only.js.coffee punctuation.dollar.js.coffee #white
       pop: true
     - match: '{{dollar_identifier}}'
-      scope: meta.property.object.dollar.js #white
+      scope: meta.property.object.dollar.js.coffee #white
       captures:
-        1: punctuation.dollar.js #white
+        1: punctuation.dollar.js.coffee #white
       pop: true
     - match: '{{identifier}}'
-      scope: meta.property.object.js #white
+      scope: meta.property.object.js.coffee #white
       pop: true
     - match: '{{identifier_part}}+{{identifier_break}}'
-      scope: invalid.illegal.illegal-identifier.js #white
+      scope: invalid.illegal.illegal-identifier.js.coffee #white
       pop: true
 
   support-property: # VERBATIM FROM JS
@@ -433,22 +431,22 @@ contexts:
 
   support-property-ecma: # VERBATIM FROM JS
     - match: constructor{{identifier_break}}
-      scope: variable.language.constructor.js #white
+      scope: variable.language.constructor.js.coffee #white
       pop: true
     - match: prototype{{identifier_break}}
-      scope: support.constant.prototype.js #white
+      scope: support.constant.prototype.js.coffee #white
       pop: true
 
     - match: (?:hasOwnProperty|isPrototypeOf|propertyIsEnumerable|toLocaleString|toString|valueOf){{identifier_break}}
-      scope: support.function.js #white
+      scope: support.function.js.coffee #white
       pop: true
 
     # Annex B
     - match: __proto__{{identifier_break}}
-      scope: invalid.deprecated.js variable.language.prototype.js #white
+      scope: invalid.deprecated.js.coffee variable.language.prototype.js.coffee #white
       pop: true
     - match: (?:__defineGetter__|__defineSetter__|__lookupGetter__){{identifier_break}}
-      scope: invalid.deprecated.js support.function.js #white
+      scope: invalid.deprecated.js.coffee support.function.js.coffee #white
 
   literal-call: # FROM JS
     - match: (?={{identifier}}\s*\()
@@ -473,16 +471,16 @@ contexts:
             - call-function-name
 
   call-function-meta: # FROM JS
-    - meta_scope: meta.function-call.js
+    - meta_scope: meta.function-call.js.coffee
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
   call-function-name: # VERBATIM FROM JS
     - match: '{{dollar_only_identifier}}'
-      scope: variable.function.js variable.other.dollar.only.js punctuation.dollar.js
+      scope: variable.function.js.coffee variable.other.dollar.only.js.coffee punctuation.dollar.js.coffee
       pop: true
     - match: '{{identifier}}'
-      scope: variable.function.js
+      scope: variable.function.js.coffee
       pop: true
     - include: else-pop
 
@@ -569,12 +567,12 @@ contexts:
 
 
   call-method-implicit-meta:
-    - meta_scope: meta.function-call.method.implicit.js #white
+    - meta_scope: meta.function-call.method.implicit.coffee #white
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
   call-function-implicit-meta:
-    - meta_scope: meta.function-call.js.implicit.coffee #bright.red-orange style.italic
+    - meta_scope: meta.function-call.implicit.coffee #bright.red-orange style.italic
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
@@ -593,14 +591,14 @@ contexts:
 
   regexp:
     - meta_include_prototype: false
-    - meta_scope: string.regexp.js
+    - meta_scope: string.regexp.js.coffee
     - match: "/"
-      scope: punctuation.definition.string.end.js
+      scope: punctuation.definition.string.end.js.coffee
       set:
         - meta_include_prototype: false
-        - meta_content_scope: string.regexp.js
+        - meta_content_scope: string.regexp.js.coffee
         - match: '[gimyus]'
-          scope: keyword.other.js
+          scope: keyword.other.js.coffee
         - match: '[A-Za-z0-9]' # Ignore unknown flags for future-compatibility
         - include: immediately-pop
     - match: '(?=.|\n)'
