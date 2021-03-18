@@ -369,7 +369,7 @@ contexts:
         - match: \)
           scope: punctuation.section.group.end.js #white
           pop: true
-        #- include: expression-list # <-- FROM JS
+        - include: expression-list # <-- FROM JS
         - include: main # ADDED
 
   call-path: # VERBATIM FROM JS
@@ -486,6 +486,84 @@ contexts:
       pop: true
     - include: else-pop
 
+  expression-list: # VERBATIM FROM JS
+    #- include: expression-break
+    - include: comma-separator
+    #- match: (?=\S)
+    #  push: expression-no-comma
+
+  comma-separator: # VERBATIM FROM JS
+    - match: \,
+      scope: punctuation.separator.comma.js.coffee
+
+
+  ### NEWLY ADDED, UNUSED CONTEXTS (MOSTLY COPIED FROM JS)
+
+
+  expression-break: # VERBATIM FROM JS
+    - match: (?=[;})\]])
+      pop: true
+
+  expression-no-comma: # VERBATIM FROM JS
+    - match: (?=\S)
+      set: [ expression-end-no-comma, expression-begin ]
+
+  expression-end-no-comma: # VERBATIM FROM JS
+    - match: (?=,)
+      pop: true
+    - include: expression-end
+
+  expression-end: # VERBATIM FROM JS
+    #- include: postfix-operators
+    #- include: binary-operators
+    #- include: ternary-operator
+
+    - include: left-expression-end
+
+  left-expression-end: # FROM JS
+    - include: expression-break
+
+    - include: property-access
+
+    #- match: (?=`)
+    #  push: literal-string-template
+
+    - match: (?=\()
+      push: function-call-arguments
+
+    #- include: fallthrough
+
+    - include: else-pop
+
+  expression-begin: # FROM JS
+    - include: expression-break
+
+    #- include: yield-expression
+    #- include: await-expression
+
+    #- include: regexp-complete
+    - include: literal-string
+    #- include: tagged-template
+    #- include: literal-string-template
+    #- include: constructor
+    #- include: literal-number
+    #- include: prefix-operators
+    #- include: import-meta-expression
+
+    #- include: class
+    #- include: constants
+    #- include: function-assignment
+    #- include: either-function-declaration
+    #- include: object-literal
+
+    #- include: parenthesized-expression
+    #- include: array-literal
+
+    - include: literal-call
+    #- include: literal-variable
+
+    - include: else-pop
+
 
   ### ADDED CONTEXTS
 
@@ -506,7 +584,7 @@ contexts:
         - meta_scope: function-call-implicit-arguments bright.red-orange
         - match: (?=\s*(#|}|$|{{keyword}}\s))
           pop: true
-        #- include: expression-list # <-- FROM JS
+        - include: expression-list # <-- FROM JS
         - include: main # ADDED
 
 
