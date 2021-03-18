@@ -219,7 +219,7 @@ contexts:
     scope: punctuation.terminator.statement.coffee
   - match: ',[ |\t]*'
     scope: meta.delimiter.object.comma.coffee
-  #- include: property-access
+  - include: property-access
   - match: \.
     scope: meta.delimiter.method.period.coffee
   #- match: \{
@@ -312,51 +312,57 @@ contexts:
 
 
   property-access: # FROM JS
-    # - match: '\['
-    #   scope: punctuation.section.brackets.begin.coffee
-    #   push:
-    #     - meta_scope: meta.brackets.coffee
-    #     - match: '\]'
-    #       scope: punctuation.section.brackets.end.coffee
-    #       pop: true
-    #     - match: (?=\S)
-    #       #push: expression # <-- FROM JS
-    #       push: main
+    - match: '\['
+      scope: punctuation.section.brackets.begin.js
+      push:
+        - meta_scope: meta.brackets.js
+        - match: '\]'
+          scope: punctuation.section.brackets.end.js
+          pop: true
+        #- match: (?=\S)    # <-- FROM JS
+        #  push: expression # <-- FROM JS
+        - include: main # <-- ADDED
 
     - match: \.
       scope: punctuation.accessor.js
       push:
-        - match: '(?={{identifier}}\s*\()'
-          set:
-            - call-method-meta
-            - function-call-arguments
-            # - call-path
-            - object-property
-        #- match: '(?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}})){{identifier}}'
-        #  set:
-        #    - call-method-meta
+        - include: object-method
         - include: object-property
 
+  object-method: # ADDED
+    - match: '(?={{identifier}}\s*\()'
+      set:
+        - call-method-meta
+        - function-call-arguments
+        - call-path
+        - object-property
+
+    - match: (?={{identifier}}\s+(?!{{operator_keyword}}|{{keyword}})(?:{{identifier_start}}|/|'|"|`|!(?!=)|@|--\s*\S|\+\+\s*\S|(-|\+)\S|\d|=>|\[|\{|\())
+      set:
+        - call-method-implicit-meta
+        - function-call-implicit-arguments
+        - call-function-name
+
   call-method-meta: # FROM JS
-    - meta_scope: meta.function-call.method.js white
+    - meta_scope: meta.function-call.method.js #white
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
   function-call-arguments: # FROM JS
     - meta_scope: function-call-arguments
     - match: \(
-      scope: punctuation.section.group.begin.js white
+      scope: punctuation.section.group.begin.js #white
       set:
-        - meta_scope: meta.group.js white
+        - meta_scope: meta.group.js #white
         - match: \)
-          scope: punctuation.section.group.end.js white
+          scope: punctuation.section.group.end.js #white
           pop: true
         #- include: expression-list # <-- FROM JS
         - include: main # ADDED
 
   call-path: # VERBATIM FROM JS
     - match: \.
-      scope: punctuation.accessor.js white
+      scope: punctuation.accessor.js #white
       push: object-property
     - include: else-pop
 
@@ -378,6 +384,9 @@ contexts:
     - match: '(?={{identifier}}\s*\()'
       set: call-method-name
 
+    - match: (?={{identifier}}\s+(?!{{operator_keyword}}|{{keyword}})(?:{{identifier_start}}|/|'|"|`|!(?!=)|@|--\s*\S|\+\+\s*\S|(-|\+)\S|\d|=>|\[|\{|\())
+      set: call-method-name
+
     #- match: '(?={{identifier}}\s*(?!{{operator_keyword}}|{{keyword}})){{identifier}}'
     #  set: call-method-name
 
@@ -387,24 +396,24 @@ contexts:
   call-method-name: # VERBATIM FROM JS
     - include: support-property
     - match: '{{identifier}}'
-      scope: variable.function.js white
+      scope: variable.function.js #white
       pop: true
     - include: else-pop
 
   object-property-base: # VERBATIM FROM JS
     - match: '{{dollar_only_identifier}}'
-      scope: meta.property.object.dollar.only.js punctuation.dollar.js white
+      scope: meta.property.object.dollar.only.js punctuation.dollar.js #white
       pop: true
     - match: '{{dollar_identifier}}'
-      scope: meta.property.object.dollar.js white
+      scope: meta.property.object.dollar.js #white
       captures:
-        1: punctuation.dollar.js white
+        1: punctuation.dollar.js #white
       pop: true
     - match: '{{identifier}}'
-      scope: meta.property.object.js white
+      scope: meta.property.object.js #white
       pop: true
     - match: '{{identifier_part}}+{{identifier_break}}'
-      scope: invalid.illegal.illegal-identifier.js white
+      scope: invalid.illegal.illegal-identifier.js #white
       pop: true
 
   support-property: # VERBATIM FROM JS
@@ -412,22 +421,22 @@ contexts:
 
   support-property-ecma: # VERBATIM FROM JS
     - match: constructor{{identifier_break}}
-      scope: variable.language.constructor.js white
+      scope: variable.language.constructor.js #white
       pop: true
     - match: prototype{{identifier_break}}
-      scope: support.constant.prototype.js white
+      scope: support.constant.prototype.js #white
       pop: true
 
     - match: (?:hasOwnProperty|isPrototypeOf|propertyIsEnumerable|toLocaleString|toString|valueOf){{identifier_break}}
-      scope: support.function.js white
+      scope: support.function.js #white
       pop: true
 
     # Annex B
     - match: __proto__{{identifier_break}}
-      scope: invalid.deprecated.js variable.language.prototype.js white
+      scope: invalid.deprecated.js variable.language.prototype.js #white
       pop: true
     - match: (?:__defineGetter__|__defineSetter__|__lookupGetter__){{identifier_break}}
-      scope: invalid.deprecated.js support.function.js white
+      scope: invalid.deprecated.js support.function.js #white
 
   literal-call: # FROM JS
     - match: (?={{identifier}}\s*\()
@@ -444,11 +453,6 @@ contexts:
     #    - literal-variable
 
     - match: (?={{identifier}}\s+(?!{{operator_keyword}}|{{keyword}})(?:{{identifier_start}}|/|'|"|`|!(?!=)|@|--\s*\S|\+\+\s*\S|(-|\+)\S|\d|=>|\[|\{|\())
-      #scope: bright.red-orange style.italic
-      #set:
-      #  - call-function-implicit-meta
-      #  - function-call-implicit-arguments
-      #  - call-function-name
       push:
         - match: (?={{identifier}})
           set:
@@ -474,16 +478,21 @@ contexts:
   ###
 
 
+  call-method-implicit-meta:
+    - meta_scope: meta.function-call.method.implicit.js #white
+    #- include: else-pop # <-- FROM JS
+    - include: immediately-pop # ADDED
+
   call-function-implicit-meta:
     - meta_scope: meta.function-call.js.implicit.coffee #bright.red-orange style.italic
     #- include: else-pop # <-- FROM JS
     - include: immediately-pop # ADDED
 
   function-call-implicit-arguments:
-    - match: ' '
+    - match: ' +'
       set:
-        - meta_scope: function-call-implicit-arguments
-        - match: (?=\s*(}|$|{{keyword}}\s))
+        - meta_scope: function-call-implicit-arguments bright.red-orange
+        - match: (?=\s*(#|}|$|{{keyword}}\s))
           pop: true
         #- include: expression-list # <-- FROM JS
         - include: main # ADDED
