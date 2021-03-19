@@ -79,7 +79,9 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 		files = []
 
+		# Open specific type of companion file, if specified.
 		if open_file_type:
+			print('\nopen file type:', open_file_type) # DEBUG
 			if open_file_type == 'route_js':
 				files.append(self.get_path_for_file_in('routes'))
 
@@ -106,27 +108,34 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 			if open_file_type == 'acceptance_test':
 				files += self.get_test_paths_for_file('acceptance')
+		# Guess the companion file to open.
 		else:
+			print('\nguess file type') # DEBUG
+			# For a test file, open its JS companion.
 			if app_folder == 'tests/':
 				if file_folder in ['integration/', 'unit/']:
 					files.append(self.get_path_for_file_in('app'))
 
+			# For a template, open its JS companion (component, route, or controller).
 			elif file_folder == 'templates/':
+				# File is in `templates/components/` and we should surface the component JS file.
 				if 'components/' in file_path:
-					# File is in `templates/components/` and we should surface the component js file.
 					files.append('%s%s%s.js' % (app_folder_path, file_path, file_name))
+				# File is in `templates/` __but not `templates/components/`__ and we should surface the
+				# route and controller JS files.
 				else:
-					# File is in `templates/` __but not `templates/components/`__ and we should surface the
-					# route and controller js files.
 					files.append(self.get_path_for_file_in('routes'))
 					files.append(self.get_path_for_file_in('controllers'))
 
+			# For a component JS file, open its template.
 			elif file_folder == 'components/':
 				files.append(self.get_path_for_file_in('templates'))
 
+			# For a route, open its template.
 			elif file_folder == 'routes/':
 				files.append(self.get_path_for_file_in('templates'))
 
+			# For a controller, open its template.
 			elif file_folder == 'controllers/':
 				files.append(self.get_path_for_file_in('templates'))
 
