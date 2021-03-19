@@ -91,8 +91,10 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			if open_file_type == 'template_hbs':
 				if app_folder == 'tests/':
 					files.append(self.get_path_for_file_in('app/templates'))
+					files.append(self.get_path_for_file_in('app', 'hbs')) # co-located structure
 				else:
 					files.append(self.get_path_for_file_in('templates'))
+					files.append(self.get_path_for_file_in('components', 'hbs')) # co-located structure
 
 			if open_file_type == 'style':
 				files += self.get_style_paths_for_file()
@@ -129,7 +131,13 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 			# For a component JS file, open its template.
 			elif file_folder == 'components/':
-				files.append(self.get_path_for_file_in('templates'))
+				# Use file type to determine which companion file to get, since the app could be using a
+				# co-located file structure.
+				if file_type == 'hbs':
+					files.append(self.get_path_for_file_in('components')) # co-located structure
+				else:
+					files.append(self.get_path_for_file_in('templates'))
+					files.append(self.get_path_for_file_in('components', 'hbs')) # co-located structure
 
 			# For a route, open its template.
 			elif file_folder == 'routes/':
@@ -155,7 +163,7 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 		if folder == 'app':
 			file_name = re.sub(r'-test$', '', self.file_name)
 
-			return '%sapp/%s%s.js' % (self.app_path, self.file_path, file_name)
+			return '%sapp/%s%s.%s' % (self.app_path, self.file_path, file_name, file_type or 'js')
 		elif folder == 'app/templates':
 			file_name = re.sub(r'-test$', '', self.file_name)
 
@@ -166,7 +174,7 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			else:
 				return '%s%s/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
 		else:
-			return '%s%s/%s%s.js' % (self.app_folder_path, folder, self.file_path, self.file_name)
+			return '%s%s/%s%s.%s' % (self.app_folder_path, folder, self.file_path, self.file_name, file_type or 'js')
 
 
 	def get_style_paths_for_file(self):
