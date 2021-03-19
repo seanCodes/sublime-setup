@@ -61,3 +61,32 @@ method.callWArrowFunctionWArrowFunctionAsParamDefault(     'argument',       (ar
 method.callWAsyncArrowFunctionWArrowFunctionAsParamDefault('argument', async (arrowParam = () => {}) => { /**/ })
 method.callWArrowFunctionWArrowFunctionAsParamDefault(     'argument',       (arrowParam = arrowParamInner => {}) => { /**/ })
 method.callWAsyncArrowFunctionWArrowFunctionAsParamDefault('argument', async (arrowParam = arrowParamInner => {}) => { /**/ })
+
+//
+// ------------------------------------------------------------------------------------------------
+//
+
+
+const SOURCE_DIR = './test-source/'
+
+async function main([targetVersion]) {
+	try {
+		({ name: targetVersion } = await fetchRepoTagData(targetVersion))
+	} catch (err) {
+		oops(err, { exit: false })
+
+		return oops('✘ TESTS FAILED')
+	}
+
+	let stdout = ''
+	let stderr = ''
+
+	;({ stdout, stderr } = spawnSync('node', `test/scripts/foo.js ${targetVersion}`.split(' '), { encoding: 'utf8' }))
+
+	console.log(stdout)
+
+	console.log('All good.', color.green('\n\n✔ TESTS PASSED'))
+	process.exit(0)
+}
+
+main(process.argv.slice(2))
