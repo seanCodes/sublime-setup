@@ -185,8 +185,8 @@ def split_by_char_not_in_quotes(str, split_char, include_empty_tokens=True):
 	#print('OUT:', out)
 	return out
 
-def char_region(char_index):
-	return sublime.Region(char_index, char_index + 1)
+#def char_region(char_index):
+#	return sublime.Region(char_index, char_index + 1)
 
 #def get_indent(view_or_text, point_or_region):
 #	text = view_or_text
@@ -267,7 +267,7 @@ class Es6ObjectMultilineCommand(sublime_plugin.TextCommand):
 				#	# Clean up any trailing commas.
 				#	out = re.sub(r', }', ' }', out)
 
-				out = '{' + out + '}'
+				out = '{%s}' % out
 			else: # expand
 				key_value_pairs = split_by_char_not_in_group(view.substr(object_region), ',', False)
 
