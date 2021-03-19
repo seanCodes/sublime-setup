@@ -641,7 +641,7 @@
 			// //"font_style": "normal",
 		},
 		{"name": "Regex - Group: Punctuation",
-			"scope": "punctuation.definition.group.regexp, storage.type.regexp.group, keyword.control.group.regexp",
+			"scope": "punctuation.definition.group.regexp, storage.type.regexp.group, keyword.control.group.regexp, keyword.control.group.regexp  punctuation.section.group",
 			"foreground": "var(dark-spring-green-fg)",
 			//"background": "#22ffa90d",
 			"background": "var(dark-purple-bg)",
