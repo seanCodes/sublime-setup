@@ -3211,10 +3211,6 @@
 		//
 		//!  CoffeeScript
 		//
-		{"name": "CoffeeScript Period",
-			"scope": "source.coffee meta.delimiter.method",
-			"foreground": "var(default-fg)",
-		},
 		{"name": "CoffeeScript Embedded",
 			"scope": "source.coffee.embedded",
 			"foreground": "var(default-fg)",
