@@ -2382,12 +2382,12 @@
   (?:\b(static)\s+)?
   (?:\b(async)\s+)?
   #(?:(\*)\s*)?([_$a-zA-Z][$\w]*)\s* # BEFORE
-  (?:(\*)\s*)?
-  # poor man’s `[foo]: …` handling:
+  (?:(\*)\s*)? # AFTER
+  # Poor man’s dynamic property (e.g. `{ [foo]: … }`) handling:
   (?:
     ([_$a-zA-Z][$\w]*)|
     ((\[)([_$a-zA-Z][$\w]*)(\]))
-  )\s*
+  )\s* # AFTER
   #(?=\(.*\)(?:\s|/\*.*\*/)*\{)
   (?=\([^())]*\)(?:\s|/\*.*\*/)*\{)</string>
 					<key>beginCaptures</key>
@@ -4171,7 +4171,7 @@
       ex(?:
         ample|
         ception|
-        ports)
+        ports)|
       f(?:
         ile(?:overview)?|
         unc(?:tion)?)|
@@ -4183,7 +4183,7 @@
         ends|
         i(?:
           cense|
-          stens
+          stens|
           nk(?:code|plain)?))|
       m(?:
         ethod|
@@ -4204,11 +4204,11 @@
       t(?:
         h(?:
           is|
-          rows)
+          rows)|
         odo|
         utorial)|
       v(?:
-        ar(?:iation)?
+        ar(?:iation)?|
         ersion)|
       yields?
     )
