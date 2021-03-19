@@ -297,7 +297,7 @@
 		"invisibles"     : "var(darker-gray-fg)",
 		"caret"          : "hsla( 68,  10%,  84%, 1   )",
 		//"block_caret"    : "",
-		"line_highlight" : "color(white alpha(0.09))", //"color(black alpha(0.21))",
+		"line_highlight" : "color(white alpha(0.065))", //"color(black alpha(0.21))",
 
 		// Accents
 
