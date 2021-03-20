@@ -65,7 +65,7 @@ repository:
         '0': {name: meta.brace.round.js}
       patterns:
 
-      - include: '#expression'
+        - include: '#expression'
 
   square-brackets:
     patterns:
@@ -80,7 +80,7 @@ repository:
         '0': {name: meta.brace.square.js}
       patterns:
 
-      - include: '#expression'
+        - include: '#expression'
 
   curly-brackets:
     patterns:
@@ -95,7 +95,7 @@ repository:
         '0': {name: meta.brace.curly.js}
       patterns:
 
-      - include: $self
+        - include: $self
 
   brackets:
     patterns:
@@ -440,19 +440,19 @@ repository:
 
     - name: comment.block.conditional.js
       begin: /\*(?=@)
+      captures:
+        '0': {name: punctuation.definition.comment.js}
 
       end: \*/
       endCaptures:
         '1': {name: keyword.control.conditional.js}
         '2': {name: punctuation.definition.keyword.js}
-      captures:
-        '0': {name: punctuation.definition.comment.js}
       patterns:
 
-      - name: punctuation.definition.comment.js
-        match: /\*
+        - name: punctuation.definition.comment.js
+          match: /\*
 
-      - include: $self
+        - include: $self
 
     - name: keyword.control.conditional.js
       match: (@)(if|elif|else|end|ifdef|endif|cc_on|set)\b
@@ -478,7 +478,7 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
+        - include: '#comments-markdown-code-span'
 
     # ___foo___
     - name: comment.markdown.strong-emphasis.js
@@ -491,7 +491,7 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
+        - include: '#comments-markdown-code-span'
 
   comments-markdown-strong:
     patterns:
@@ -507,8 +507,8 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
-      # - include: '#comments-markdown-emphasis'
+        - include: '#comments-markdown-code-span'
+        # - include: '#comments-markdown-emphasis'
 
     # __foo__
     - name: comment.markdown.strong.js
@@ -521,8 +521,8 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
-      # - include: '#comments-markdown-emphasis'
+        - include: '#comments-markdown-code-span'
+        # - include: '#comments-markdown-emphasis'
 
   comments-markdown-emphasis:
     # Reviewed these May 9 2018 and they can probably all be deleted.
@@ -552,7 +552,7 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
+        - include: '#comments-markdown-code-span'
 
     # _foo_
     - name: comment.markdown.emphasis.js
@@ -565,7 +565,7 @@ repository:
 
       patterns:
 
-      - include: '#comments-markdown-code-span'
+        - include: '#comments-markdown-code-span'
 
   comments-markdown-code-span:
     patterns:
@@ -597,16 +597,16 @@ repository:
 
       patterns:
 
-      - match: ^(\s*)(\*|//)(?=\s)
-        captures:
-          '1': {name: meta.punctuation.definition.comment.edge.before.js}
-          '2': {name: punctuation.definition.comment.edge.js}
+        - match: ^(\s*)(\*|//)(?=\s)
+          captures:
+            '1': {name: meta.punctuation.definition.comment.edge.before.js}
+            '2': {name: punctuation.definition.comment.edge.js}
 
-      - match: ^(\s*)(//)(\s+(?!```))?
-        captures:
-          '1': {name: meta.punctuation.definition.comment.before.js}
-          '2': {name: punctuation.definition.comment.js}
-          '3': {name: meta.punctuation.definition.comment.after.js}
+        - match: ^(\s*)(//)(\s+(?!```))?
+          captures:
+            '1': {name: meta.punctuation.definition.comment.before.js}
+            '2': {name: punctuation.definition.comment.js}
+            '3': {name: meta.punctuation.definition.comment.after.js}
 
     # ~~~
     # foo
@@ -626,16 +626,16 @@ repository:
 
       patterns:
 
-      - match: ^(\s*)(\*|//)(?=\s)
-        captures:
-          '1': {name: meta.punctuation.definition.comment.edge.before.js}
-          '2': {name: punctuation.definition.comment.edge.js}
+        - match: ^(\s*)(\*|//)(?=\s)
+          captures:
+            '1': {name: meta.punctuation.definition.comment.edge.before.js}
+            '2': {name: punctuation.definition.comment.edge.js}
 
-      - match: ^(\s*)(//)(\s+(?!~~~))?
-        captures:
-          '1': {name: meta.punctuation.definition.comment.before.js}
-          '2': {name: punctuation.definition.comment.js}
-          '3': {name: meta.punctuation.definition.comment.after.js}
+        - match: ^(\s*)(//)(\s+(?!~~~))?
+          captures:
+            '1': {name: meta.punctuation.definition.comment.before.js}
+            '2': {name: punctuation.definition.comment.js}
+            '3': {name: meta.punctuation.definition.comment.after.js}
 
   function-declaration-parameters:
     patterns:
@@ -650,30 +650,30 @@ repository:
         '0': {name: punctuation.definition.parameters.end.js}
       patterns:
 
-      - name: meta.spread.js
-        match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
-        captures:
-          '1': {name: keyword.operator.spread.js}
-          '2': {name: variable.other.readwrite.js}
+        - name: meta.spread.js
+          match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
+          captures:
+            '1': {name: keyword.operator.spread.js}
+            '2': {name: variable.other.readwrite.js}
 
-      - name: variable.parameter.function.js
-        match: '[_$a-zA-Z][$\w]*'
+        - name: variable.parameter.function.js
+          match: '[_$a-zA-Z][$\w]*'
 
-      - name: punctuation.separator.parameter.function.js
-        match: ','
+        - name: punctuation.separator.parameter.function.js
+          match: ','
 
-      - name: meta.parameter.optional.js
-        begin: '='
-        beginCaptures:
-          '0': {name: keyword.operator.assignment.js}
+        - name: meta.parameter.optional.js
+          begin: '='
+          beginCaptures:
+            '0': {name: keyword.operator.assignment.js}
 
-        end: '(?=[,)])'
-        patterns:
+          end: '(?=[,)])'
+          patterns:
 
-        #- include: '#literal-method-call'
-        - include: '#expression'
+            #- include: '#literal-method-call'
+            - include: '#expression'
 
-      - include: '#comments'
+        - include: '#comments'
 
   method-declaration-parameters:
     patterns:
@@ -688,30 +688,30 @@ repository:
         '0': {name: punctuation.definition.parameters.end.js}
       patterns:
 
-      - name: meta.spread.js
-        match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
-        captures:
-          '1': {name: keyword.operator.spread.js}
-          '2': {name: variable.other.readwrite.js}
+        - name: meta.spread.js
+          match: (?<!\.)(\.\.\.)([_$a-zA-Z][$\w]*)?
+          captures:
+            '1': {name: keyword.operator.spread.js}
+            '2': {name: variable.other.readwrite.js}
 
-      - name: variable.parameter.function.js
-        match: '[_$a-zA-Z][$\w]*'
+        - name: variable.parameter.function.js
+          match: '[_$a-zA-Z][$\w]*'
 
-      - name: punctuation.separator.parameter.function.js
-        match: ','
+        - name: punctuation.separator.parameter.function.js
+          match: ','
 
-      - name: meta.parameter.optional.js
-        begin: '='
-        beginCaptures:
-          '0': {name: keyword.operator.assignment.js}
+        - name: meta.parameter.optional.js
+          begin: '='
+          beginCaptures:
+            '0': {name: keyword.operator.assignment.js}
 
-        end: '(?=[,)])'
-        patterns:
+          end: '(?=[,)])'
+          patterns:
 
-        #- include: '#literal-method-call'
-        - include: '#expression'
+            #- include: '#literal-method-call'
+            - include: '#expression'
 
-      - include: '#comments'
+        - include: '#comments'
 
   literal-module:
     patterns:
@@ -737,28 +737,28 @@ repository:
         '0': {name: meta.brace.curly.js}
       patterns:
 
-      - name: meta.class.extends.js
-        begin: \b(extends)\b
-        beginCaptures:
-          '1': {name: storage.type.extends.js}
+        - name: meta.class.extends.js
+          begin: \b(extends)\b
+          beginCaptures:
+            '1': {name: storage.type.extends.js}
 
-        end: '(?={)'
-        patterns:
+          end: '(?={)'
+          patterns:
 
-        - include: '#expression'
+            - include: '#expression'
 
-      - begin: '{'
-        beginCaptures:
-          '0': {name: meta.brace.curly.js}
+        - begin: '{'
+          beginCaptures:
+            '0': {name: meta.brace.curly.js}
 
-        end: '(?=})'
-        patterns:
+          end: '(?=})'
+          patterns:
 
-        - include: '#brackets'
-        - include: '#comments'
-        - include: '#literal-method'
-        - include: '#literal-property-initializer'
-        - include: '#expression'
+            - include: '#brackets'
+            - include: '#comments'
+            - include: '#literal-method'
+            - include: '#literal-property-initializer'
+            - include: '#expression'
 
   literal-method:
     patterns:
@@ -791,7 +791,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#method-declaration-parameters'
+        - include: '#method-declaration-parameters'
 
     # getter/setter
     - name: meta.accessor.js
@@ -809,7 +809,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
   literal-property-initializer:
     patterns:
@@ -858,7 +858,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. play = function(arg1, arg2) {  }
     - name: meta.function.js
@@ -879,7 +879,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. Sound.prototype.play = function(arg1, arg2) {  }
     - name: meta.prototype.function.js
@@ -906,7 +906,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. Sound.play = function(arg1, arg2) {  }
     - name: meta.function.static.js
@@ -930,7 +930,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
   literal-function-labels:
     patterns:
@@ -955,7 +955,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. "play": function(arg1, arg2) {  }
     - name: meta.function.json.js
@@ -987,7 +987,7 @@ repository:
       end: (?<=\))
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
   literal-arrow-function:
     patterns:
@@ -1006,7 +1006,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. arg => { }
     - name: meta.function.arrow.js
@@ -1036,7 +1036,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. play = arg => { }
     - name: meta.function.arrow.js
@@ -1075,7 +1075,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. Sound.prototype.play = arg => { }
     - name: meta.prototype.function.arrow.js
@@ -1117,7 +1117,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. Sound.play = arg => { }
     - name: meta.function.static.arrow.js
@@ -1157,7 +1157,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. play: arg => { }
     - name: meta.function.json.arrow.js
@@ -1202,7 +1202,7 @@ repository:
         '1': {name: storage.type.function.arrow.js}
       patterns:
 
-      - include: '#function-declaration-parameters'
+        - include: '#function-declaration-parameters'
 
     # e.g. "play": arg => { }
     - name: meta.function.json.arrow.js
@@ -1349,19 +1349,19 @@ repository:
       end: (?![_$a-zA-Z.])
       patterns:
 
-      - include: '#support'
-      - include: '#literal-language-variable'
+        - include: '#support'
+        - include: '#literal-language-variable'
 
-      - name: keyword.operator.accessor.js
-        match: \.
+        - name: keyword.operator.accessor.js
+          match: \.
 
-      - name: variable.type.new.js
-        match: (?<=\s)[_$a-zA-Z][$\w]*(?=\s*\()
+        - name: variable.type.new.js
+          match: (?<=\s)[_$a-zA-Z][$\w]*(?=\s*\()
 
-      - name: meta.property.object.js
-        match: (?<=\.)\s*[_$a-zA-Z][$\w]*
-        captures:
-          '2': {name: variable.other.property.js}
+        - name: meta.property.object.js
+          match: (?<=\.)\s*[_$a-zA-Z][$\w]*
+          captures:
+            '2': {name: variable.other.property.js}
 
   literal-keyword-storage:
     patterns:
@@ -1387,7 +1387,7 @@ repository:
       end: \n|^
       patterns:
 
-      - include: '#core'
+        - include: '#core'
 
     - name: keyword.control.flow.js
       match: (?<!\.)\bawait\b
@@ -1421,9 +1421,9 @@ repository:
         end: (?=\))
         patterns:
 
-        - include: '#literal-keyword-storage'
-        - include: '#expression'
-        - include: '#literal-punctuation'
+          - include: '#literal-keyword-storage'
+          - include: '#expression'
+          - include: '#literal-punctuation'
 
   literal-switch:
     patterns:
@@ -1438,25 +1438,25 @@ repository:
         '0': {name: meta.brace.curly.js}
       patterns:
 
-      - include: '#round-brackets'
+        - include: '#round-brackets'
 
-      - begin: \{
-        beginCaptures:
-          '0': {name: meta.brace.curly.js}
-
-        end: (?=})
-        patterns:
-
-        - begin: (?<!\.)\b(case|default)\b
+        - begin: \{
           beginCaptures:
-            '1': {name: keyword.control.switch.js}
+            '0': {name: meta.brace.curly.js}
 
-          end: (?=:)
+          end: (?=})
           patterns:
 
-          - include: '#expression'
+            - begin: (?<!\.)\b(case|default)\b
+              beginCaptures:
+                '1': {name: keyword.control.switch.js}
 
-        - include: $self
+              end: (?=:)
+              patterns:
+
+                - include: '#expression'
+
+            - include: $self
 
   literal-operators:
     patterns:
@@ -1556,7 +1556,7 @@ repository:
         '0': {name: punctuation.separator.key-value.js}
       patterns:
 
-      - include: '#literal-string'
+        - include: '#literal-string'
 
     - name: constant.other.object.key.js
       match: (?<!\.|\?|\?\s)([_$a-zA-Z][$\w]*)\s*(:)
@@ -1613,19 +1613,19 @@ repository:
         '0': {name: punctuation.definition.template-string.end.js}
       patterns:
 
-      - include: '#string-content'
+        - include: '#string-content'
 
-      - name: entity.template-string.element.js
-        begin: \${
-        beginCaptures:
-          '0': {name: punctuation.template-string.element.begin.js}
+        - name: entity.template-string.element.js
+          begin: \${
+          beginCaptures:
+            '0': {name: punctuation.template-string.element.begin.js}
 
-        end: '}'
-        endCaptures:
-          '0': {name: punctuation.template-string.element.end.js}
-        patterns:
+          end: '}'
+          endCaptures:
+            '0': {name: punctuation.template-string.element.end.js}
+          patterns:
 
-        - include: '#expression'
+            - include: '#expression'
 
   literal-regexp:
     patterns:
@@ -1651,7 +1651,7 @@ repository:
         '2': {name: keyword.other.js}
       patterns:
 
-      - include: source.regexp.js.es
+        - include: source.regexp.js.es
 
   literal-string:
     patterns:
@@ -1667,7 +1667,7 @@ repository:
         '2': {name: invalid.illegal.newline.js}
       patterns:
 
-      - include: '#string-content'
+        - include: '#string-content'
 
     - name: string.quoted.double.js
       begin: '"'
@@ -1680,7 +1680,7 @@ repository:
         '2': {name: invalid.illegal.newline.js}
       patterns:
 
-      - include: '#string-content'
+        - include: '#string-content'
 
   string-content:
     patterns:
