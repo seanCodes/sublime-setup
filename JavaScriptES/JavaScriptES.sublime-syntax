@@ -8,11 +8,9 @@ first_line_match: ^#!/.*\b(node|js)$\n?
 
 contexts:
   main:
-
     - include: core
 
   core:
-
     - include: literal-function-labels
     - include: literal-arrow-function-labels
     - include: literal-labels
@@ -25,7 +23,6 @@ contexts:
     - include: literal-punctuation
 
   expression:
-
     - include: support
     - include: literal-function
     - include: literal-arrow-function
@@ -53,11 +50,9 @@ contexts:
     - include: literal-variable
 
   round-brackets:
-
     - match: \(
       captures:
         0: meta.brace.round.js
-
       push:
         - meta_scope: meta.group.braces.round
         - match: \)
@@ -68,11 +63,9 @@ contexts:
         - include: expression
 
   square-brackets:
-
     - match: \[
       captures:
         0: meta.brace.square.js
-
       push:
         - meta_scope: meta.group.braces.square
         - match: \]
@@ -83,11 +76,9 @@ contexts:
         - include: expression
 
   curly-brackets:
-
     - match: \{
       captures:
         0: meta.brace.curly.js
-
       push:
         - meta_scope: meta.group.braces.curly
         - match: \}
@@ -98,20 +89,17 @@ contexts:
         - include: main
 
   brackets:
-
     - include: round-brackets
     - include: square-brackets
     - include: curly-brackets
 
   comments:
-
     - include: special-comments-conditional-compilation
 
     # Comment Doc
     - match: /\*\*(?!/)
       captures:
         0: punctuation.definition.comment.begin.js
-
       push:
         - meta_scope: comment.block.documentation.js
         - match: (\*/)(\n)?
@@ -142,7 +130,6 @@ contexts:
     - match: /\*
       captures:
         0: punctuation.definition.comment.begin.js
-
       push:
         - meta_scope: comment.block.js
         - match: (\*/)(\n)?
@@ -167,7 +154,6 @@ contexts:
     - match: (//)
       captures:
         1: punctuation.definition.comment.js
-
       push:
         - meta_scope: comment.line.double-slash.js
         - match: \n|^
@@ -189,7 +175,6 @@ contexts:
         2: meta.after.comment.line.shebang.js
 
   special-comments-jsdoc:
-
     # Callbacks
     - scope: meta.jsdoc.tag.definition.callback # namepath
       match: ^(\s+)(\*)\s+((@)(callback))\s+((external:)?(\S+))\s*$
@@ -437,11 +422,9 @@ contexts:
         11: punctuation.definition.type.jsdoc.js
 
   special-comments-conditional-compilation:
-
     - match: /\*(?=@)
       captures:
         0: punctuation.definition.comment.js
-
       push:
         - meta_scope: comment.block.conditional.js
         - match: \*/
@@ -466,12 +449,10 @@ contexts:
         1: punctuation.definition.variable.js
 
   comments-markdown-strong-emphasis:
-
     # ***foo***
     - match: (\*\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\b(?!_)|\S\*(?![a-zA-Z0-9]))) #(\*\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*\*)
       captures:
         1: punctuation.definition.markdown.strong-emphasis.begin.js
-
       push:
         - meta_scope: comment.markdown.strong-emphasis.js
         - match: (\b(?<!_)\*\*\*\b(?!_)|(?<!\s)\*\*\*(?![a-zA-Z0-9])) #(?<![\s\\*])(\*\*\*)
@@ -485,7 +466,6 @@ contexts:
     - match: ((?<![a-zA-Z0-9])___(?=[a-zA-Z0-9])|(?<![a-zA-Z0-9])___(?!\s))(?=.*?\S___(?![a-zA-Z0-9])) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(___)(?=[^\s_](\\_|\s[\s_]+\s|[^_])*(?<!\s)___)
       captures:
         1: punctuation.definition.markdown.strong-emphasis.begin.js
-
       push:
         - meta_scope: comment.markdown.strong-emphasis.js
         - match: ((?<=[a-zA-Z0-9])___(?=[a-zA-Z0-9])|(?<=\S)___(?=[^a-zA-Z0-9])) #\n|(?<![\s\\_])(___)
@@ -496,12 +476,10 @@ contexts:
         - include: comments-markdown-code-span
 
   comments-markdown-strong:
-
     # **foo**
     - match: (\*\*\b(?!_)|(?<![a-zA-Z0-9])\*\*(?!\s))(?=.*?(?:\b(?<!_)\*\*\b(?!_)|\S\*\*(?![a-zA-Z0-9]))) #(\*\*)(?=[^\s*](\\\*|\s[\s*]+\s|[^*])*(?<!\s)\*\*)
       captures:
         1: punctuation.definition.markdown.strong.begin.js
-
       push:
         - meta_scope: comment.markdown.strong.js
         - match: (\b(?<!_)\*\*\b(?!_)|(?<!\s)\*\*(?![a-zA-Z0-9])) #(?<![\s\\*])(\*\*)
@@ -516,7 +494,6 @@ contexts:
     - match: ((?<!\w)__(?=[a-zA-Z0-9])|(?<!\w)__(?![\s_]))(?=.*?\S__(?!\w)) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(__)(?=[^\s_](\\_|\s[\s_]+\s|[^_])*(?<!\s)__)
       captures:
         1: punctuation.definition.markdown.strong.begin.js
-
       push:
         - meta_scope: comment.markdown.strong.js
         - match: ((?<=[a-zA-Z0-9])__(?=[a-zA-Z0-9])|(?<=\S)__(?=[^a-zA-Z0-9])) #\n|(?<![\s\\_])(__)
@@ -547,7 +524,6 @@ contexts:
       #  3: name: punctuation.definition.markdown.emphasis.end.js
       captures:
         1: punctuation.definition.markdown.emphasis.begin.js
-
       push:
         - meta_scope: comment.markdown.emphasis.js
         - match: (\b(?<!_)\*\b(?!_)|(?<![\s*])\*(?![a-zA-Z0-9*])) #\n|(?<![\s\\*])(\*)
@@ -561,7 +537,6 @@ contexts:
     - match: ((?<!\w)_(?=[a-zA-Z0-9])|(?<!\w)_(?![\s_]))(?=.*?[^\s_]_(?!\w)) #\b(?<=[\s!"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~‘’“”])(_(?!\s))(?=(\\_|\s[\s_]+\s|[^_])*[^\s_]_)
       captures:
         1: punctuation.definition.markdown.emphasis.begin.js
-
       push:
         - meta_scope: comment.markdown.emphasis.js
         - match: (?<![\s_])(_)(?!\w) #\n|(?<![\s\\_])(_)
@@ -572,7 +547,6 @@ contexts:
         - include: comments-markdown-code-span
 
   comments-markdown-code-span:
-
     - scope: comment.markdown.code.js
       match: (`)(?!\s)(\\`|[^`])*?\S(`)(?![a-zA-Z0-9])
       captures:
@@ -580,7 +554,6 @@ contexts:
         3: punctuation.definition.markdown.code.end.js
 
   comments-markdown-code-block:
-
     # ```
     # foo
     # ```
@@ -590,7 +563,6 @@ contexts:
         2: punctuation.definition.markdown.code.block.begin.js
         3: comment.markdown.code.block.syntax.js
         4: meta.punctuation.definition.markdown.code.block.begin.after.js
-
       push:
         - meta_scope: comment.markdown.code.block.js
         - match: (\s*)(\2`*)(\s*)
@@ -620,7 +592,6 @@ contexts:
         2: punctuation.definition.markdown.code.block.begin.js
         3: comment.markdown.code.block.syntax.js
         4: meta.punctuation.definition.markdown.code.block.begin.after.js
-
       push:
         - meta_scope: comment.markdown.code.block.js
         - match: (\s*)(\2~*)(\s*)
@@ -642,11 +613,9 @@ contexts:
             3: meta.punctuation.definition.comment.after.js
 
   function-declaration-parameters:
-
     - match: \(
       captures:
         0: punctuation.definition.parameters.begin.js
-
       push:
         - meta_scope: meta.function.declaration.parameters.js
         - match: \)
@@ -669,7 +638,6 @@ contexts:
         - match: '='
           captures:
             0: keyword.operator.assignment.js
-
           push:
             - meta_scope: meta.parameter.optional.js
             - match: '(?=[,)])'
@@ -681,11 +649,9 @@ contexts:
         - include: comments
 
   method-declaration-parameters:
-
     - match: \(
       captures:
         0: punctuation.definition.parameters.begin.js
-
       push:
         - meta_scope: meta.method.declaration.parameters.js
 
@@ -709,7 +675,6 @@ contexts:
         - match: '='
           captures:
             0: keyword.operator.assignment.js
-
           push:
             - meta_scope: meta.parameter.optional.js
             - match: '(?=[,)])'
@@ -721,12 +686,10 @@ contexts:
         - include: comments
 
   literal-module:
-
     - scope: keyword.operator.module.js
       match: (?<!\.)\b(import|export|default|from|as)\b
 
   literal-class:
-
     # e.g. class MyClass {  }
     - match: >-
         (?x)
@@ -735,7 +698,6 @@ contexts:
       captures:
         1: storage.type.class.js
         2: entity.name.class.js
-
       push:
         - meta_scope: meta.class.js
         - match: '}'
@@ -746,7 +708,6 @@ contexts:
         - match: \b(extends)\b
           captures:
             1: storage.type.extends.js
-
           push:
             - meta_scope: meta.class.extends.js
             - match: '(?={)'
@@ -757,7 +718,6 @@ contexts:
         - match: '{'
           captures:
             0: meta.brace.curly.js
-
           push:
             - match: '(?=})'
               pop: true
@@ -769,7 +729,6 @@ contexts:
             - include: expression
 
   literal-method:
-
     # e.g. play(arg1, arg2) {  }
     - match: >-
         (?x)
@@ -793,7 +752,6 @@ contexts:
         6: meta.brace.square.js
         7: variable.other.readwrite.js
         8: meta.brace.square.js
-
       push:
         - meta_scope: meta.method.js
         - match: (?<=\))
@@ -812,7 +770,6 @@ contexts:
         1: storage.type.js
         2: storage.type.accessor.js
         3: entity.name.accessor.js
-
       push:
         - meta_scope: meta.accessor.js
         - match: (?<=\))
@@ -821,7 +778,6 @@ contexts:
         - include: function-declaration-parameters
 
   literal-property-initializer:
-
     - scope: meta.class.property.js
       match: \b(?:(static)\s+)?([_$a-zA-Z][$\w]*)\s*=
       captures:
@@ -829,7 +785,6 @@ contexts:
         2: variable.class.property.js
 
   literal-prototype:
-
     # e.g. Sound.prototype
     - scope: meta.prototype.access.js
       match: ([_$a-zA-Z][$\w]*)(\.)(prototype)\b
@@ -847,7 +802,6 @@ contexts:
         3: variable.language.prototype.js
 
   literal-function:
-
     # e.g. function play(arg1, arg2) {  }
     - match: >-
         (?x)
@@ -859,7 +813,6 @@ contexts:
         2: storage.type.function.js
         3: keyword.generator.asterisk.js
         4: entity.name.function.js
-
       push:
         - meta_scope: meta.function.js
         - match: (?<=\))
@@ -881,7 +834,6 @@ contexts:
         3: storage.type.function.js
         4: keyword.generator.asterisk.js
         5: entity.name.function.js
-
       push:
         - meta_scope: meta.function.js
         - match: (?<=\))
@@ -909,7 +861,6 @@ contexts:
         7: storage.type.function.js
         8: keyword.generator.asterisk.js
         9: entity.name.function.js
-
       push:
         - meta_scope: meta.prototype.function.js
         - match: (?<=\))
@@ -934,7 +885,6 @@ contexts:
         5: storage.type.function.js
         6: keyword.generator.asterisk.js
         7: entity.name.function.js
-
       push:
         - meta_scope: meta.function.static.js
         - match: (?<=\))
@@ -943,7 +893,6 @@ contexts:
         - include: function-declaration-parameters
 
   literal-function-labels:
-
     # e.g. play: function(arg1, arg2) {  }
     - match: >-
         (?x)
@@ -959,7 +908,6 @@ contexts:
         4: storage.type.function.js
         5: keyword.generator.asterisk.js
         6: entity.name.function.js
-
       push:
         - meta_scope: meta.function.json.js
         - match: (?<=\))
@@ -992,7 +940,6 @@ contexts:
         11: storage.type.function.js
         12: keyword.generator.asterisk.js
         13: entity.name.function.js
-
       push:
         - meta_scope: meta.function.json.js
         - match: (?<=\))
@@ -1001,7 +948,6 @@ contexts:
         - include: function-declaration-parameters
 
   literal-arrow-function:
-
     # e.g. (args) => { }
     - match: >-
         (?x)
@@ -1009,7 +955,6 @@ contexts:
           (?=\([^()]*\)\s*(=>))
       captures:
         1: storage.type.js
-
       push:
         - meta_scope: meta.function.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1040,7 +985,6 @@ contexts:
       captures:
         1: entity.name.function.js
         2: storage.type.js
-
       push:
         - meta_scope: meta.function.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1080,7 +1024,6 @@ contexts:
         4: keyword.operator.accessor.js
         5: entity.name.function.js
         6: storage.type.js
-
       push:
         - meta_scope: meta.prototype.function.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1123,7 +1066,6 @@ contexts:
         2: keyword.operator.accessor.js
         3: entity.name.function.js
         4: storage.type.js
-
       push:
         - meta_scope: meta.function.static.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1151,7 +1093,6 @@ contexts:
         6: storage.type.function.arrow.js
 
   literal-arrow-function-labels:
-
     # e.g. play: (args) => { }
     - match: >-
         (?x)
@@ -1163,7 +1104,6 @@ contexts:
         1: entity.name.function.js
         2: punctuation.separator.key-value.js
         3: storage.type.js
-
       push:
         - meta_scope: meta.function.json.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1209,7 +1149,6 @@ contexts:
         8: punctuation.definition.string.end.js
         9: punctuation.separator.key-value.js
         10: storage.type.js
-
       push:
         - meta_scope: meta.function.json.arrow.js
         - match: (?<=\))\s*(=>)
@@ -1245,7 +1184,6 @@ contexts:
         12: storage.type.function.arrow.js
 
   literal-function-call:
-
     - scope: meta.function-call.without-arguments.js
       match: >-
         (?x)
@@ -1264,7 +1202,6 @@ contexts:
         1: variable.function.js
 
   literal-method-call:
-
     - scope: meta.function-call.static.without-arguments.js
       match: >-
         (?x)
@@ -1310,7 +1247,6 @@ contexts:
         1: variable.function.js
 
   literal-language-variable:
-
     - scope: variable.language.arguments.js
       match: (?<!(?<!\.\.)\.)\b(arguments)\b
 
@@ -1333,7 +1269,6 @@ contexts:
       match: (?<=\.)\b(prototype)\b
 
   literal-language-constant:
-
     - scope: constant.language.boolean.true.js
       match: (?<!\.)\btrue\b
 
@@ -1350,11 +1285,9 @@ contexts:
       match: (?<!\.)\bNaN\b
 
   literal-constructor:
-
     - match: (new)\s+(?=[_$a-zA-Z][$\w.]*)
       captures:
         1: keyword.operator.new.js
-
       push:
         - meta_scope: meta.instance.constructor
         - match: (?![_$a-zA-Z.])
@@ -1375,12 +1308,10 @@ contexts:
             2: variable.other.property.js
 
   literal-keyword-storage:
-
     - scope: storage.type.js
       match: (?<!\.)\b(const|let|var)\b
 
   literal-keywords:
-
     - include: literal-keyword-storage
 
     - match: (?<!\.)\b(yield)\b(?:\s*(\*))?
@@ -1391,7 +1322,6 @@ contexts:
     - match: (?<!\.)\b(return)\b
       captures:
         1: keyword.control.flow.js
-
       push:
         - meta_scope: meta.return.js
         - match: \n|^
@@ -1412,11 +1342,9 @@ contexts:
       match: (?<!\.)\b(break|continue|do|goto|while)\b
 
   literal-for:
-
     - match: (?<!\.)\b(for)\b
       captures:
         1: keyword.control.loop.js
-
       push:
         - meta_scope: meta.for.js
         - match: \)
@@ -1427,7 +1355,6 @@ contexts:
         - match: \(
           captures:
             0: meta.brace.round.js
-
           push:
             - match: (?=\))
               pop: true
@@ -1437,11 +1364,9 @@ contexts:
             - include: literal-punctuation
 
   literal-switch:
-
     - match: (?<!\.)\b(switch)\b
       captures:
         1: keyword.control.switch.js
-
       push:
         - meta_scope: meta.switch.js
         - match: \}
@@ -1454,7 +1379,6 @@ contexts:
         - match: \{
           captures:
             0: meta.brace.curly.js
-
           push:
             - match: (?=})
               pop: true
@@ -1462,7 +1386,6 @@ contexts:
             - match: (?<!\.)\b(case|default)\b
               captures:
                 1: keyword.control.switch.js
-
               push:
                 - match: (?=:)
                   pop: true
@@ -1472,7 +1395,6 @@ contexts:
             - include: main
 
   literal-operators:
-
     - scope: keyword.operator.js
       match: (?<!\.)\b(delete|in|instanceof|new|of|typeof|void|with)\b
 
@@ -1554,14 +1476,12 @@ contexts:
       match: \.
 
   literal-labels:
-
     - match: >-
         (?x)
           (?<!\?)(?<!\?\s)(?=(
             ((')((?:[^']|\\')*)('))|
             ((")((?:[^"]|\\")*)("))
           )\s*:)
-
       push:
         - match: ':'
           captures:
@@ -1577,7 +1497,6 @@ contexts:
         2: punctuation.separator.key-value.js
 
   literal-number:
-
     - scope: invalid.illegal.numeric.hex.js
       match: (?i)(?:\B[-+]|\b)0x[0-9a-f]*\.(\B|\b[0-9]+)
 
@@ -1602,7 +1521,6 @@ contexts:
       match: (?:\B[-+]|\b)(Infinity)\b
 
   literal-punctuation:
-
     - scope: punctuation.terminator.statement.js
       match: \;
 
@@ -1610,12 +1528,10 @@ contexts:
       match: ','
 
   literal-template-string:
-
     - match: ([a-zA-Z$_][\w$_]*)?(`)
       captures:
         1: entity.template-string.tag.name.js
         2: punctuation.definition.template-string.begin.js
-
       push:
         - meta_scope: string.template-string.js
         - match: '`'
@@ -1628,7 +1544,6 @@ contexts:
         - match: \${
           captures:
             0: punctuation.template-string.element.begin.js
-
           push:
             - meta_scope: entity.template-string.element.js
             - match: '}'
@@ -1639,7 +1554,6 @@ contexts:
             - include: expression
 
   literal-regexp:
-
     # ignore ++, -- since they're uncommon, distinguishing them is not possible in sublime text, see:
     #   http://stackoverflow.com/questions/5519596/when-parsing-javascript-what-determines-the-meaning-of-a-slash
     - match: >-
@@ -1653,7 +1567,6 @@ contexts:
           (?!/|\*|$)
       captures:
         1: punctuation.definition.string.begin.js
-
       push:
         - meta_scope: string.regexp.js
         - match: (/)([gimyus]*)
@@ -1665,11 +1578,9 @@ contexts:
         - include: scope:source.regexp.js.es
 
   literal-string:
-
     - match: "'"
       captures:
         0: punctuation.definition.string.begin.js
-
       push:
         - meta_scope: string.quoted.single.js
         - match: (')|(\n)
@@ -1683,7 +1594,6 @@ contexts:
     - match: '"'
       captures:
         0: punctuation.definition.string.begin.js
-
       push:
         - meta_scope: string.quoted.double.js
         - match: (")|(\n)
@@ -1695,7 +1605,6 @@ contexts:
         - include: string-content
 
   string-content:
-
     - scope: constant.character.escape.newline.js
       match: \\\s*\n
 
@@ -1703,7 +1612,6 @@ contexts:
       match: \\(x[\da-fA-F]{2}|u[\da-fA-F]{4}|.)
 
   literal-variable:
-
     # e.g. CONSTANT
     - scope: variable.other.constant.js
       match: '[A-Z][_$\dA-Z]*\b'
@@ -1741,7 +1649,6 @@ contexts:
       match: '[_$a-zA-Z][$\w]*'
 
   support:
-
     # built-ins
     - scope: support.class.builtin.js
       match: \b(Array|Boolean|Date|Function|Map|Math|Number|Object|Promise|Proxy|RegExp|Set|String|WeakMap)\b
@@ -1809,7 +1716,6 @@ contexts:
 
     # mustache
     - match: '{{'
-
       push:
         - meta_scope: meta.tag.mustache.js
         - match: '}}'
