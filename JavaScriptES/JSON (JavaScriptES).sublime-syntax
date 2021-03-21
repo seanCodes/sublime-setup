@@ -1,88 +1,97 @@
-# [PackageDev] target_format: plist, ext: tmLanguage
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
 name: JSON (JavaScriptES)
-uuid: 6d960be2-8f9b-4ae5-b667-b6ab93782289
-scopeName: source.json.es
-fileTypes: [json, sublime-settings, sublime-menu, sublime-keymap, sublime-mousemap,
+file_extensions: [json, sublime-settings, sublime-menu, sublime-keymap, sublime-mousemap,
   sublime-theme, sublime-build, sublime-project, sublime-completions]
-foldingStartMarker: >-
-  (?x)       # turn on extended mode
-    ^        # a line beginning with
-    \s*      # some optional space
-    [{\[]    # the start of an object or array
-    (?!      # but not followed by
-      .*     # whatever
-      [}\]]  # and the close of an object or array
-      ,?     # an optional comma
-      \s*    # some optional space
-      $      # at the end of the line
-    )
-    |        # ...or...
-    [{\[]    # the start of an object or array
-    \s*      # some optional space
-    $        # at the end of the line
-foldingStopMarker: >-
-  (?x)     # turn on extended mode
-    ^      # a line beginning with
-    \s*    # some optional space
-    [}\]]  # and the close of an object or array
-keyEquivalent: ^~J
+scope: source.json.es
+#foldingStartMarker: >-
+#  (?x)       # turn on extended mode
+#    ^        # a line beginning with
+#    \s*      # some optional space
+#    [{\[]    # the start of an object or array
+#    (?!      # but not followed by
+#      .*     # whatever
+#      [}\]]  # and the close of an object or array
+#      ,?     # an optional comma
+#      \s*    # some optional space
+#      $      # at the end of the line
+#    )
+#    |        # ...or...
+#    [{\[]    # the start of an object or array
+#    \s*      # some optional space
+#    $        # at the end of the line
+#foldingStopMarker: >-
+#  (?x)     # turn on extended mode
+#    ^      # a line beginning with
+#    \s*    # some optional space
+#    [}\]]  # and the close of an object or array
 
-patterns:
+contexts:
 
-    - include: '#value'
+  main:
 
-repository:
+    - include: value
 
   array:
 
-    name: meta.structure.array.json
-    begin: \[
-    beginCaptures:
-      '0': {name: punctuation.definition.array.begin.json}
+    - match: \[
+      captures:
+        0: punctuation.definition.array.begin.json
 
-    end: \]
-    endCaptures:
-      '0': {name: punctuation.definition.array.end.json}
-    patterns:
+      push:
+        - meta_scope: meta.structure.array.json
+        - match: \]
+          captures:
+            0: punctuation.definition.array.end.json
+          pop: true
 
-      - include: '#value'
+        - include: value
 
-      - name: punctuation.separator.array.json
-        match: ','
+        - scope: punctuation.separator.array.json
+          match: ','
 
-      - name: invalid.illegal.expected-array-separator.json
-        match: '[^\s\]]'
+        - scope: invalid.illegal.expected-array-separator.json
+          match: '[^\s\]]'
 
   comments:
 
-    patterns:
+    #patterns:
 
-    - name: comment.block.documentation.json
-      begin: /\*\*
-      end: \*/
+    - match: /\*\*
       captures:
-        '0': {name: punctuation.definition.comment.json}
+        0: punctuation.definition.comment.json
+      push:
+        - meta_scope: comment.block.documentation.json
+        - match: \*/
+          captures:
+            0: punctuation.definition.comment.json
+          pop: true
 
-    - name: comment.block.json
-      begin: /\*
-      end: \*/
+    - match: /\*
       captures:
-        '0': {name: punctuation.definition.comment.json}
+        0: punctuation.definition.comment.json
+      push:
+        - meta_scope: comment.block.json
+        - match: \*/
+          captures:
+            0: punctuation.definition.comment.json
+          pop: true
 
-    - name: comment.line.double-slash.js
+    - scope: comment.line.double-slash.js
       match: (//).*$\n?
       captures:
-        '1': {name: punctuation.definition.comment.json}
+        1: punctuation.definition.comment.json
 
   constant:
-    name: constant.language.json
-    match: \b(?:true|false|null)\b
+    - scope: constant.language.json
+      match: \b(?:true|false|null)\b
 
   # handles integer and decimal numbers
   number:
-    name: constant.numeric.json
-    match: >-
-      (?x)        # turn on extended mode
+    - scope: constant.numeric.json
+      match: |-
+        (?x)      # turn on extended mode
         -?        # an optional minus
         (?:
           0       # a zero
@@ -105,55 +114,57 @@ repository:
   # a JSON object
   object:
 
-    name: meta.structure.dictionary.json
-    begin: \{
-    beginCaptures:
-      '0': {name: punctuation.definition.dictionary.begin.json}
+    - match: \{
+      captures:
+        0: punctuation.definition.dictionary.begin.json
 
-    end: \}
-    endCaptures:
-      '0': {name: punctuation.definition.dictionary.end.json}
-    patterns:
+      push:
+        - meta_scope: meta.structure.dictionary.json
+        - match: \}
+          captures:
+            0: punctuation.definition.dictionary.end.json
+          pop: true
 
       # the JSON object key
 
-      - include: '#string'
-      - include: '#comments'
+        - include: string
+        - include: comments
 
-      - name: meta.structure.dictionary.value.json
-        begin: ':'
-        beginCaptures:
-          '0': {name: punctuation.separator.dictionary.key-value.json}
+        - match: ':'
+          captures:
+            0: punctuation.separator.dictionary.key-value.json
 
-        end: (,)|(?=\})
-        endCaptures:
-          '1': {name: punctuation.separator.dictionary.pair.json}
-        patterns:
+          push:
+            - meta_scope: meta.structure.dictionary.value.json
+            - match: (,)|(?=\})
+              captures:
+                1: punctuation.separator.dictionary.pair.json
+              pop: true
 
           # the JSON object value
 
-          - include: '#value'
+            - include: value
 
-          - name: invalid.illegal.expected-dictionary-separator.json
-            match: '[^\s,]'
+            - scope: invalid.illegal.expected-dictionary-separator.json
+              match: '[^\s,]'
 
-      - name: invalid.illegal.expected-dictionary-separator.json
-        match: '[^\s\}]'
+        - scope: invalid.illegal.expected-dictionary-separator.json
+          match: '[^\s\}]'
 
   string:
-    name: string.quoted.double.json
-    begin: '"'
-    beginCaptures:
-      '0': {name: punctuation.definition.string.begin.json}
+    - match: '"'
+      captures:
+        0: punctuation.definition.string.begin.json
+      push:
+        - meta_scope: string.quoted.double.json
+        - match: '"'
+          captures:
+            0: punctuation.definition.string.end.json
+          pop: true
 
-    end: '"'
-    endCaptures:
-      '0': {name: punctuation.definition.string.end.json}
-    patterns:
-
-      - name: constant.character.escape.json
-        match: >-
-          (?x)                # turn on extended mode
+        - scope: constant.character.escape.json
+          match: |-
+            (?x)              # turn on extended mode
             \\                # a literal backslash
             (?:               # ...followed by...
               ["\\/bfnrt]     # one of these characters
@@ -161,17 +172,17 @@ repository:
               u               # a u
               [0-9a-fA-F]{4}) # and four hex digits
 
-      - name: invalid.illegal.unrecognized-string-escape.json
-        match: \\.
+        - scope: invalid.illegal.unrecognized-string-escape.json
+          match: \\.
 
   # the 'value' diagram at http://json.org
   value:
 
-    patterns:
+    #patterns:
 
-    - include: '#constant'
-    - include: '#number'
-    - include: '#string'
-    - include: '#array'
-    - include: '#object'
-    - include: '#comments'
+    - include: constant
+    - include: number
+    - include: string
+    - include: array
+    - include: object
+    - include: comments
