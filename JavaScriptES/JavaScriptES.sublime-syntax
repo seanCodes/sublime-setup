@@ -1575,7 +1575,7 @@ contexts:
             2: keyword.other.js
           pop: true
 
-        - include: scope:source.regexp.js.es
+        - include: scope:source.regexp.js
 
   literal-string:
     - match: "'"
