@@ -5,7 +5,7 @@ from os import path
 
 
 
-FILE_PATH_REGEX = re.compile(r'^(?P<app_folder_path>(?P<app_path>.*?/)(?P<app_folder>app/|tests/))(?P<file_folder>[^/]+/)(?P<file_path>.*?(?=[^/]+$))(?P<file_name>[^.]+)\.(?P<file_type>.*)$')
+FILE_PATH_REGEX = re.compile(r'^(?P<app_folder_path>(?P<app_path>.*?/)(?P<app_folder>app/|addon/|tests/))(?P<file_folder>[^/]+/)(?P<file_path>.*?(?=[^/]+$))(?P<file_name>[^.]+)\.(?P<file_type>.*)$')
 STYLE_FILE_TYPES = ['.css', '.less', '.scss', '.sass', '.styl']
 
 
@@ -27,7 +27,7 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 		self.process_file()
 
 		if not self.file_path_match:
-			return sublime.status_message('File is not in an ember project app/*/ or tests/*/ directory!')
+			return sublime.status_message('File is not in an ember project app/*/ addon/*/ or tests/*/ directory!')
 
 		# Determine Companion Files
 
@@ -96,9 +96,11 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			if open_file_type == 'template_hbs':
 				if app_folder == 'tests/':
 					files.append(self.get_path_for_file_in('app/templates'))
+					files.append(self.get_path_for_file_in('addon/templates'))
 					files.append(self.get_path_for_file_in('app', 'hbs')) # co-located structure
 				else:
 					files.append(self.get_path_for_file_in('templates'))
+					files.append(self.get_path_for_file_in('templates/components'))
 					files.append(self.get_path_for_file_in('components', 'hbs')) # co-located structure
 
 			if open_file_type == 'style':
@@ -121,7 +123,7 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			# For a test file, open its JS companion.
 			if app_folder == 'tests/':
 				if file_folder in ['integration/', 'unit/']:
-					files.append(self.get_path_for_file_in('app'))
+					files.append(self.get_path_for_file_in(app_folder))
 
 			# For a template, open its JS companion (component, route, or controller).
 			elif file_folder == 'templates/':
@@ -168,17 +170,17 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 		# Remove any trailing slash from the folder name.
 		folder = re.sub(r'/$', '', folder)
 
-		if folder == 'app':
+		if folder in ['app', 'addon']:
 			file_name = re.sub(r'-test$', '', self.file_name)
 
-			return '%sapp/%s%s.%s' % (self.app_path, self.file_path, file_name, file_type or 'js')
+			return '%s%s/%s%s.%s' % (self.app_path, folder, self.file_path, file_name, file_type or 'js')
 
-		elif folder == 'app/templates':
+		if folder in ['app/templates', 'addon/templates']:
 			file_name = re.sub(r'-test$', '', self.file_name)
 
-			return '%sapp/templates/%s%s.hbs' % (self.app_path, self.file_path, file_name)
+			return '%s%s/%s%s.hbs' % (self.app_path, folder, self.file_path, file_name)
 
-		elif folder == 'templates':
+		if folder.startswith('templates'):
 			if self.file_folder == 'components/':
 				return '%s%s/components/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
 			return '%s%s/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
@@ -188,7 +190,8 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 	def get_style_paths_for_file(self):
 		files = []
-		# SHORTCUT: Try and use the existence of `styles/app.*` to determine style files’ file-type.
+		# SHORTCUT: Try and use the existence of `styles/app.*` or `styles/addon.*` to determine the
+		# type of style files being used.
 		app_style_file_type = self.get_app_style_file_type()
 		app_style_file_types = [app_style_file_type] if app_style_file_type else STYLE_FILE_TYPES
 
@@ -198,41 +201,52 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			print('\nfile is a style file!') # DEBUG
 			return []
 
+		app_styles_path = self.app_folder_path + 'styles/'
+
 		def get_file_paths_for_path(path):
 			path = re.sub(r'/$', '', path)
 			path_files = []
 			# .../app/styles/<file_path>/<file_name>.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s'        % (self.app_folder_path, path, self.file_name), app_style_file_types)
+			path_files += get_file_type_paths_for('%s%s/%s'        % (app_styles_path, path, self.file_name), app_style_file_types)
 			# .../app/styles/<file_path>/index.css
-			path_files += get_file_type_paths_for('%sstyles/%sindex'     % (self.app_folder_path, path), app_style_file_types)
+			path_files += get_file_type_paths_for('%s%s/index'     % (app_styles_path, path),                 app_style_file_types)
 			# .../app/styles/<file_path>/_index.css
-			path_files += get_file_type_paths_for('%sstyles/%s_index'    % (self.app_folder_path, path), app_style_file_types)
+			path_files += get_file_type_paths_for('%s%s/_index'    % (app_styles_path, path),                 app_style_file_types)
 			# .../app/styles/<file_path>/<file_name>/index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/index'  % (self.app_folder_path, path, self.file_name), app_style_file_types)
+			path_files += get_file_type_paths_for('%s%s/%s/index'  % (app_styles_path, path, self.file_name), app_style_file_types)
 			# .../app/styles/<file_path>/<file_name>/_index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/_index' % (self.app_folder_path, path, self.file_name), app_style_file_types)
+			path_files += get_file_type_paths_for('%s%s/%s/_index' % (app_styles_path, path, self.file_name), app_style_file_types)
 
 			return path_files
 
-		file_path = self.file_path
+		file_path = ''
+		file_path_prefix = ''
 
 		# Strip `components/` from the front of the file path, if necessary.
-		if file_path.startswith('components/'):
-			file_path = file_path.split('components/', 1)[1]
-
-		print('\npath:', file_path) # DEBUG
-		print('type:', app_style_file_type or file_types) # DEBUG
+		if self.file_path.startswith('components/'):
+			file_path = self.file_path.split('components/', 1)[1]
+			file_path_prefix = 'components/'
+		else:
+			file_path = self.file_path
 
 		# Traverse up the file path and add style-file-path options for each level.
 		#
 		# > NOTE: `file_path` should have a trailing slash but NO leading slash, e.g. `foo/bar/baz/`.
 		while True:
 			# Get style file paths for the path (but only if it exists).
-			if path.exists('styles/' + file_path):
+			if path.exists(app_styles_path + file_path):
 				print('\npath:         ', file_path) # DEBUG
 				files += get_file_paths_for_path(file_path)
 			else:
 				print('\npath:         ', file_path, '  <-- PATH DOES NOT EXIST') # DEBUG
+
+			# Get style file paths for the “prefixed” version of the path (but only if it exists).
+			if file_path_prefix:
+				if path.exists(app_styles_path + file_path_prefix + file_path):
+					print('path prefixed:', file_path_prefix + file_path) # DEBUG
+					files += get_file_paths_for_path(file_path_prefix + file_path)
+				else:
+					print('path prefixed:', file_path_prefix + file_path, '  <-- PATH DOES NOT EXIST') # DEBUG
 
 			# If this is the top-level directory of the path.
 			if file_path.count('/') is 1:
@@ -344,6 +358,8 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 	def get_app_style_file_type(self):
 		for style_file_type in STYLE_FILE_TYPES:
 			if path.exists('%sstyles/app%s' % (self.app_folder_path, style_file_type)):
+				return style_file_type
+			if path.exists('%sstyles/addon%s' % (self.app_folder_path, style_file_type)):
 				return style_file_type
 
 		return ''
