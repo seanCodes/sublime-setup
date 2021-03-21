@@ -10,6 +10,11 @@ STYLE_FILE_TYPES = ['.css', '.less', '.scss', '.sass', '.styl']
 
 
 
+def get_file_type_paths_for(path, file_types):
+	return [path + type for type in file_types]
+
+
+
 class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 
@@ -185,28 +190,26 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 		files = []
 		# SHORTCUT: Try and use the existence of `styles/app.*` to determine style files’ file-type.
 		app_style_file_type = self.get_app_style_file_type()
+		app_style_file_types = [app_style_file_type] if app_style_file_type else STYLE_FILE_TYPES
+
+		print('\ntype:', app_style_file_type or ('%s (UNKNOWN)' % STYLE_FILE_TYPES)) # DEBUG
 
 		if '.' + self.file_type == app_style_file_type:
 			print('\nfile is a style file!') # DEBUG
 			return []
 
-		def get_file_type_paths_for(path):
-			if app_style_file_type:
-				return [path + app_style_file_type]
-			return [path + type for type in STYLE_FILE_TYPES]
-
 		def get_file_paths_for_path(path):
 			path_files = []
 			# .../app/styles/<file_path>/<file_name>.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s' % (self.app_folder_path, path, self.file_name))
+			path_files += get_file_type_paths_for('%sstyles/%s%s' % (self.app_folder_path, path, self.file_name), app_style_file_types)
 			# .../app/styles/<file_path>/index.css
-			path_files += get_file_type_paths_for('%sstyles/%sindex' % (self.app_folder_path, path))
+			path_files += get_file_type_paths_for('%sstyles/%sindex' % (self.app_folder_path, path), app_style_file_types)
 			# .../app/styles/<file_path>/_index.css
-			path_files += get_file_type_paths_for('%sstyles/%s_index' % (self.app_folder_path, path))
+			path_files += get_file_type_paths_for('%sstyles/%s_index' % (self.app_folder_path, path), app_style_file_types)
 			# .../app/styles/<file_path>/<file_name>/index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/index' % (self.app_folder_path, path, self.file_name))
+			path_files += get_file_type_paths_for('%sstyles/%s%s/index' % (self.app_folder_path, path, self.file_name), app_style_file_types)
 			# .../app/styles/<file_path>/<file_name>/_index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/_index' % (self.app_folder_path, path, self.file_name))
+			path_files += get_file_type_paths_for('%sstyles/%s%s/_index' % (self.app_folder_path, path, self.file_name), app_style_file_types)
 
 			return path_files
 
