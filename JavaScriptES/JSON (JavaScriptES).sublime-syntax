@@ -30,17 +30,15 @@ scope: source.json.es
 contexts:
 
   main:
-
     - include: value
 
   array:
-
     - match: \[
       captures:
         0: punctuation.definition.array.begin.json
-
       push:
         - meta_scope: meta.structure.array.json
+
         - match: \]
           captures:
             0: punctuation.definition.array.end.json
@@ -55,14 +53,12 @@ contexts:
           match: '[^\s\]]'
 
   comments:
-
-    #patterns:
-
     - match: /\*\*
       captures:
         0: punctuation.definition.comment.json
       push:
         - meta_scope: comment.block.documentation.json
+
         - match: \*/
           captures:
             0: punctuation.definition.comment.json
@@ -73,6 +69,7 @@ contexts:
         0: punctuation.definition.comment.json
       push:
         - meta_scope: comment.block.json
+
         - match: \*/
           captures:
             0: punctuation.definition.comment.json
@@ -117,7 +114,6 @@ contexts:
     - match: \{
       captures:
         0: punctuation.definition.dictionary.begin.json
-
       push:
         - meta_scope: meta.structure.dictionary.json
         - match: \}
@@ -125,7 +121,7 @@ contexts:
             0: punctuation.definition.dictionary.end.json
           pop: true
 
-      # the JSON object key
+        # the JSON object key
 
         - include: string
         - include: comments
@@ -133,15 +129,15 @@ contexts:
         - match: ':'
           captures:
             0: punctuation.separator.dictionary.key-value.json
-
           push:
             - meta_scope: meta.structure.dictionary.value.json
+
             - match: (,)|(?=\})
               captures:
                 1: punctuation.separator.dictionary.pair.json
               pop: true
 
-          # the JSON object value
+            # the JSON object value
 
             - include: value
 
@@ -157,6 +153,7 @@ contexts:
         0: punctuation.definition.string.begin.json
       push:
         - meta_scope: string.quoted.double.json
+
         - match: '"'
           captures:
             0: punctuation.definition.string.end.json
@@ -177,9 +174,6 @@ contexts:
 
   # the 'value' diagram at http://json.org
   value:
-
-    #patterns:
-
     - include: constant
     - include: number
     - include: string
