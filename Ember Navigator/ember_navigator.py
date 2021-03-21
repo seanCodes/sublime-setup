@@ -227,7 +227,12 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 		#
 		# > NOTE: `file_path` should have a trailing slash but NO leading slash, e.g. `foo/bar/baz/`.
 		while True:
-			files += get_file_paths_for_path(file_path)
+			# Get style file paths for the path (but only if it exists).
+			if path.exists('styles/' + file_path):
+				print('\npath:         ', file_path) # DEBUG
+				files += get_file_paths_for_path(file_path)
+			else:
+				print('\npath:         ', file_path, '  <-- PATH DOES NOT EXIST') # DEBUG
 
 			# If this is the top-level directory of the path.
 			if file_path.count('/') is 1:
