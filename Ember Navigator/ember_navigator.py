@@ -160,21 +160,25 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 
 	def get_path_for_file_in(self, folder, file_type=''):
+		# Remove any trailing slash from the folder name.
+		folder = re.sub(r'/$', '', folder)
+
 		if folder == 'app':
 			file_name = re.sub(r'-test$', '', self.file_name)
 
 			return '%sapp/%s%s.%s' % (self.app_path, self.file_path, file_name, file_type or 'js')
+
 		elif folder == 'app/templates':
 			file_name = re.sub(r'-test$', '', self.file_name)
 
 			return '%sapp/templates/%s%s.hbs' % (self.app_path, self.file_path, file_name)
+
 		elif folder == 'templates':
 			if self.file_folder == 'components/':
 				return '%s%s/components/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
-			else:
-				return '%s%s/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
-		else:
-			return '%s%s/%s%s.%s' % (self.app_folder_path, folder, self.file_path, self.file_name, file_type or 'js')
+			return '%s%s/%s%s.hbs' % (self.app_folder_path, folder, self.file_path, self.file_name)
+
+		return '%s%s/%s%s.%s' % (self.app_folder_path, folder, self.file_path, self.file_name, file_type or 'js')
 
 
 	def get_style_paths_for_file(self):
