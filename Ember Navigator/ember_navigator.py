@@ -199,14 +199,14 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			path_files = []
 			# .../app/styles/<file_path>/<file_name>.css
 			path_files += get_file_type_paths_for('%sstyles/%s%s' % (self.app_folder_path, path, self.file_name))
-			# .../app/styles/<file_path>/<file_name>/index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/index' % (self.app_folder_path, path, self.file_name))
-			# .../app/styles/<file_path>/<file_name>/_index.css
-			path_files += get_file_type_paths_for('%sstyles/%s%s/_index' % (self.app_folder_path, path, self.file_name))
 			# .../app/styles/<file_path>/index.css
 			path_files += get_file_type_paths_for('%sstyles/%sindex' % (self.app_folder_path, path))
 			# .../app/styles/<file_path>/_index.css
 			path_files += get_file_type_paths_for('%sstyles/%s_index' % (self.app_folder_path, path))
+			# .../app/styles/<file_path>/<file_name>/index.css
+			path_files += get_file_type_paths_for('%sstyles/%s%s/index' % (self.app_folder_path, path, self.file_name))
+			# .../app/styles/<file_path>/<file_name>/_index.css
+			path_files += get_file_type_paths_for('%sstyles/%s%s/_index' % (self.app_folder_path, path, self.file_name))
 
 			return path_files
 
