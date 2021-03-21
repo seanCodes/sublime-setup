@@ -198,6 +198,9 @@ class QunitCompletions(sublime_plugin.EventListener):
         if not view.match_selector(locations[0], 'source.js'):
             return None
 
+        if view.match_selector(locations[0], 'string, comment'):
+            return None
+
         print('\nQUNIT QUERY COMPLETIONS\n') # DEBUG
 
         if prefix == 'a':
