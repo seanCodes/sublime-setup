@@ -197,7 +197,7 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 
 		print('\ntype:', app_style_file_type or ('%s (UNKNOWN)' % STYLE_FILE_TYPES)) # DEBUG
 
-		if '.' + self.file_type == app_style_file_type:
+		if '.' + self.file_type == app_style_file_type or '.block.' + self.file_type == app_style_file_type:
 			print('\nfile is a style file!') # DEBUG
 			return []
 
@@ -208,6 +208,8 @@ class EmberNavigatorCommand(sublime_plugin.WindowCommand):
 			path_files = []
 			# .../app/styles/<file_path>/<file_name>.css
 			path_files += get_file_type_paths_for('%s%s/%s'        % (app_styles_path, path, self.file_name), app_style_file_types)
+			# .../app/styles/<file_path>/<file_name>.block.css
+			path_files += get_file_type_paths_for('%s%s/%s.block'  % (app_styles_path, path, self.file_name), app_style_file_types)
 			# .../app/styles/<file_path>/index.css
 			path_files += get_file_type_paths_for('%s%s/index'     % (app_styles_path, path),                 app_style_file_types)
 			# .../app/styles/<file_path>/_index.css
