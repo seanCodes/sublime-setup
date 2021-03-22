@@ -22,6 +22,20 @@
 	// REMAP: Goto Reference (prev: `super+alt+shift+down`)
 	{ "keys": ["super+alt+up"], "command": "goto_reference" },
 
+	// > NOTE: Next Bookmark is already mapped to `ctrl+r`
+	// REMAP: Previous Bookmark (prev: `shift+f2`) (overrides: `toggle_bookmark`)
+	{ "keys": ["ctrl+shift+r"], "command": "prev_bookmark" },
+	// REMAP: Toggle Bookmark (prev: `shift+f2`)
+	{ "keys": ["super+ctrl+r"], "command": "toggle_bookmark" },
+	// REMAP: Clear Bookmarks (prev: `super+shift+f2`)
+	{ "keys": ["ctrl+alt+shift+r"], "command": "clear_bookmarks" },
+	// REMAP: Select All Bookmarks (prev: `alt+f2`)
+	{ "keys": ["super+ctrl+shift+r"], "command": "select_all_bookmarks" },
+
+
+	// Show Scope Name (Use ScopeHunter instead of default)
+	{ "keys": ["super+alt+shift+p"], "command": "get_selection_scope" },
+
 
 	// Wrap in Tag
 	{ "keys": ["super+shift+,"], "command": "insert_snippet", "args": { "name": "Packages/XML/Snippets/long-tag.sublime-snippet" }, "context":
