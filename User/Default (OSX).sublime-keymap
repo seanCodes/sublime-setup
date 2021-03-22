@@ -310,7 +310,8 @@
 		[
 			{ "key": "selection_empty",            "operator": "equal",              "operand": true,          "match_all": true },
 			{ "key": "selector",                   "operator": "equal",              "operand": "source.css, source.less, source.sass, source.scss", "match_all": true },
-			{ "key": "preceding_text",             "operator": "regex_contains",     "operand": "!important$", "match_all": true },
+			{ "key": "selector",                   "operator": "not_equal",          "operand": "comment, string",                                   "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains",     "operand": "!important$",                                       "match_all": true },
 		]
 	},
 
