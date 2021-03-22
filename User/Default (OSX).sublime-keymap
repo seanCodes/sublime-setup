@@ -445,6 +445,9 @@
 
 
 
+	//
+	// JSDoc/Doc Key-Triggered Commands
+	//
 
 	// Auto-pair asterisk/underscore/tilde in doc comments.
 	{ "keys": ["*"], "command": "insert_snippet", "args": {"contents": "*$0*"}, "context":
@@ -559,6 +562,10 @@
 
 
 
+	//
+	// Global Key-Triggered Commands
+	//
+
 	// Auto-pair backticks.
 	{ "keys": ["`"], "command": "insert_snippet", "args": {"contents": "`$0`"}, "context":
 		[
@@ -602,6 +609,13 @@
 			{ "key": "eol_selector",               "operator": "not_equal",      "operand": "string.template-string - punctuation.definition.template-string.end", "match_all": true },
 		]
 	},
+
+
+
+	//
+	// Markdown Key-Triggered Commands
+	//
+
 	// Auto-pair triple backticks in Markdown files.
 	{ "keys": ["`"], "command": "insert_snippet", "args": {"contents": "`$0\n```"}, "context":
 		[
@@ -625,6 +639,10 @@
 	},
 
 
+
+	//
+	// Sublime Files Key-Triggered Commands
+	//
 
 	{ "keys": ["\""], "command": "insert_snippet", "args": {"contents": "\"$1\"$2: \"$3\","}, "context":
 		[
