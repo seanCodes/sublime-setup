@@ -302,6 +302,7 @@
 		[
 			{ "key": "selection_empty",            "operator": "equal",              "operand": true,          "match_all": true },
 			{ "key": "selector",                   "operator": "equal",              "operand": "source.css, source.less, source.sass, source.scss", "match_all": true },
+			{ "key": "selector",                   "operator": "not_equal",          "operand": "comment, string",                                   "match_all": true },
 		]
 	},
 	// Delete `!important` in CSS contexts.
