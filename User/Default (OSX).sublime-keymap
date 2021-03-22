@@ -708,12 +708,21 @@
 	// Sublime Files Key-Triggered Commands
 	//
 
-	{ "keys": ["\""], "command": "insert_snippet", "args": {"contents": "\"$1\"$2: \"$3\","}, "context":
+	{ "keys": ["\""], "command": "insert_snippet", "args": {"contents": "\"$1\": \"$2\","}, "context":
 		[
 			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
 			{ "key": "selection_empty",            "operator": "equal",          "operand": true,                                                                       "match_all": true },
 			{ "key": "preceding_text",             "operator": "regex_contains", "operand": "^\\s*$",                                                                   "match_all": true },
 			{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\s*$",                                                                   "match_all": true },
+			{ "key": "selector",                   "operator": "equal",          "operand": "source.json.sublime  meta.mapping.value.json  meta.mapping.json - string", "match_all": true },
+		]
+	},
+	{ "keys": ["\""], "command": "insert_snippet", "args": {"contents": "\"$1\": \"$2\","}, "context":
+		[
+			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+			{ "key": "selection_empty",            "operator": "equal",          "operand": true,                                                                       "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains", "operand": "[{,]\\s*$",                                                                   "match_all": true },
+			{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\s*(}|\"(\\\"|[^\"])*\":)",                                                                   "match_all": true },
 			{ "key": "selector",                   "operator": "equal",          "operand": "source.json.sublime  meta.mapping.value.json  meta.mapping.json - string", "match_all": true },
 		]
 	},
