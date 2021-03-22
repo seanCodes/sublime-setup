@@ -641,6 +641,70 @@
 
 
 	//
+	// JSON Key-Triggered Commands
+	//
+
+	// Insert `: ` at EOL when just inside a property’s quote marks. This is a shortcut for a
+	// `→, :, <space>` key sequence. e.g.:
+	//
+	// ```
+	//   "foo│"
+	// ```
+	// --> `:` -->
+	// ```
+	//   "foo": │
+	// ```
+	{ "keys": [":"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Macros/Move 1 Char Right and Insert Colon.sublime-macro"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                                   "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_match",        "operand": "^\\s*(\"(\\\\\"|[^\"])*|'(\\\\'|[^'])*)$", "match_all": true },
+			{ "key": "following_text",             "operator": "regex_match",        "operand": "^(\"|')\\s*(?!:)$",                    "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.json  punctuation.definition.string.end", "match_all": true },
+		]
+	},
+	// Auto-pair brackets (curly and square) and quotes when the next character is a comma.
+	//
+	// ```
+	//   "foo": │,
+	// ```
+	//  --> `{` -->
+	// ```
+	//   "foo": {│},
+	// ```
+	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{$0}"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                                   "match_all": true },
+			{ "key": "following_text",             "operator": "regex_contains",     "operand": "^,",                                   "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.json - string", "match_all": true },
+		]
+	},
+	{ "keys": ["["], "command": "insert_snippet", "args": {"contents": "[$0]"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                                   "match_all": true },
+			{ "key": "following_text",             "operator": "regex_contains",     "operand": "^,",                                   "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.json - string", "match_all": true },
+		]
+	},
+	{ "keys": ["\""], "command": "insert_snippet", "args": {"contents": "\"$0\""}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                                   "match_all": true },
+			{ "key": "following_text",             "operator": "regex_contains",     "operand": "^,",                                   "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.json - string", "match_all": true },
+		]
+	},
+	// Indent when pressing `enter` inside square brackets.
+	{ "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n\t$0\n"}, "context":
+		[
+			{ "key": "selection_empty",            "operator": "equal",              "operand": true,                                   "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains",     "operand": "\\[$",                                 "match_all": true },
+			{ "key": "following_text",             "operator": "regex_contains",     "operand": "^]",                                   "match_all": true },
+			{ "key": "selector",                   "operator": "equal",              "operand": "source.json  meta.sequence", "match_all": true },
+		]
+	},
+
+
+
+	//
 	// Sublime Files Key-Triggered Commands
 	//
 
