@@ -128,6 +128,77 @@
 	},
 
 
+	// Package Dev
+	// Delete all preceding whitespace when pressing backspace on an empty line in a sublime-test file.
+	// { "keys": ["backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete Preceding Whitespace.sublime-macro" },
+	// 	"context": [
+	// 		{ "key": "setting.auto_indent",   "operator": "equal",          "operand": true,                            "match_all": true },
+	// 		//{ "key": "selection_empty",       "operator": "equal",          "operand": true,                            "match_all": true },
+	// 		{ "key": "selector",              "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+	// 		//{ "key": "auto_complete_visible", "operator": "equal",          "operand": false,                           "match_all": true },
+	// 		//{ "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s{2,}$",              "match_all": true },
+	// 		//{ "key": "following_text",        "operator": "regex_contains", "operand": "^\\s*$",                        "match_all": true }
+	// 	]
+	// },
+	// Delete to the end of the preceding line when deleting to BOL in a sublime-test file.
+	{ "keys": ["super+backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete To BOL Plus One.sublime-macro" },
+		"context": [
+			{ "key": "selector",              "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+			//{ "key": "auto_complete_visible", "operator": "equal",          "operand": false,                           "match_all": true },
+			//{ "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*.*$", "match_all": true }
+		]
+	},
+	// Delete to the end of the preceding line when deleting words on an empty line in a sublime-test file.
+	// { "keys": ["alt+backspace"], "command": "run_macro_file", "args": { "file": "res://Packages/DocBlockr/DocBlockr Delete To BOL Plus One.sublime-macro" },
+	// 	"context": [
+	// 		{ "key": "selector",              "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+	// 		//{ "key": "auto_complete_visible", "operator": "equal",          "operand": false,                           "match_all": true },
+	// 		//{ "key": "preceding_text",        "operator": "regex_contains", "operand": "^\\s*\\*\\s*$", "match_all": true }
+	// 	]
+	// },
+	// Extend test lines (||) in a sublime-test file.
+	{ "keys": ["super+shift+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/User/Macros/Extend Line Above.sublime-macro" },
+		"context": [
+			{ "key": "setting.auto_indent",                "operator": "equal",          "operand": true,                            "match_all": true },
+			{ "key": "selector",                           "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+			{ "key": "auto_complete_visible",              "operator": "equal",          "operand": false,                           "match_all": true },
+			//{ "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\|\\|", "match_all": true }
+		]
+	},
+	{ "keys": ["super+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/User/Macros/Extend Line Below.sublime-macro" },
+		"context": [
+			{ "key": "setting.auto_indent",                "operator": "equal",          "operand": true,                            "match_all": true },
+			{ "key": "selector",                           "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+			{ "key": "auto_complete_visible",              "operator": "equal",          "operand": false,                           "match_all": true },
+			//{ "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\|\\|", "match_all": true }
+		]
+	},
+	{ "keys": ["enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^(\\|\\|\\s*).*/$1/}"},
+		"context": [
+			{ "key": "setting.auto_indent",                "operator": "equal",          "operand": true,                            "match_all": true },
+			{ "key": "selector",                           "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+			{ "key": "auto_complete_visible",              "operator": "equal",          "operand": false,                           "match_all": true },
+			//{ "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\|\\|", "match_all": true }
+		]
+	},
+	{ "keys": ["keypad_enter"], "command": "insert_snippet", "args": {"contents": "\n${TM_CURRENT_LINE/^(\\|\\|\\s*).*$/$1/}"},
+		"context": [
+			{ "key": "setting.auto_indent",                "operator": "equal",          "operand": true,                            "match_all": true },
+			{ "key": "selector",                           "operator": "equal",          "operand": "meta.test.sublime-syntax-test", "match_all": true },
+			{ "key": "auto_complete_visible",              "operator": "equal",          "operand": false,                           "match_all": true },
+			//{ "key": "preceding_text",                     "operator": "regex_contains", "operand": "^\\|\\|",  "match_all": true }
+		]
+	},
+	{ "keys": ["|"], "command": "insert_snippet", "args": {"contents": "||"},
+		"context": [
+			{ "key": "setting.auto_indent",                "operator": "equal",       "operand": true,                            "match_all": true },
+			{ "key": "selector",                           "operator": "equal",       "operand": "text.html",                     "match_all": true },
+			{ "key": "auto_complete_visible",              "operator": "equal",       "operand": false,                           "match_all": true },
+			{ "key": "preceding_text",                     "operator": "regex_match", "operand": "^", "match_all": true }
+		]
+	},
+
+
 
 	//
 	// Macros
