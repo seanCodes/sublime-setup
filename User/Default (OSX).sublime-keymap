@@ -372,6 +372,16 @@
 			{ "key": "selector",                   "operator": "equal",          "operand": "text.html.handlebars meta.tag - comment", "match_all": true },
 		]
 	},
+	// Auto-pair spaces when inside an empty tag.
+	{ "keys": [" "], "command": "insert_snippet", "args": {"contents": " $0 "}, "context":
+		[
+			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+			{ "key": "selection_empty",            "operator": "equal",          "operand": true,                             "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains", "operand": "(^|[^{\\\\])(\\\\\\\\)*\\{\\{$", "match_all": true }, // prevent double-delete in cases like `\{{│` and `{{{│` but allow in cases like `\\{{│`
+			{ "key": "following_text",             "operator": "regex_contains", "operand": "^\\}\\}",                        "match_all": true },
+			{ "key": "selector",                   "operator": "equal",          "operand": "text.html.handlebars  meta.tag.template - comment, text.html.glimmer  meta.tag.template - comment", "match_all": true },
+		]
+	},
 	// Insert additional braces and auto-pair (when editing Handlebars).
 	// OVERRIDE: Auto-pair braces.
 	{ "keys": ["{"], "command": "insert_snippet", "args": {"contents": "{{$1}}$0"}, "context":
@@ -418,6 +428,17 @@
 			{ "key": "selector",                   "operator": "equal",          "operand": "text.html.handlebars - meta.tag.template.unescaped - comment", "match_all": true },
 		]
 	},
+	// Delete auto-paired spaces.
+	{ "keys": ["backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete Left Right.sublime-macro"}, "context":
+		[
+			{ "key": "setting.auto_match_enabled", "operator": "equal",          "operand": true },
+			{ "key": "selection_empty",            "operator": "equal",          "operand": true,                              "match_all": true },
+			{ "key": "preceding_text",             "operator": "regex_contains", "operand": "(^|[^{\\\\])(\\\\\\\\)*\\{\\{ $", "match_all": true }, // prevent double-delete in cases like `\{{│` and `{{{│` but allow in cases like `\\{{│`
+			{ "key": "following_text",             "operator": "regex_contains", "operand": "^ \\}\\}",                        "match_all": true },
+			{ "key": "selector",                   "operator": "equal",          "operand": "text.html.handlebars - meta.tag.template.unescaped - comment, text.html.glimmer - meta.tag.template.unescaped - comment", "match_all": true },
+		]
+	},
+
 
 
 
